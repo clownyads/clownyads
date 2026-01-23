@@ -30,7 +30,7 @@ export default function Hero() {
           </Badge>
           <Badge className="bg-[#BF00FF]/10 text-[#BF00FF] border border-[#BF00FF]/20 px-3 py-1">
             <Shield size={12} className="mr-1" />
-            Gray & Black Friendly
+            Ofertas White & Black
           </Badge>
           <Badge className="bg-white/5 text-zinc-400 border border-white/10 px-3 py-1">
             <Zap size={12} className="mr-1" />
