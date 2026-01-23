@@ -7,19 +7,19 @@ const steps = [
     icon: Eye,
     number: '01',
     title: 'Monitoramos o mercado',
-    description: 'Rastreamos diariamente as ofertas que estão performando em nutra, hot e info.'
+    description: 'Analisamos plataformas, campanhas, VSLs e movimentos reais de escala.'
   },
   {
     icon: Filter,
     number: '02',
     title: 'Filtramos o que performa',
-    description: 'Separamos só o que está escalando de verdade. Sem lixo, sem promessa.'
+    description: 'Só entra oferta com sinal claro de conversão e potencial de escala.'
   },
   {
     icon: Rocket,
     number: '03',
-    title: 'Você executa e escala',
-    description: 'Acessa a oferta, clona o ângulo e manda tráfego. Simples assim.'
+    title: 'Você executa',
+    description: 'Escolhe a oferta, aplica o modelo e vai direto pro tráfego.'
   }
 ];
 
@@ -36,9 +36,10 @@ export default function HowItWorks() {
           <span className="text-[#39FF14] text-sm font-semibold tracking-wider uppercase mb-4 block">
             Como funciona
           </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-white">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-2">
             3 passos pra escalar
           </h2>
+          <p className="text-zinc-400">Simples. Rápido. Lucrativo.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -2,8 +2,12 @@ import React from 'react';
 import Header from '@/components/landing/Header';
 import Hero from '@/components/landing/Hero';
 import Metrics from '@/components/landing/Metrics';
+import WhatIs from '@/components/landing/WhatIs';
 import HowItWorks from '@/components/landing/HowItWorks';
-import Features from '@/components/landing/Features';
+import WhatYouFind from '@/components/landing/WhatYouFind';
+import WhyDifferent from '@/components/landing/WhyDifferent';
+import ForWho from '@/components/landing/ForWho';
+import SocialProof from '@/components/landing/SocialProof';
 import Pricing from '@/components/landing/Pricing';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
@@ -14,8 +18,12 @@ export default function Home() {
       <Header />
       <Hero />
       <Metrics />
+      <WhatIs />
       <HowItWorks />
-      <Features />
+      <WhatYouFind />
+      <WhyDifferent />
+      <ForWho />
+      <SocialProof />
       <Pricing />
       <CTASection />
       <Footer />

@@ -24,7 +24,7 @@ export default function CTASection() {
             Pare de testar no escuro.
           </h2>
           <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto">
-            Ferramenta real para escala real. Sem teoria, sem promessa. Só resultado.
+            Use o que já está funcionando no mercado real.
           </p>
           
           <Link to={createPageUrl('Dashboard')}>
@@ -38,7 +38,7 @@ export default function CTASection() {
           </Link>
           
           <p className="mt-6 text-sm text-zinc-500">
-            Acesso imediato após o pagamento
+            Acesso imediato. Cancele quando quiser.
           </p>
         </motion.div>
       </div>

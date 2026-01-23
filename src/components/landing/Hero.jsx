@@ -34,7 +34,7 @@ export default function Hero() {
           </Badge>
           <Badge className="bg-white/5 text-zinc-400 border border-white/10 px-3 py-1">
             <Zap size={12} className="mr-1" />
-            Sem teoria
+            Sem teoria. Só o que performa.
           </Badge>
         </motion.div>
 
@@ -59,8 +59,9 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Nutra, hot e info agressivo. Curadas no mercado real, 
-          filtradas e prontas pra clonar.
+          Nutra, hot e info agressivo.
+          <br />
+          Curadas no mercado real, filtradas e prontas pra clonar.
         </motion.p>
 
         {/* CTAs */}
