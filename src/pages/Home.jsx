@@ -4,7 +4,7 @@ import Hero from '@/components/landing/Hero';
 import Metrics from '@/components/landing/Metrics';
 import WhatIs from '@/components/landing/WhatIs';
 import HowItWorks from '@/components/landing/HowItWorks';
-import WhatYouFind from '@/components/landing/WhatYouFind';
+import WhatYouFind from '@/components/landing/WhatYouFind.jsx';
 import WhyDifferent from '@/components/landing/WhyDifferent';
 import ForWho from '@/components/landing/ForWho';
 import SocialProof from '@/components/landing/SocialProof';
