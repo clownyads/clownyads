@@ -6,6 +6,7 @@ import Alerts from './pages/Alerts';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
 import OfferDetail from './pages/OfferDetail';
+import Admin from './pages/Admin';
 
 
 export const PAGES = {
@@ -17,6 +18,7 @@ export const PAGES = {
     "Favorites": Favorites,
     "Profile": Profile,
     "OfferDetail": OfferDetail,
+    "Admin": Admin,
 }
 
 export const pagesConfig = {

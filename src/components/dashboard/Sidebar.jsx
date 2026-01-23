@@ -8,10 +8,12 @@ import {
   AlertTriangle, 
   Heart, 
   User,
+  Settings,
   LogOut,
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { base44 } from '@/api/base44Client';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
@@ -19,11 +21,25 @@ const navItems = [
   { icon: Flame, label: 'Em Alta', page: 'HotOffers' },
   { icon: AlertTriangle, label: 'Alertas', page: 'Alerts' },
   { icon: Heart, label: 'Favoritos', page: 'Favorites' },
+  { icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
   { icon: User, label: 'Perfil', page: 'Profile' },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
+  const [user, setUser] = React.useState(null);
+  
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (error) {
+        console.error('Erro ao carregar usuário:', error);
+      }
+    };
+    loadUser();
+  }, []);
   
   const isActive = (page) => {
     const pageUrl = createPageUrl(page);
@@ -69,23 +85,29 @@ export default function Sidebar({ isOpen, onClose }) {
           {/* Navigation */}
           <nav className="flex-1 px-3 py-4">
             <ul className="space-y-1">
-              {navItems.map((item) => (
-                <li key={item.page}>
-                  <Link
-                    to={createPageUrl(item.page)}
-                    onClick={onClose}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                      isActive(item.page)
-                        ? "bg-[#39FF14]/10 text-[#39FF14]"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
-                    )}
-                  >
-                    <item.icon size={20} />
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {navItems.map((item) => {
+                // Hide admin-only items for non-admin users
+                if (item.adminOnly && user?.role !== 'admin') {
+                  return null;
+                }
+                return (
+                  <li key={item.page}>
+                    <Link
+                      to={createPageUrl(item.page)}
+                      onClick={onClose}
+                      className={cn(
+                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                        isActive(item.page)
+                          ? "bg-[#39FF14]/10 text-[#39FF14]"
+                          : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      )}
+                    >
+                      <item.icon size={20} />
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
