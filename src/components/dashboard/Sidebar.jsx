@@ -48,10 +48,12 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 flex items-center justify-between">
-            <Link to={createPageUrl('Home')} className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#39FF14] to-[#BF00FF] flex items-center justify-center">
-                <span className="text-black font-black text-sm">C</span>
-              </div>
+            <Link to={createPageUrl('Home')} className="flex items-center gap-3">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/23bff8abb_logoClownyAds.png"
+                alt="ClownyAds" 
+                className="h-10 w-auto"
+              />
               <span className="font-bold text-white text-lg tracking-tight">
                 Clowny<span className="text-[#39FF14]">Ads</span>
               </span>
