@@ -1,20 +1,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Beaker, Flame, Glasses, Target, Image, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Beaker, Flame, Glasses, Target, Image, AlertTriangle, TrendingUp, Package, Zap } from 'lucide-react';
 
 const items = [
-  { icon: Beaker, label: 'Ofertas Nutra agressivas', color: '#22C55E' },
-  { icon: Flame, label: 'Produtos Hot', color: '#FF6B6B' },
-  { icon: Glasses, label: 'Info Black & Gray', color: '#6B7280' },
+  { icon: Beaker, label: 'Ofertas de Nutra', color: '#22C55E' },
+  { icon: Flame, label: 'Ofertas Nicho Hot', color: '#FF6B6B' },
+  { icon: Glasses, label: 'Info White e Black', color: '#6B7280' },
   { icon: Target, label: 'Ângulos vencedores', color: '#39FF14' },
-  { icon: Image, label: 'Criativos que rodam', color: '#BF00FF' },
-  { icon: AlertTriangle, label: 'Nível de risco e alerta de ban', color: '#FFB800' },
-  { icon: TrendingUp, label: 'Status real: testando, escalando ou saturando', color: '#3B82F6' }
+  { icon: Image, label: 'Criativos escalados', color: '#BF00FF' },
+  { icon: AlertTriangle, label: 'Nível de risco da Oferta (Bloqueios)', color: '#FFB800' },
+  { icon: TrendingUp, label: 'Status real: testando, escalando ou saturando', color: '#3B82F6' },
+  { icon: Package, label: 'Materiais prontos para usar', color: '#10B981' },
+  { icon: Zap, label: 'Hacks para Escalar', color: '#F59E0B' }
 ];
 
 export default function WhatYouFind() {
   return (
-    <section className="py-24 bg-[#0B0B0D]">
+    <section id="recursos" className="py-16 bg-[#0B0B0D]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -27,7 +29,7 @@ export default function WhatYouFind() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
           {items.map((item, i) => (
             <motion.div
               key={i}

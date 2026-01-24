@@ -19,7 +19,7 @@ export default function Header() {
               className="h-10 w-auto"
             />
             <span className="font-black text-xl tracking-tight">
-              <span className="text-[#39FF14]">Clowny</span><span className="text-[#BF00FF]">Ads</span>
+              <span className="text-white">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
             </span>
           </Link>
 
@@ -43,11 +43,11 @@ export default function Header() {
                 Entrar
               </Button>
             </Link>
-            <Link to={createPageUrl('Dashboard')}>
+            <a href="#precos">
               <Button className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
                 Acessar ofertas
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Toggle */}
@@ -78,11 +78,11 @@ export default function Header() {
                 Entrar
               </Button>
             </Link>
-            <Link to={createPageUrl('Dashboard')}>
+            <a href="#precos">
               <Button className="w-full bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
                 Acessar ofertas
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       )}

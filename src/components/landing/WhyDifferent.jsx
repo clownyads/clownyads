@@ -16,7 +16,7 @@ const yesItems = [
 
 export default function WhyDifferent() {
   return (
-    <section className="py-24 bg-[#0B0B0D] relative overflow-hidden">
+    <section className="py-16 bg-[#0B0B0D] relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-[#39FF14]/5 rounded-full blur-[120px]" />
         <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-[#BF00FF]/5 rounded-full blur-[120px]" />
@@ -82,7 +82,7 @@ export default function WhyDifferent() {
         >
           Se você já sabe rodar tráfego,{' '}
           <span className="text-[#39FF14] font-semibold">
-            o ClownyAds vira sua arma diária.
+            o ClownyAds vira sua ferramenta secreta cabulosa.
           </span>
         </motion.p>
       </div>

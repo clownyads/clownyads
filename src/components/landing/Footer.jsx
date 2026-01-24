@@ -22,12 +22,12 @@ export default function Footer() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/23bff8abb_logoClownyAds.png"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
               alt="ClownyAds" 
               className="h-8 w-auto"
             />
-            <span className="font-bold text-white text-lg tracking-tight">
-              Clowny<span className="text-[#39FF14]">Ads</span>
+            <span className="font-black text-lg tracking-tight">
+              <span className="text-white">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
             </span>
           </div>
 

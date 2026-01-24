@@ -57,31 +57,50 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+          className="text-base sm:text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-8 leading-relaxed px-4"
         >
-          Nutra, hot e info agressivo.
+          Nutra, hot, info & Low Ticket.
           <br />
-          Curadas no mercado real, filtradas e prontas pra clonar.
+          Extraídas do mercado com tecnologia ant-cloacker, filtradas e prontas pra você clonar.
         </motion.p>
+
+        {/* Video */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="max-w-3xl mx-auto mb-8 px-4"
+        >
+          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-video">
+            <iframe 
+              className="w-full h-full"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0&modestbranding=1&rel=0"
+              title="ClownyAds Demo"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </motion.div>
 
         {/* CTAs */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link to={createPageUrl('Dashboard')}>
+          <a href="#precos">
             <Button size="lg" className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-bold text-lg px-8 h-14 group">
               Acessar ofertas
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-          </Link>
-          <Link to={createPageUrl('Dashboard')}>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/5 font-semibold text-lg px-8 h-14">
+          </a>
+          <a href="#precos">
+            <Button size="lg" variant="outline" className="border-[#BF00FF]/50 text-white hover:bg-[#BF00FF]/10 bg-[#BF00FF]/5 font-semibold text-lg px-8 h-14">
               Criar conta grátis
             </Button>
-          </Link>
+          </a>
         </motion.div>
 
         {/* Trust */}
@@ -89,9 +108,9 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-8 text-sm text-zinc-500"
+          className="mt-6 text-sm text-zinc-500"
         >
-          +2.500 afiliados já acessaram este mês
+          +3.273 ofertas já foram clonadas
         </motion.p>
       </div>
 
