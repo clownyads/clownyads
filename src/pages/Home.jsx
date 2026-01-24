@@ -8,6 +8,7 @@ import WhatYouFind from '@/components/landing/WhatYouFind.jsx';
 import WhyDifferent from '@/components/landing/WhyDifferent';
 import ForWho from '@/components/landing/ForWho';
 import SocialProof from '@/components/landing/SocialProof';
+import Testimonials from '@/components/landing/Testimonials';
 import Pricing from '@/components/landing/Pricing';
 import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
@@ -23,6 +24,7 @@ export default function Home() {
       <WhatYouFind />
       <WhyDifferent />
       <ForWho />
+      <Testimonials />
       <SocialProof />
       <Pricing />
       <CTASection />
