@@ -14,7 +14,7 @@ export default function Header() {
           {/* Logo */}
           <Link to={createPageUrl('Home')} className="flex items-center gap-3">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/23bff8abb_logoClownyAds.png"
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
               alt="ClownyAds" 
               className="h-10 w-auto"
             />
