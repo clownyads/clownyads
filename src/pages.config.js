@@ -8,6 +8,7 @@ import OfferDetail from './pages/OfferDetail';
 import Offers from './pages/Offers';
 import Profile from './pages/Profile';
 import Checkout from './pages/Checkout';
+import ClownckerPlus from './pages/ClownckerPlus';
 
 
 export const PAGES = {
@@ -21,6 +22,7 @@ export const PAGES = {
     "Offers": Offers,
     "Profile": Profile,
     "Checkout": Checkout,
+    "ClownckerPlus": ClownckerPlus,
 }
 
 export const pagesConfig = {

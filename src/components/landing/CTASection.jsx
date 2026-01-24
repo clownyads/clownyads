@@ -27,15 +27,15 @@ export default function CTASection() {
             Use o que já está funcionando no mercado real.
           </p>
           
-          <Link to={createPageUrl('Dashboard')}>
+          <a href="#precos">
             <Button 
               size="lg" 
               className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-bold text-lg px-10 h-14 group"
             >
               Entrar no ClownyAds agora
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              <parameter name="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-          </Link>
+          </a>
           
           <p className="mt-6 text-sm text-zinc-500">
             Acesso imediato. Cancele quando quiser.
