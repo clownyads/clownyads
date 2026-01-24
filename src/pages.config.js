@@ -9,6 +9,7 @@ import Offers from './pages/Offers';
 import Profile from './pages/Profile';
 import Checkout from './pages/Checkout';
 import ClownckerPlus from './pages/ClownckerPlus';
+import AntiChargeback from './pages/AntiChargeback';
 
 
 export const PAGES = {
@@ -23,6 +24,7 @@ export const PAGES = {
     "Profile": Profile,
     "Checkout": Checkout,
     "ClownckerPlus": ClownckerPlus,
+    "AntiChargeback": AntiChargeback,
 }
 
 export const pagesConfig = {
