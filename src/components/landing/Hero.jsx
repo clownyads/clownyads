@@ -96,11 +96,11 @@ export default function Hero() {
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </a>
-          <a href="#precos">
+          <Link to={createPageUrl('SignUp')}>
             <Button size="lg" variant="outline" className="border-[#BF00FF]/50 text-white hover:bg-[#BF00FF]/10 bg-[#BF00FF]/5 font-semibold text-lg px-8 h-14">
               Criar conta grátis
             </Button>
-          </a>
+          </Link>
         </motion.div>
 
         {/* Trust */}
