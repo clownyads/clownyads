@@ -10,7 +10,9 @@ import {
   User,
   Settings,
   LogOut,
-  X
+  X,
+  Shield,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { base44 } from '@/api/base44Client';
@@ -19,8 +21,10 @@ const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
   { icon: Package, label: 'Ofertas', page: 'Offers' },
   { icon: Flame, label: 'Em Alta', page: 'HotOffers' },
-  { icon: AlertTriangle, label: 'Alertas', page: 'Alerts' },
+  { icon: AlertTriangle, label: 'Alertas', page: 'Alerts', requiredPlan: ['CABULOSO', 'MESTRE'] },
   { icon: Heart, label: 'Favoritos', page: 'Favorites' },
+  { icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus', requiredPlan: ['MESTRE'] },
+  { icon: ShieldCheck, label: 'Anti-Chargeback', page: 'AntiChargeback', requiredPlan: ['MESTRE'] },
   { icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
   { icon: User, label: 'Perfil', page: 'Profile' },
 ];
@@ -88,6 +92,10 @@ export default function Sidebar({ isOpen, onClose }) {
               {navItems.map((item) => {
                 // Hide admin-only items for non-admin users
                 if (item.adminOnly && user?.role !== 'admin') {
+                  return null;
+                }
+                // Hide plan-restricted items
+                if (item.requiredPlan && (!user?.plan || !item.requiredPlan.includes(user.plan))) {
                   return null;
                 }
                 return (
