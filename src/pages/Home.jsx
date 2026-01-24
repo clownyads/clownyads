@@ -14,6 +14,10 @@ import CTASection from '@/components/landing/CTASection';
 import Footer from '@/components/landing/Footer';
 
 export default function Home() {
+  React.useEffect(() => {
+    document.title = 'ClownyAds';
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0B0B0D]">
       <Header />

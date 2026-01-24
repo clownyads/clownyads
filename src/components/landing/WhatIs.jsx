@@ -4,7 +4,7 @@ import { Radar } from 'lucide-react';
 
 export default function WhatIs() {
   return (
-    <section className="py-24 bg-[#0B0B0D] relative overflow-hidden">
+    <section className="py-12 bg-[#0B0B0D] relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#BF00FF]/20 rounded-full blur-[120px]" />

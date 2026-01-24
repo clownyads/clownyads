@@ -69,7 +69,7 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section id="precos" className="py-24 bg-[#0B0B0D]">
+    <section id="precos" className="py-16 bg-[#0B0B0D]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
