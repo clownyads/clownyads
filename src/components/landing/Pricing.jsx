@@ -4,7 +4,7 @@ import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Check, Zap, Crown, Infinity } from 'lucide-react';
+import { Check, X, Zap, Crown, Infinity, Gift } from 'lucide-react';
 
 const plans = [
   {
@@ -14,12 +14,17 @@ const plans = [
     billing: 'Semanal',
     description: 'Testar o mercado real',
     features: [
-      'Ofertas básicas',
-      'Nutra e Hot',
+      'Biblioteca das ofertas',
+      '3 Ofertas diversas do Dia',
       'Indicador de risco básico'
     ],
+    unavailable: [
+      'Alertas de ban',
+      'Ângulos vencedores'
+    ],
     color: '#39FF14',
-    highlight: false
+    highlight: false,
+    planType: 'NOVATO'
   },
   {
     name: 'CABULOSO',
@@ -30,12 +35,15 @@ const plans = [
     badge: 'Mais escolhido',
     features: [
       'Todas as ofertas',
-      'Info Gray',
+      'Comunidade Exclusiva',
       'Alertas de ban',
-      'Ângulos vencedores'
+      'Ângulos vencedores',
+      'Hacks Secretos de Escala MetaAds e GoogleAds',
+      'Histórico mensal de Ofertas'
     ],
     color: '#BF00FF',
-    highlight: true
+    highlight: true,
+    planType: 'CABULOSO'
   },
   {
     name: 'MESTRE',
@@ -46,12 +54,16 @@ const plans = [
     badge: 'Uma vez só',
     features: [
       'Acesso total',
-      'Gray e Black',
+      'Estratégia Secreta para ganhar no leilão',
+      'Acesso a Comunidade',
       'Alertas antecipados',
-      'Histórico completo'
+      'Histórico completo',
+      'Clowncker PLUS [Cloacker EXCLUSIVO]',
+      'Entregáveis ant-chargeback(Zero Reembolso)'
     ],
     color: '#FFB800',
-    highlight: false
+    highlight: false,
+    planType: 'MESTRE'
   }
 ];
 
@@ -74,6 +86,28 @@ export default function Pricing() {
           <p className="text-zinc-400 max-w-xl mx-auto">
             Sem enrolação. Paga e acessa. Cancela quando quiser.
           </p>
+        </motion.div>
+
+        {/* Plano Gratuito */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-md mx-auto mb-8"
+        >
+          <div className="bg-white/[0.02] border border-white/5 rounded-xl p-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Gift size={20} className="text-zinc-500" />
+              <span className="font-bold text-zinc-400 text-lg">TÔ LISO</span>
+            </div>
+            <p className="text-2xl font-black text-white mb-2">Gratuito</p>
+            <p className="text-zinc-500 text-sm mb-4">Acesso a comunidade com 1 Oferta diária gratuita</p>
+            <a href="https://chat.whatsapp.com/BijJFfPK9EDASCNUyFdeeK" target="_blank" rel="noopener noreferrer">
+              <Button className="w-full bg-white/5 border border-white/10 text-white hover:bg-white/10">
+                Entrar na Comunidade
+              </Button>
+            </a>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -135,9 +169,17 @@ export default function Pricing() {
                       <span className="text-sm text-zinc-300">{feature}</span>
                     </div>
                   ))}
+                  {plan.unavailable?.map((feature, j) => (
+                    <div key={`unavail-${j}`} className="flex items-center gap-3 opacity-40">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-red-500/20">
+                        <X size={12} className="text-red-400" />
+                      </div>
+                      <span className="text-sm text-zinc-400 line-through">{feature}</span>
+                    </div>
+                  ))}
                 </div>
 
-                <Link to={createPageUrl('Dashboard')}>
+                <Link to={`${createPageUrl('Checkout')}?plan=${plan.planType}`}>
                   <Button 
                     className="w-full font-semibold h-12"
                     style={{ 
