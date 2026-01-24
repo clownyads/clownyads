@@ -7,6 +7,7 @@ import HotOffers from './pages/HotOffers';
 import OfferDetail from './pages/OfferDetail';
 import Offers from './pages/Offers';
 import Profile from './pages/Profile';
+import Checkout from './pages/Checkout';
 
 
 export const PAGES = {
@@ -19,6 +20,7 @@ export const PAGES = {
     "OfferDetail": OfferDetail,
     "Offers": Offers,
     "Profile": Profile,
+    "Checkout": Checkout,
 }
 
 export const pagesConfig = {
