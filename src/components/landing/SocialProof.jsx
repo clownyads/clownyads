@@ -10,7 +10,7 @@ const testimonials = [
 
 export default function SocialProof() {
   return (
-    <section className="py-20 bg-[#0B0B0D]">
+    <section className="py-12 bg-[#0B0B0D]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((text, i) => (

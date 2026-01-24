@@ -31,7 +31,7 @@ const metrics = [
 
 export default function Metrics() {
   return (
-    <section className="py-20 bg-[#0B0B0D]">
+    <section className="py-8 bg-[#0B0B0D]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {metrics.map((metric, i) => (
