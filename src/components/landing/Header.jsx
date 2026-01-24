@@ -18,8 +18,8 @@ export default function Header() {
               alt="ClownyAds" 
               className="h-10 w-auto"
             />
-            <span className="font-bold text-white text-lg tracking-tight">
-              Clowny<span className="text-[#39FF14]">Ads</span>
+            <span className="font-black text-xl tracking-tight">
+              <span className="text-[#39FF14]">Clowny</span><span className="text-[#BF00FF]">Ads</span>
             </span>
           </Link>
 
