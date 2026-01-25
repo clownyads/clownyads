@@ -13,13 +13,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to={createPageUrl('Home')} className="flex items-center gap-3">
-            <img 
+            <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
-              alt="ClownyAds" 
-              className="h-10 w-auto"
-            />
+              alt="ClownyAds"
+              className="h-10 w-auto" />
+
             <span className="font-black text-xl tracking-tight">
-              <span className="text-white">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
+              <span className="text-white font-medium">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
             </span>
           </Link>
 
@@ -51,18 +51,18 @@ export default function Header() {
           </div>
 
           {/* Mobile Toggle */}
-          <button 
+          <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-zinc-400"
-          >
+            className="md:hidden p-2 text-zinc-400">
+
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-[#0B0B0D] border-t border-white/5 px-4 py-4 space-y-4">
+      {mobileOpen &&
+      <div className="md:hidden bg-[#0B0B0D] border-t border-white/5 px-4 py-4 space-y-4">
           <a href="#como-funciona" className="block text-sm text-zinc-400 hover:text-white">
             Como funciona
           </a>
@@ -85,7 +85,7 @@ export default function Header() {
             </a>
           </div>
         </div>
-      )}
-    </header>
-  );
+      }
+    </header>);
+
 }
