@@ -17,16 +17,6 @@ const testimonials = [
     name: 'Pedro Costa',
     image: 'https://i.pravatar.cc/150?img=14',
     text: 'Slc, essa plataforma é diferenciada demais. Eu sempre fui cético com essas paradas de "ofertas prontas", mas o ClownyAds me provou o contrário. Os caras entregam exatamente o que tá funcionando no mercado agora, não é reciclado. Consegui escalar uma oferta de info gray que peguei aqui e fiz 15k no primeiro mês. O nível de detalhamento sobre risco, ângulo, geo, tudo... é coisa de profissional pra profissional mesmo.'
-  },
-  {
-    name: 'Mateus Ferreira',
-    image: 'https://i.pravatar.cc/150?img=15',
-    text: 'Irmão, tô usando o ClownyAds tem uns 4 meses e só tenho a agradecer. Eu tava queimando dinheiro com teste de oferta que não convertia, gastando 200, 300 reais pra descobrir que era furada. Aqui dentro eu só pego o que já tá provado que funciona, economizo tempo e grana. Semana passada peguei uma oferta de low ticket que tá bombando, escalei e já fiz mais de 5k de lucro. A comunidade também é top, troca ideia com gente que sabe o que tá fazendo.'
-  },
-  {
-    name: 'Gabriel Almeida',
-    image: 'https://i.pravatar.cc/150?img=16',
-    text: 'Véi, ClownyAds é a real definição de trabalhar esperto. Eu cansei de ficar quebrando cabeça procurando oferta boa e testando às cegas. Agora eu entro na plataforma, vejo o que tá em alta, pego os criativos, os ângulos, e meto a cara. Resultado? Faturamento subiu 400% em 2 meses. Não é milagre, é estratégia. Os hacks de escala que eles passam são ouro puro. Se tu manja de tráfego, essa ferramenta vai te deixar numa vantagem absurda.'
   }
 ];
 
