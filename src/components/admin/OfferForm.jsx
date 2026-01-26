@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Upload, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { base44 } from '@/api/base44Client';
 
 export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
   const [formData, setFormData] = useState(offer || {
@@ -24,12 +25,14 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
     creatives: [],
     alerts: [],
     affiliate_url: '',
-    is_hot: false
+    is_hot: false,
+    banner_url: ''
   });
 
   const [newTrafficSource, setNewTrafficSource] = useState('');
   const [newCreative, setNewCreative] = useState('');
   const [newAlert, setNewAlert] = useState('');
+  const [uploadingBanner, setUploadingBanner] = useState(false);
 
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -50,6 +53,22 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
       ...prev,
       [field]: prev[field].filter((_, i) => i !== index)
     }));
+  };
+
+  const handleBannerUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingBanner(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      handleChange('banner_url', file_url);
+    } catch (error) {
+      console.error('Erro ao fazer upload do banner:', error);
+      alert('Erro ao fazer upload do banner');
+    } finally {
+      setUploadingBanner(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -347,6 +366,58 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Banner Upload */}
+        <div className="md:col-span-2">
+          <Label className="text-white mb-2 block">Banner (500x200)</Label>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleBannerUpload}
+                className="hidden"
+                id="banner-upload"
+                disabled={uploadingBanner}
+              />
+              <label htmlFor="banner-upload">
+                <Button
+                  type="button"
+                  disabled={uploadingBanner}
+                  className="bg-white/5 hover:bg-white/10 text-white border-white/10"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('banner-upload')?.click();
+                  }}
+                >
+                  <Upload size={16} className="mr-2" />
+                  {uploadingBanner ? 'Fazendo upload...' : 'Fazer upload do banner'}
+                </Button>
+              </label>
+              {formData.banner_url && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleChange('banner_url', '')}
+                  className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                >
+                  <X size={14} className="mr-1" />
+                  Remover
+                </Button>
+              )}
+            </div>
+            {formData.banner_url && (
+              <div className="border border-white/10 rounded-lg overflow-hidden bg-white/5 p-2">
+                <img 
+                  src={formData.banner_url} 
+                  alt="Banner preview"
+                  className="w-full aspect-[5/2] object-cover rounded"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

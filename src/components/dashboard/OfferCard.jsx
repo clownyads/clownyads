@@ -58,17 +58,30 @@ export default function OfferCard({ offer }) {
   const niche = nicheConfig[offer.niche] || nicheConfig.nutra;
   const StatusIcon = status.icon;
 
+  // Calculate ad count from aggressiveness
+  const adCount = offer.aggressiveness * 25;
+  let adLevel, adColor, gaugeAngle;
+  
+  if (adCount <= 10) {
+    adLevel = 'Baixo';
+    adColor = '#22c55e';
+    gaugeAngle = -90 + (adCount / 10) * 45;
+  } else if (adCount <= 30) {
+    adLevel = 'Médio Baixo';
+    adColor = '#eab308';
+    gaugeAngle = -45 + ((adCount - 10) / 20) * 45;
+  } else if (adCount <= 99) {
+    adLevel = 'Médio Alto';
+    adColor = '#f97316';
+    gaugeAngle = 0 + ((adCount - 30) / 69) * 45;
+  } else {
+    adLevel = 'Alto';
+    adColor = '#ef4444';
+    gaugeAngle = 45 + Math.min((adCount - 100) / 100, 1) * 45;
+  }
+
   return (
     <div className="group relative bg-[#0A0A0C] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition-all duration-300">
-      {/* Hot Badge */}
-      {offer.is_hot && (
-        <div className="absolute top-3 right-3 z-10">
-          <Badge className="bg-[#FF6B6B]/20 text-[#FF6B6B] border-[#FF6B6B]/30">
-            <Flame size={12} className="mr-1" />
-            Em alta
-          </Badge>
-        </div>
-      )}
 
       <div className="p-5">
         {/* Header */}
@@ -105,30 +118,56 @@ export default function OfferCard({ offer }) {
           </Badge>
         </div>
 
-        {/* Aggressiveness */}
+        {/* Ad Volume Gauge */}
         <div className="mb-4">
-          <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
-            <span>Agressividade</span>
-            <span>{offer.aggressiveness}/5</span>
-          </div>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4, 5].map((level) => (
-              <div
-                key={level}
-                className={cn(
-                  "h-1.5 flex-1 rounded-full transition-colors",
-                  level <= offer.aggressiveness
-                    ? offer.aggressiveness >= 4 
-                      ? "bg-red-500" 
-                      : offer.aggressiveness >= 3 
-                        ? "bg-yellow-500" 
-                        : "bg-green-500"
-                    : "bg-white/10"
-                )}
+          <div className="relative w-full h-16 flex items-center justify-center">
+            <svg className="w-full h-full" viewBox="0 0 120 60">
+              {/* Background arc */}
+              <path
+                d="M 15 55 A 45 45 0 0 1 105 55"
+                fill="none"
+                stroke="#ffffff10"
+                strokeWidth="8"
               />
-            ))}
+              {/* Colored sections */}
+              <path d="M 15 55 A 45 45 0 0 1 37.5 25" fill="none" stroke="#22c55e" strokeWidth="8" />
+              <path d="M 37.5 25 A 45 45 0 0 1 60 15" fill="none" stroke="#eab308" strokeWidth="8" />
+              <path d="M 60 15 A 45 45 0 0 1 82.5 25" fill="none" stroke="#f97316" strokeWidth="8" />
+              <path d="M 82.5 25 A 45 45 0 0 1 105 55" fill="none" stroke="#ef4444" strokeWidth="8" />
+              {/* Needle */}
+              <g transform={`rotate(${gaugeAngle} 60 55)`}>
+                <line x1="60" y1="55" x2="60" y2="22" stroke={adColor} strokeWidth="2.5" />
+                <circle cx="60" cy="55" r="3" fill={adColor} />
+              </g>
+              {/* Center value */}
+              <text x="60" y="48" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">
+                {adCount}
+              </text>
+            </svg>
           </div>
+          <p className="text-center text-xs text-zinc-500 -mt-1">{adLevel}</p>
         </div>
+
+        {/* Hot Badge Below Gauge */}
+        {offer.is_hot && (
+          <div className="mb-4 flex justify-center">
+            <Badge className="bg-[#FF6B6B]/20 text-[#FF6B6B] border-[#FF6B6B]/30">
+              <Flame size={12} className="mr-1" />
+              Em alta
+            </Badge>
+          </div>
+        )}
+
+        {/* Banner */}
+        {offer.banner_url && (
+          <div className="mb-4 rounded-lg overflow-hidden border border-white/5">
+            <img 
+              src={offer.banner_url} 
+              alt="Banner da oferta"
+              className="w-full aspect-[5/2] object-cover"
+            />
+          </div>
+        )}
 
         {/* Cloaker Info */}
         {offer.requires_cloaker && (
