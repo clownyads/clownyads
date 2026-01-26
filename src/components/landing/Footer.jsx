@@ -21,13 +21,13 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img 
+            <img
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
-              alt="ClownyAds" 
-              className="h-8 w-auto"
-            />
+              alt="ClownyAds"
+              className="h-8 w-auto" />
+
             <span className="font-black text-lg tracking-tight">
-              <span className="text-white">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
+              <span className="text-white font-medium">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
             </span>
           </div>
 
@@ -50,6 +50,6 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 }
