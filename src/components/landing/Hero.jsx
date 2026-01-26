@@ -74,10 +74,11 @@ export default function Hero() {
           <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-video">
             <iframe 
               className="w-full h-full"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0&modestbranding=1&rel=0"
-              title="ClownyAds Demo"
+              src="https://www.youtube.com/embed/BsX5zcxHhas?si=bDJ8b2z3Wn1G5xC_&controls=0"
+              title="YouTube video player"
               frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             />
           </div>
