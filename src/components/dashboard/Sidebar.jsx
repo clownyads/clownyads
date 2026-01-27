@@ -1,38 +1,38 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { 
-  LayoutDashboard, 
-  Package, 
-  Flame, 
-  AlertTriangle, 
-  Heart, 
+import {
+  LayoutDashboard,
+  Package,
+  Flame,
+  AlertTriangle,
+  Heart,
   User,
   Settings,
   LogOut,
   X,
   Shield,
-  ShieldCheck
-} from 'lucide-react';
+  ShieldCheck } from
+'lucide-react';
 import { cn } from '@/lib/utils';
 import { base44 } from '@/api/base44Client';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
-  { icon: Package, label: 'Ofertas', page: 'Offers' },
-  { icon: Flame, label: 'Em Alta', page: 'HotOffers' },
-  { icon: AlertTriangle, label: 'Alertas', page: 'Alerts', requiredPlan: ['CABULOSO', 'MESTRE'] },
-  { icon: Heart, label: 'Favoritos', page: 'Favorites' },
-  { icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus', requiredPlan: ['MESTRE'] },
-  { icon: ShieldCheck, label: 'Anti-Chargeback', page: 'AntiChargeback', requiredPlan: ['MESTRE'] },
-  { icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
-  { icon: User, label: 'Perfil', page: 'Profile' },
-];
+{ icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
+{ icon: Package, label: 'Ofertas', page: 'Offers' },
+{ icon: Flame, label: 'Em Alta', page: 'HotOffers' },
+{ icon: AlertTriangle, label: 'Alertas', page: 'Alerts', requiredPlan: ['CABULOSO', 'MESTRE'] },
+{ icon: Heart, label: 'Favoritos', page: 'Favorites' },
+{ icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus', requiredPlan: ['MESTRE'] },
+{ icon: ShieldCheck, label: 'Anti-Chargeback', page: 'AntiChargeback', requiredPlan: ['MESTRE'] },
+{ icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
+{ icon: User, label: 'Perfil', page: 'Profile' }];
+
 
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const [user, setUser] = React.useState(null);
-  
+
   React.useEffect(() => {
     const loadUser = async () => {
       try {
@@ -44,7 +44,7 @@ export default function Sidebar({ isOpen, onClose }) {
     };
     loadUser();
   }, []);
-  
+
   const isActive = (page) => {
     const pageUrl = createPageUrl(page);
     return location.pathname === pageUrl || location.pathname === pageUrl + '/';
@@ -53,12 +53,12 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <>
       {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
+      {isOpen &&
+      <div
+        className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        onClick={onClose} />
+
+      }
 
       {/* Sidebar */}
       <aside className={cn(
@@ -69,19 +69,19 @@ export default function Sidebar({ isOpen, onClose }) {
           {/* Header */}
           <div className="p-6 flex items-center justify-between">
             <Link to={createPageUrl('Home')} className="flex items-center gap-3">
-              <img 
+              <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
-                alt="ClownyAds" 
-                className="h-10 w-auto"
-              />
+                alt="ClownyAds"
+                className="h-10 w-auto" />
+
               <span className="font-black text-lg tracking-tight">
-                <span className="text-white">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
+                <span className="text-white font-medium">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
               </span>
             </Link>
-            <button 
+            <button
               onClick={onClose}
-              className="lg:hidden p-2 text-zinc-400 hover:text-white"
-            >
+              className="lg:hidden p-2 text-zinc-400 hover:text-white">
+
               <X size={20} />
             </button>
           </div>
@@ -105,16 +105,16 @@ export default function Sidebar({ isOpen, onClose }) {
                       onClick={onClose}
                       className={cn(
                         "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
-                        isActive(item.page)
-                          ? "bg-[#39FF14]/10 text-[#39FF14]"
-                          : "text-zinc-400 hover:text-white hover:bg-white/5"
-                      )}
-                    >
+                        isActive(item.page) ?
+                        "bg-[#39FF14]/10 text-[#39FF14]" :
+                        "text-zinc-400 hover:text-white hover:bg-white/5"
+                      )}>
+
                       <item.icon size={20} />
                       {item.label}
                     </Link>
-                  </li>
-                );
+                  </li>);
+
               })}
             </ul>
           </nav>
@@ -128,6 +128,6 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
         </div>
       </aside>
-    </>
-  );
+    </>);
+
 }
