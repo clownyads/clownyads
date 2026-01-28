@@ -11,6 +11,16 @@ export default function HotOffers() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+      }
+    };
+    checkAuth();
+  }, []);
+
   const { data: offers = [], isLoading } = useQuery({
     queryKey: ['offers'],
     queryFn: () => base44.entities.Offer.list('-created_date'),

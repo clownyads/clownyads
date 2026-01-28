@@ -11,6 +11,16 @@ export default function Profile() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+      }
+    };
+    checkAuth();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0B0B0D]">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

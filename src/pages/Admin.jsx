@@ -41,7 +41,13 @@ export default function Admin() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const loadUser = async () => {
+    const checkAuth = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+        return;
+      }
+      
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
@@ -49,7 +55,7 @@ export default function Admin() {
         console.error('Erro ao carregar usuário:', error);
       }
     };
-    loadUser();
+    checkAuth();
   }, []);
 
   const { data: offers = [], isLoading } = useQuery({
