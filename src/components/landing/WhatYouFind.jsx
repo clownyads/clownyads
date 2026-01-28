@@ -39,25 +39,8 @@ export default function WhatYouFind() {
               transition={{ duration: 0.3, delay: i * 0.05 }}
               className="group relative"
             >
-              {/* Pill capsule background with glassmorphism */}
-              <div className="absolute inset-0 rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#BF00FF]/10 via-transparent to-[#39FF14]/10" />
-                <div 
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1/2 h-full rounded-r-full"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(191, 0, 255, 0.15), rgba(191, 0, 255, 0.05))',
-                    backdropFilter: 'blur(10px)'
-                  }}
-                />
-                <div 
-                  className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-full rounded-l-full"
-                  style={{
-                    background: 'linear-gradient(225deg, rgba(57, 255, 20, 0.15), rgba(57, 255, 20, 0.05))',
-                    backdropFilter: 'blur(10px)'
-                  }}
-                />
-              </div>
-              <div className="relative p-5 border border-white/5 rounded-xl hover:border-white/10 transition-all duration-300 flex items-start gap-3 backdrop-blur-sm bg-black/20">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl" />
+              <div className="relative p-5 border border-white/5 rounded-xl hover:border-white/10 transition-all duration-300 flex items-start gap-3">
                 <div 
                   className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: `${item.color}15` }}
