@@ -16,8 +16,8 @@ export default function WhatIs() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl"
-        >
+          className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 sm:p-12 shadow-2xl">
+
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#BF00FF]/20 to-[#39FF14]/20 backdrop-blur-sm border border-white/10 flex items-center justify-center mx-auto mb-8">
             <Radar size={40} className="text-[#BF00FF]" />
           </div>
@@ -27,8 +27,8 @@ export default function WhatIs() {
           </h2>
           
           <div className="space-y-6 text-lg text-zinc-300 leading-relaxed max-w-2xl mx-auto">
-            <p className="text-xl">
-              O ClownyAds é uma plataforma de curadoria de ofertas agressivas que já estão rodando no mercado.
+            <p className="text-xl">O ClownyAds é uma plataforma de ofertas de diversos nichos,
+que já estão rodando escaladas.
             </p>
             
             <div className="inline-block px-6 py-4 rounded-2xl bg-black/30 backdrop-blur-sm border border-white/10">
@@ -38,8 +38,8 @@ export default function WhatIs() {
               </p>
             </div>
             
-            <p className="text-lg">
-              A gente observa o jogo, filtra o que está performando e entrega o atalho.
+            <p className="text-lg">A gente observa o jogo, filtra o que está performando e entrega tudo pra você clonar e escalar.
+
             </p>
             
             <div className="inline-block px-8 py-4 rounded-2xl bg-gradient-to-r from-[#39FF14]/10 to-[#BF00FF]/10 backdrop-blur-sm border border-[#39FF14]/30 mt-4">
@@ -50,6 +50,6 @@ export default function WhatIs() {
           </div>
         </motion.div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
