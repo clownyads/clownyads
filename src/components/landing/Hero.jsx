@@ -43,7 +43,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }} className="text-white mb-6 text-3xl font-black leading-tight sm:text-5xl md:text-7xl">As ofertas que estão
-escalando agora.
+<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BF00FF] to-[#39FF14]">ESCALANDO</span> agora.
 
 
 
