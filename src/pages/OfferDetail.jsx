@@ -53,6 +53,16 @@ export default function OfferDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const offerId = urlParams.get('id');
 
+  React.useEffect(() => {
+    const checkAuth = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+      }
+    };
+    checkAuth();
+  }, []);
+
   const { data: offer, isLoading } = useQuery({
     queryKey: ['offer', offerId],
     queryFn: async () => {

@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { base44 } from '@/api/base44Client';
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLogin = () => {
+    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0B0B0D]/80 backdrop-blur-xl border-b border-white/5">
@@ -38,11 +43,13 @@ export default function Header() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Link to={createPageUrl('Dashboard')}>
-              <Button variant="ghost" className="text-zinc-400 hover:text-white hover:bg-white/5">
-                Entrar
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              onClick={handleLogin}
+              className="text-zinc-400 hover:text-white hover:bg-white/5"
+            >
+              Entrar
+            </Button>
             <a href="#precos">
               <Button className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
                 Acessar ofertas
@@ -73,11 +80,13 @@ export default function Header() {
             Preços
           </a>
           <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
-            <Link to={createPageUrl('Dashboard')}>
-              <Button variant="ghost" className="w-full text-zinc-400 hover:text-white hover:bg-white/5">
-                Entrar
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              onClick={handleLogin}
+              className="w-full text-zinc-400 hover:text-white hover:bg-white/5"
+            >
+              Entrar
+            </Button>
             <a href="#precos">
               <Button className="w-full bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
                 Acessar ofertas
