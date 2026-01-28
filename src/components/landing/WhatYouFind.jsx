@@ -40,7 +40,7 @@ export default function WhatYouFind() {
               className="group relative"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent rounded-xl" />
-              <div className="relative p-5 border border-white/5 rounded-xl hover:border-white/10 transition-all duration-300 flex items-start gap-3">
+              <div className="relative p-5 border border-white/5 rounded-xl hover:border-white/10 transition-all duration-300 flex items-center gap-3">
                 <div 
                   className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: `${item.color}15` }}
