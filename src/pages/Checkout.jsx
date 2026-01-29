@@ -9,23 +9,23 @@ import { Card } from '@/components/ui/card';
 import { CreditCard, QrCode, Check, Loader2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
-const planPrices = {
-  NOVATO: { name: 'NOVATO', price: 27.90, billing: 'Semanal' },
-  CABULOSO: { name: 'CABULOSO', price: 87.90, billing: 'Mensal' },
-  MESTRE: { name: 'MESTRE', price: 697.90, billing: 'Vitalício' }
+const PLAN_CONFIGS = {
+  NOVATO: { name: 'NOVATO', price: 27.90, hash: 'pjjz31oykp', billing: 'Semanal' },
+  CABULOSO: { name: 'CABULOSO', price: 87.90, hash: 'pjjz31oykp', billing: 'Mensal' },
+  MESTRE: { name: 'MESTRE', price: 697.90, hash: 'pjjz31oykp', billing: 'Anual' }
 };
 
 export default function Checkout() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [step, setStep] = useState('register'); // register, payment, processing
+  const [step, setStep] = useState('register');
   const [paymentMethod, setPaymentMethod] = useState('credit_card');
   const [loading, setLoading] = useState(false);
-  const [pixCode, setPixCode] = useState('');
-  const [transactionId, setTransactionId] = useState('');
+  const [pixData, setPixData] = useState(null);
+  const [transactionHash, setTransactionHash] = useState('');
   
-  const plan = searchParams.get('plan') || 'CABULOSO';
-  const currentPlan = planPrices[plan] || planPrices.CABULOSO;
+  const planKey = searchParams.get('plan') || 'CABULOSO';
+  const currentPlan = PLAN_CONFIGS[planKey] || PLAN_CONFIGS.CABULOSO;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -80,68 +80,89 @@ export default function Checkout() {
     setLoading(true);
     
     try {
-      // Simular integração com CinqPay
-      // Na produção, você faria a chamada real para a API do CinqPay aqui
-      const mockTransactionId = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      setTransactionId(mockTransactionId);
+      const payload = {
+        amount: Math.round(currentPlan.price * 100),
+        offer_hash: currentPlan.hash,
+        payment_method: paymentMethod,
+        customer: {
+          name: formData.name,
+          email: formData.email,
+          phone_number: formData.phone,
+          document: formData.cpf.replace(/\D/g, '')
+        },
+        cart: [{
+          product_hash: currentPlan.hash,
+          title: `Plano ${currentPlan.name}`,
+          price: Math.round(currentPlan.price * 100),
+          quantity: 1,
+          operation_type: 1,
+          tangible: false
+        }],
+        plan: currentPlan.name
+      };
 
-      if (paymentMethod === 'pix') {
-        // Gerar código PIX (simulado)
-        const mockPixCode = `00020126360014br.gov.bcb.pix0114${formData.cpf}52040000530398654${currentPlan.price.toFixed(2)}5802BR5925${formData.name}6009SAO PAULO62070503***6304${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
-        setPixCode(mockPixCode);
-        setStep('processing');
-        
-        // Iniciar polling para verificar pagamento
-        startPaymentPolling(mockTransactionId);
-      } else {
-        // Cartão de crédito - processar pagamento
-        await processPayment(mockTransactionId);
+      if (paymentMethod === 'credit_card') {
+        const [month, year] = formData.cardExpiry.split('/');
+        payload.card = {
+          number: formData.cardNumber.replace(/\s/g, ''),
+          holder_name: formData.cardName,
+          exp_month: parseInt(month),
+          exp_year: parseInt('20' + year),
+          cvv: formData.cardCvv
+        };
       }
+
+      const response = await base44.functions.invoke('createCinqpayTransaction', payload);
+
+      if (!response.data.success) {
+        throw new Error(response.data.error || 'Erro ao processar pagamento');
+      }
+
+      const { transaction } = response.data;
+      setTransactionHash(transaction.hash);
+
+      if (paymentMethod === 'pix' && transaction.payment_method_details) {
+        setPixData(transaction.payment_method_details);
+        setStep('processing');
+        startPaymentPolling(transaction.hash);
+      } else if (transaction.status === 'approved' || transaction.status === 'paid') {
+        toast.success('Pagamento aprovado! Criando sua conta...');
+        setTimeout(() => {
+          toast.success('Conta criada! Faça login para acessar.');
+          base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+        }, 2000);
+      } else if (transaction.status === 'pending') {
+        toast.info('Pagamento em processamento...');
+        setStep('processing');
+        startPaymentPolling(transaction.hash);
+      } else {
+        throw new Error('Status de pagamento desconhecido');
+      }
+
     } catch (error) {
       console.error('Erro ao processar pagamento:', error);
-      toast.error('Erro ao processar pagamento. Tente novamente.');
+      toast.error(error.message || 'Erro ao processar pagamento');
+    } finally {
       setLoading(false);
     }
   };
 
-  const processPayment = async (txnId) => {
-    try {
-      // Simular aprovação do pagamento
-      await new Promise(resolve => setTimeout(resolve, 2000));
+  const startPaymentPolling = (hash) => {
+    let attempts = 0;
+    const maxAttempts = 120; // 10 minutos (5s * 120)
 
-      // Criar registro de pagamento
-      await base44.asServiceRole.entities.Payment.create({
-        transactionId: txnId,
-        amount: currentPlan.price,
-        currency: 'BRL',
-        status: 'approved',
-        userId: formData.email,
-        plan: plan,
-        paymentMethod: paymentMethod
-      });
-
-      // Criar usuário com plano
-      // Na produção, isso seria feito via webhook do CinqPay
-      // Por ora, simulando a criação
-      toast.success('Pagamento aprovado! Criando sua conta...');
-      
-      setTimeout(() => {
-        // Redirecionar para login
-        toast.success('Conta criada com sucesso! Faça login para acessar.');
-        base44.auth.redirectToLogin(createPageUrl('Dashboard'));
-      }, 1500);
-    } catch (error) {
-      console.error('Erro ao processar pagamento:', error);
-      toast.error('Erro ao finalizar pagamento.');
-      setLoading(false);
-    }
-  };
-
-  const startPaymentPolling = (txnId) => {
     const pollInterval = setInterval(async () => {
+      attempts++;
+      
+      if (attempts > maxAttempts) {
+        clearInterval(pollInterval);
+        toast.error('Tempo de espera excedido. Entre em contato com o suporte.');
+        return;
+      }
+
       try {
-        const response = await base44.functions.invoke('checkPaymentStatus', {
-          transactionId: txnId
+        const response = await base44.functions.invoke('checkCinqpayStatus', {
+          transactionHash: hash
         });
 
         if (response.data.status === 'approved' || response.data.status === 'paid') {
@@ -152,19 +173,15 @@ export default function Checkout() {
             toast.success('Conta criada com sucesso! Faça login para acessar.');
             base44.auth.redirectToLogin(createPageUrl('Dashboard'));
           }, 1500);
+        } else if (response.data.status === 'declined' || response.data.status === 'cancelled') {
+          clearInterval(pollInterval);
+          toast.error('Pagamento não aprovado. Tente novamente.');
+          setStep('payment');
         }
       } catch (error) {
         console.error('Erro ao verificar status:', error);
       }
-    }, 3000); // Verificar a cada 3 segundos
-
-    // Parar após 10 minutos
-    setTimeout(() => {
-      clearInterval(pollInterval);
-      if (step === 'processing') {
-        toast.error('Tempo de espera excedido. Entre em contato com o suporte.');
-      }
-    }, 600000);
+    }, 5000); // Verificar a cada 5 segundos
   };
 
   return (
@@ -429,47 +446,59 @@ export default function Checkout() {
               </Card>
             )}
 
-            {step === 'processing' && paymentMethod === 'pix' && (
+            {step === 'processing' && (
               <Card className="bg-white/5 border-white/10 p-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
-                    <QrCode size={32} className="text-[#39FF14]" />
-                  </div>
-                  
-                  <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
-                  <p className="text-zinc-400 mb-6">Escaneie o QR Code ou copie o código abaixo</p>
+                  {pixData ? (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
+                        <QrCode size={32} className="text-[#39FF14]" />
+                      </div>
+                      
+                      <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
+                      <p className="text-zinc-400 mb-6">Escaneie o QR Code ou copie o código abaixo</p>
 
-                  {/* QR Code simulado */}
-                  <div className="bg-white p-4 rounded-lg mx-auto w-64 h-64 flex items-center justify-center mb-4">
-                    <div className="text-center">
-                      <QrCode size={200} className="text-black mx-auto" />
-                    </div>
-                  </div>
+                      {/* QR Code */}
+                      {pixData.qrcode && (
+                        <div className="bg-white p-4 rounded-lg mx-auto w-fit mb-4">
+                          <img src={pixData.qrcode} alt="QR Code PIX" className="w-64 h-64" />
+                        </div>
+                      )}
 
-                  <div className="bg-white/5 p-4 rounded-lg mb-4">
-                    <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
-                    <p className="text-white text-xs break-all font-mono">{pixCode}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        navigator.clipboard.writeText(pixCode);
-                        toast.success('Código copiado!');
-                      }}
-                      className="mt-2 text-white border-white/20"
-                    >
-                      Copiar código
-                    </Button>
-                  </div>
+                      <div className="bg-white/5 p-4 rounded-lg mb-4">
+                        <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
+                        <p className="text-white text-xs break-all font-mono">{pixData.qrcode_text || pixData.emv}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            navigator.clipboard.writeText(pixData.qrcode_text || pixData.emv);
+                            toast.success('Código copiado!');
+                          }}
+                          className="mt-2 text-white border-white/20"
+                        >
+                          Copiar código
+                        </Button>
+                      </div>
 
-                  <div className="flex items-center justify-center gap-2 text-[#39FF14] mb-4">
-                    <Loader2 className="animate-spin" size={20} />
-                    <span className="text-sm">Aguardando pagamento...</span>
-                  </div>
+                      <div className="flex items-center justify-center gap-2 text-[#39FF14] mb-4">
+                        <Loader2 className="animate-spin" size={20} />
+                        <span className="text-sm">Aguardando pagamento...</span>
+                      </div>
 
-                  <p className="text-xs text-zinc-500">
-                    O sistema irá detectar automaticamente quando o pagamento for confirmado
-                  </p>
+                      <p className="text-xs text-zinc-500">
+                        O sistema irá detectar automaticamente quando o pagamento for confirmado
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
+                        <Loader2 className="animate-spin text-[#39FF14]" size={32} />
+                      </div>
+                      <h2 className="text-xl font-bold text-white mb-2">Processando pagamento</h2>
+                      <p className="text-zinc-400">Aguarde enquanto confirmamos seu pagamento...</p>
+                    </>
+                  )}
                 </div>
               </Card>
             )}
