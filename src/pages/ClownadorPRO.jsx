@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import Sidebar from '@/components/dashboard/Sidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
@@ -47,6 +47,7 @@ const tools = [
 ];
 
 export default function ClownadorPRO() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
@@ -63,6 +64,12 @@ export default function ClownadorPRO() {
 
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Redireciona se não tiver o plano necessário
+        if (!currentUser.plan || (!['CABULOSO', 'MESTRE'].includes(currentUser.plan))) {
+          navigate(createPageUrl('OfertasDoDia'));
+          return;
+        }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
       } finally {
@@ -70,7 +77,7 @@ export default function ClownadorPRO() {
       }
     };
     loadUser();
-  }, []);
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -78,12 +85,6 @@ export default function ClownadorPRO() {
         <p className="text-white">Carregando...</p>
       </div>
     );
-  }
-
-  // Se não tem plano CABULOSO ou MESTRE, redireciona
-  if (!user || (!['CABULOSO', 'MESTRE'].includes(user.plan))) {
-    window.location.href = createPageUrl('OfertasDoDia');
-    return null;
   }
 
   return (
