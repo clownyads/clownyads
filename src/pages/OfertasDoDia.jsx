@@ -11,6 +11,7 @@ export default function OfertasDoDia() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -25,14 +26,18 @@ export default function OfertasDoDia() {
         setUser(currentUser);
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
+      } finally {
+        setLoading(false);
       }
     };
     checkAuth();
   }, []);
 
+  // Se não tem plano ativo, não busca ofertas
   const { data: offers = [], isLoading } = useQuery({
     queryKey: ['offers'],
     queryFn: () => base44.entities.Offer.list('-created_date'),
+    enabled: !loading && !!user && !!user.plan && user.plan !== 'FREE'
   });
 
   // Filtrar ofertas dos últimos 2 dias (48 horas)
@@ -47,11 +52,6 @@ export default function OfertasDoDia() {
   const filteredOffers = recentOffers.filter(offer =>
     offer.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Usuários sem plano veem apenas 1 oferta
-  const displayOffers = (!user || !user.plan || user.plan === 'FREE') 
-    ? filteredOffers.slice(0, 1) 
-    : filteredOffers;
 
   return (
     <div className="min-h-screen bg-[#0B0B0D]">
@@ -75,15 +75,19 @@ export default function OfertasDoDia() {
             </div>
           </div>
 
-          {(!user || user.plan === 'FREE') && <PlanUpgradePrompt />}
-
-          {isLoading ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <p className="text-zinc-400">Carregando...</p>
+            </div>
+          ) : (!user || !user.plan || user.plan === 'FREE') ? (
+            <PlanUpgradePrompt />
+          ) : isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => (
                 <Skeleton key={i} className="h-[400px] bg-white/5" />
               ))}
             </div>
-          ) : displayOffers.length === 0 ? (
+          ) : filteredOffers.length === 0 ? (
             <div className="text-center py-16">
               <div className="w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-4">
                 <span className="text-4xl">🔍</span>
@@ -96,24 +100,11 @@ export default function OfertasDoDia() {
               </p>
             </div>
           ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {displayOffers.map((offer) => (
-                  <OfferCard key={offer.id} offer={offer} />
-                ))}
-              </div>
-              
-              {(!user || !user.plan || user.plan === 'FREE') && filteredOffers.length > 1 && (
-                <div className="text-center py-8">
-                  <div className="bg-gradient-to-r from-[#39FF14]/10 to-[#BF00FF]/10 border border-[#39FF14]/20 rounded-xl p-6 max-w-2xl mx-auto">
-                    <h3 className="text-lg font-bold text-white mb-2">🔒 Mais {filteredOffers.length - 1} ofertas disponíveis</h3>
-                    <p className="text-zinc-400 text-sm">
-                      Faça upgrade do seu plano para acessar todas as ofertas do dia
-                    </p>
-                  </div>
-                </div>
-              )}
-            </>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filteredOffers.map((offer) => (
+                <OfferCard key={offer.id} offer={offer} />
+              ))}
+            </div>
           )}
         </main>
       </div>

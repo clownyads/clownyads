@@ -20,8 +20,8 @@ import { base44 } from '@/api/base44Client';
 const navItems = [
 { icon: Flame, label: 'Ofertas do Dia', page: 'OfertasDoDia' },
 { icon: User, label: 'Comunidade', page: 'Comunidade' },
-{ icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus', requiredPlan: ['MESTRE'] },
-{ icon: ShieldCheck, label: 'Clownador PRO', page: 'ClownadorPRO', requiredPlan: ['CABULOSO', 'MESTRE'] },
+{ icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus' },
+{ icon: ShieldCheck, label: 'Clownador PRO', page: 'ClownadorPRO' },
 { icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
 { icon: User, label: 'Perfil', page: 'Profile' }];
 
@@ -108,10 +108,6 @@ export default function Sidebar({ isOpen, onClose }) {
               {navItems.map((item) => {
                 // Hide admin-only items for non-admin users
                 if (item.adminOnly && user?.email !== 'pedrinhojpkl@gmail.com') {
-                  return null;
-                }
-                // Hide plan-restricted items
-                if (item.requiredPlan && (!user?.plan || !item.requiredPlan.includes(user.plan))) {
                   return null;
                 }
                 return (

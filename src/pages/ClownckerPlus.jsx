@@ -6,8 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import { Shield, Code, Copy, CheckCircle2 } from 'lucide-react';
+import { Shield, Code, Copy, CheckCircle2, User } from 'lucide-react';
 import { toast } from 'sonner';
+import Sidebar from '@/components/dashboard/Sidebar';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
 
 export default function ClownckerPlus() {
   const [user, setUser] = useState(null);
@@ -15,6 +17,8 @@ export default function ClownckerPlus() {
   const [blackUrl, setBlackUrl] = useState('');
   const [whiteUrl, setWhiteUrl] = useState('');
   const [scriptGenerated, setScriptGenerated] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const loadUser = async () => {
@@ -89,8 +93,18 @@ export default function ClownckerPlus() {
   // Se não é MESTRE, mostrar upgrade
   if (!user || user.plan !== 'MESTRE') {
     return (
-      <div className="min-h-screen bg-[#0B0B0D] py-12 px-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-[#0B0B0D]">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        
+        <div className="lg:pl-64">
+          <DashboardHeader 
+            onMenuClick={() => setSidebarOpen(true)}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+
+          <main className="p-4 lg:p-6">
+            <div className="max-w-4xl mx-auto">
           <div className="mb-8 text-center">
             <div className="w-16 h-16 rounded-xl bg-[#FFB800]/10 flex items-center justify-center mx-auto mb-4">
               <Shield size={32} className="text-[#FFB800]" />
@@ -163,21 +177,26 @@ export default function ClownckerPlus() {
             </div>
           </div>
 
-          <div className="mt-6 text-center">
-            <Link to={createPageUrl('OfertasDoDia')}>
-              <Button variant="ghost" className="text-zinc-400 hover:text-white">
-                Voltar
-              </Button>
-            </Link>
-          </div>
+            </div>
+          </main>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0B0D] py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#0B0B0D]">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      
+      <div className="lg:pl-64">
+        <DashboardHeader 
+          onMenuClick={() => setSidebarOpen(true)}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+
+        <main className="p-4 lg:p-6">
+          <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-xl bg-[#FFB800]/10 flex items-center justify-center">
@@ -269,13 +288,8 @@ export default function ClownckerPlus() {
           )}
         </div>
 
-        <div className="mt-6 text-center">
-          <Link to={createPageUrl('OfertasDoDia')}>
-            <Button variant="ghost" className="text-zinc-400 hover:text-white">
-              Voltar
-            </Button>
-          </Link>
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   );
