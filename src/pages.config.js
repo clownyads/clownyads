@@ -50,64 +50,64 @@
 import Admin from './pages/Admin';
 import Alerts from './pages/Alerts';
 import AntiChargeback from './pages/AntiChargeback';
+import CategoryDesenvolvPessoal from './pages/CategoryDesenvolvPessoal';
+import CategoryEducacaoIdiomas from './pages/CategoryEducacaoIdiomas';
+import CategoryEmagrecimento from './pages/CategoryEmagrecimento';
+import CategoryEspiritualidade from './pages/CategoryEspiritualidade';
+import CategoryEstiloVida from './pages/CategoryEstiloVida';
+import CategoryFamiliaMaternidade from './pages/CategoryFamiliaMaternidade';
+import CategoryFitnessExercicios from './pages/CategoryFitnessExercicios';
+import CategoryLowTicket from './pages/CategoryLowTicket';
+import CategoryModaBeleza from './pages/CategoryModaBeleza';
+import CategoryPets from './pages/CategoryPets';
+import CategoryRelacionamento from './pages/CategoryRelacionamento';
+import CategoryRendaExtra from './pages/CategoryRendaExtra';
+import CategorySaudeBemEstar from './pages/CategorySaudeBemEstar';
+import CategorySexualidade from './pages/CategorySexualidade';
+import CategoryTendencias from './pages/CategoryTendencias';
 import Checkout from './pages/Checkout';
+import ClownadorPRO from './pages/ClownadorPRO';
 import ClownckerPlus from './pages/ClownckerPlus';
+import Comunidade from './pages/Comunidade';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import HotOffers from './pages/HotOffers';
+import OfertasDoDia from './pages/OfertasDoDia';
 import OfferDetail from './pages/OfferDetail';
 import Offers from './pages/Offers';
 import Profile from './pages/Profile';
-import OfertasDoDia from './pages/OfertasDoDia';
-import CategoryTendencias from './pages/CategoryTendencias';
-import CategoryLowTicket from './pages/CategoryLowTicket';
-import CategoryRendaExtra from './pages/CategoryRendaExtra';
-import CategorySaudeBemEstar from './pages/CategorySaudeBemEstar';
-import CategoryEmagrecimento from './pages/CategoryEmagrecimento';
-import CategoryFitnessExercicios from './pages/CategoryFitnessExercicios';
-import CategoryRelacionamento from './pages/CategoryRelacionamento';
-import CategorySexualidade from './pages/CategorySexualidade';
-import CategoryFamiliaMaternidade from './pages/CategoryFamiliaMaternidade';
-import CategoryEducacaoIdiomas from './pages/CategoryEducacaoIdiomas';
-import CategoryDesenvolvPessoal from './pages/CategoryDesenvolvPessoal';
-import CategoryEspiritualidade from './pages/CategoryEspiritualidade';
-import CategoryModaBeleza from './pages/CategoryModaBeleza';
-import CategoryEstiloVida from './pages/CategoryEstiloVida';
-import CategoryPets from './pages/CategoryPets';
-import Comunidade from './pages/Comunidade';
-import ClownadorPRO from './pages/ClownadorPRO';
 
 
 export const PAGES = {
     "Admin": Admin,
     "Alerts": Alerts,
     "AntiChargeback": AntiChargeback,
+    "CategoryDesenvolvPessoal": CategoryDesenvolvPessoal,
+    "CategoryEducacaoIdiomas": CategoryEducacaoIdiomas,
+    "CategoryEmagrecimento": CategoryEmagrecimento,
+    "CategoryEspiritualidade": CategoryEspiritualidade,
+    "CategoryEstiloVida": CategoryEstiloVida,
+    "CategoryFamiliaMaternidade": CategoryFamiliaMaternidade,
+    "CategoryFitnessExercicios": CategoryFitnessExercicios,
+    "CategoryLowTicket": CategoryLowTicket,
+    "CategoryModaBeleza": CategoryModaBeleza,
+    "CategoryPets": CategoryPets,
+    "CategoryRelacionamento": CategoryRelacionamento,
+    "CategoryRendaExtra": CategoryRendaExtra,
+    "CategorySaudeBemEstar": CategorySaudeBemEstar,
+    "CategorySexualidade": CategorySexualidade,
+    "CategoryTendencias": CategoryTendencias,
     "Checkout": Checkout,
+    "ClownadorPRO": ClownadorPRO,
     "ClownckerPlus": ClownckerPlus,
+    "Comunidade": Comunidade,
     "Favorites": Favorites,
     "Home": Home,
     "HotOffers": HotOffers,
+    "OfertasDoDia": OfertasDoDia,
     "OfferDetail": OfferDetail,
     "Offers": Offers,
     "Profile": Profile,
-    "OfertasDoDia": OfertasDoDia,
-    "CategoryTendencias": CategoryTendencias,
-    "CategoryLowTicket": CategoryLowTicket,
-    "CategoryRendaExtra": CategoryRendaExtra,
-    "CategorySaudeBemEstar": CategorySaudeBemEstar,
-    "CategoryEmagrecimento": CategoryEmagrecimento,
-    "CategoryFitnessExercicios": CategoryFitnessExercicios,
-    "CategoryRelacionamento": CategoryRelacionamento,
-    "CategorySexualidade": CategorySexualidade,
-    "CategoryFamiliaMaternidade": CategoryFamiliaMaternidade,
-    "CategoryEducacaoIdiomas": CategoryEducacaoIdiomas,
-    "CategoryDesenvolvPessoal": CategoryDesenvolvPessoal,
-    "CategoryEspiritualidade": CategoryEspiritualidade,
-    "CategoryModaBeleza": CategoryModaBeleza,
-    "CategoryEstiloVida": CategoryEstiloVida,
-    "CategoryPets": CategoryPets,
-    "Comunidade": Comunidade,
-    "ClownadorPRO": ClownadorPRO,
 }
 
 export const pagesConfig = {

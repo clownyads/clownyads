@@ -118,35 +118,7 @@ export default function OfferCard({ offer }) {
           </Badge>
         </div>
 
-        {/* Ad Volume Gauge */}
-        <div className="mb-4">
-          <div className="relative w-full h-16 flex items-center justify-center">
-            <svg className="w-full h-full" viewBox="0 0 120 60">
-              {/* Background arc */}
-              <path
-                d="M 15 55 A 45 45 0 0 1 105 55"
-                fill="none"
-                stroke="#ffffff10"
-                strokeWidth="8"
-              />
-              {/* Colored sections */}
-              <path d="M 15 55 A 45 45 0 0 1 37.5 25" fill="none" stroke="#22c55e" strokeWidth="8" />
-              <path d="M 37.5 25 A 45 45 0 0 1 60 15" fill="none" stroke="#eab308" strokeWidth="8" />
-              <path d="M 60 15 A 45 45 0 0 1 82.5 25" fill="none" stroke="#f97316" strokeWidth="8" />
-              <path d="M 82.5 25 A 45 45 0 0 1 105 55" fill="none" stroke="#ef4444" strokeWidth="8" />
-              {/* Needle */}
-              <g transform={`rotate(${gaugeAngle} 60 55)`}>
-                <line x1="60" y1="55" x2="60" y2="22" stroke={adColor} strokeWidth="2.5" />
-                <circle cx="60" cy="55" r="3" fill={adColor} />
-              </g>
-              {/* Center value */}
-              <text x="60" y="48" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">
-                {adCount}
-              </text>
-            </svg>
-          </div>
-          <p className="text-center text-xs text-zinc-500 -mt-1">{adLevel}</p>
-        </div>
+
 
         {/* Hot Badge Below Gauge */}
         {offer.is_hot && (

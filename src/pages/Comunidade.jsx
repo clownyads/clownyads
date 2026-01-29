@@ -80,7 +80,7 @@ export default function Comunidade() {
           <div className="max-w-4xl bg-gradient-to-r from-[#39FF14]/10 to-[#BF00FF]/10 border border-[#39FF14]/20 rounded-2xl p-6">
             <h3 className="text-lg font-bold text-white mb-2">💎 Comunidade Exclusiva</h3>
             <p className="text-zinc-400 text-sm">
-              Conecte-se com outros afiliados, compartilhe resultados, tire dúvidas e aprenda com quem está escalando todos os dias.
+              Conecte-se com outros top players, compartilhe resultados, tire dúvidas e aprenda com quem está escalando todos os dias.
             </p>
           </div>
         </main>
