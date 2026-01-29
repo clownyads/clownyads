@@ -23,57 +23,28 @@ Deno.serve(async (req) => {
     // A CinqPay exige installments mesmo no PIX
     const payload = { ...body, installments: body.installments || 1 };
 
-    console.error('PAYLOAD ENVIADO:', JSON.stringify(payload, null, 2));
-    
     const response = await fetch(`https://api.cinqpay.com.br/api/public/v1/transactions?api_token=${apiToken}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    console.error('HTTP Status:', response.status);
-    
     const result = await response.json();
-
-    // LOG COMPLETO DA RESPOSTA DA CINQPAY
-    console.error('========== RESPOSTA CINQPAY ==========');
-    console.error(JSON.stringify(result, null, 2));
-    console.error('=====================================');
 
     if (!response.ok) {
       return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
     }
 
-    // Estruturar resposta - CinqPay retorna 'data' com transaction
-    const transaction = result.data || result.transaction || result;
-    
-    // Log para debug - remover após validação
-    console.log('Transaction extraída:', JSON.stringify(transaction, null, 2));
+    // Estruturar resposta - CinqPay retorna resposta diretamente
+    const transaction = result;
     
     // Extrair dados do PIX da resposta da CinqPay
     let pixData = null;
-    if (body.payment_method === 'pix') {
-      // Mapeamento correto conforme documentação CinqPay
-      const pixCode = transaction.pix_bruto || 
-                      transaction.pix_code || 
-                      transaction.emv ||
-                      transaction.pix?.code ||
-                      '';
-      const pixQrCode = transaction.pix_image ||
-                        transaction.qr_code ||
-                        transaction.pix_qr_code_url ||
-                        transaction.pix?.qr_code_url ||
-                        '';
-      
-      console.log('PIX Code encontrado:', pixCode ? 'SIM' : 'NÃO');
-      console.log('PIX QR Code encontrado:', pixQrCode ? 'SIM' : 'NÃO');
-      
-      if (pixCode || pixQrCode) {
-        pixData = {
-          pix_code: pixCode,
-          pix_qr_code_url: pixQrCode
-        };
-      }
+    if (body.payment_method === 'pix' && transaction.pix) {
+      pixData = {
+        pix_code: transaction.pix.pix_qr_code || '',
+        pix_qr_code_url: null  // CinqPay retorna o código, não a URL
+      };
     }
 
     // Retornar resposta estruturada com sucesso confirmado
