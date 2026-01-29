@@ -9,7 +9,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogin = () => {
-    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+    base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
   };
 
   return (
