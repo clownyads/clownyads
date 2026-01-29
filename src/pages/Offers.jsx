@@ -5,12 +5,14 @@ import Sidebar from '@/components/dashboard/Sidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import OfferFilters from '@/components/dashboard/OfferFilters';
 import OfferCard from '@/components/dashboard/OfferCard';
+import PlanUpgradePrompt from '@/components/dashboard/PlanUpgradePrompt';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Package } from 'lucide-react';
 
 export default function Offers() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState(null);
   const [filters, setFilters] = useState({
     niche: '',
     status: '',
@@ -24,6 +26,9 @@ export default function Offers() {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
         base44.auth.redirectToLogin(window.location.pathname);
+      } else {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
       }
     };
     checkAuth();
@@ -73,6 +78,11 @@ export default function Offers() {
             <h1 className="text-2xl font-black text-white mb-1">Todas as Ofertas</h1>
             <p className="text-zinc-500 text-sm">Explore todas as ofertas disponíveis na plataforma</p>
           </div>
+
+          {/* Plan Upgrade Prompt for FREE users */}
+          {user && (!user.plan || user.plan === 'FREE') && (
+            <PlanUpgradePrompt />
+          )}
 
           <OfferFilters 
             filters={filters} 

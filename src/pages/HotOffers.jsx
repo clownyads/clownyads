@@ -4,18 +4,23 @@ import { base44 } from '@/api/base44Client';
 import Sidebar from '@/components/dashboard/Sidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import OfferCard from '@/components/dashboard/OfferCard';
+import PlanUpgradePrompt from '@/components/dashboard/PlanUpgradePrompt';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Flame } from 'lucide-react';
 
 export default function HotOffers() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = useState(null);
 
   React.useEffect(() => {
     const checkAuth = async () => {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
         base44.auth.redirectToLogin(window.location.pathname);
+      } else {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
       }
     };
     checkAuth();
@@ -52,6 +57,11 @@ export default function HotOffers() {
               <p className="text-zinc-500 text-sm">Ofertas que estão bombando agora</p>
             </div>
           </div>
+
+          {/* Plan Upgrade Prompt for FREE users */}
+          {user && (!user.plan || user.plan === 'FREE') && (
+            <PlanUpgradePrompt />
+          )}
 
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
