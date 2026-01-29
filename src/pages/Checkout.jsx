@@ -791,52 +791,62 @@ export default function Checkout() {
               </Card>
             )}
 
-            {step === 'processing' && (
+            {step === 'processing' && pixData && (
+              <Card className="bg-white/5 border-white/10 p-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
+                  <QrCode size={32} className="text-[#39FF14]" />
+                </div>
+                
+                <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
+                <p className="text-zinc-400 mb-6">Escaneie o QR Code ou copie o código abaixo</p>
+
+                {/* QR Code Real da CinqPay */}
+                <div className="bg-white p-4 rounded-lg mx-auto w-64 h-64 flex items-center justify-center mb-4">
+                  <img 
+                    src={pixData.pix_qr_code_url || pixData.qrcode} 
+                    alt="QR Code PIX" 
+                    className="w-full h-full"
+                  />
+                </div>
+
+                <div className="bg-white/5 p-4 rounded-lg mb-4">
+                  <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
+                  <p className="text-white text-xs break-all font-mono">
+                    {pixData.pix_code || pixData.qrcode_text}
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const code = pixData.pix_code || pixData.qrcode_text;
+                      navigator.clipboard.writeText(code);
+                      toast.success('Código copiado!');
+                    }}
+                    className="mt-2 text-white border-white/20"
+                  >
+                    Copiar código
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-center gap-2 text-[#39FF14] mb-4">
+                  <Loader2 className="animate-spin" size={20} />
+                  <span className="text-sm">Aguardando pagamento...</span>
+                </div>
+
+                <p className="text-xs text-zinc-500">
+                  O sistema irá detectar automaticamente quando o pagamento for confirmado
+                </p>
+              </Card>
+            )}
+
+            {step === 'processing' && !pixData && (
               <Card className="bg-white/5 border-white/10 p-6">
                 <div className="text-center">
-                  {pixData ? (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
-                        <QrCode size={32} className="text-[#39FF14]" />
-                      </div>
-                      
-                      <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
-                      <p className="text-zinc-400 mb-6">Copie o código abaixo e realize o pagamento</p>
-
-                      <div className="bg-white/5 p-4 rounded-lg mb-4">
-                        <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
-                        <p className="text-white text-xs break-all font-mono">{pixData.qrcode_text || pixData.emv}</p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            navigator.clipboard.writeText(pixData.qrcode_text || pixData.emv);
-                            toast.success('Código copiado com sucesso, faça o pagamento e não perca seu acesso!');
-                          }}
-                          className="mt-2 text-white border-white/20"
-                        >
-                          Copiar código
-                        </Button>
-                      </div>
-
-                      <div className="flex items-center justify-center gap-2 text-[#39FF14] mb-4">
-                        <Loader2 className="animate-spin" size={20} />
-                        <span className="text-sm">Aguardando pagamento...</span>
-                      </div>
-
-                      <p className="text-xs text-zinc-500">
-                        O sistema irá detectar automaticamente quando o pagamento for confirmado
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
-                        <Loader2 className="animate-spin text-[#39FF14]" size={32} />
-                      </div>
-                      <h2 className="text-xl font-bold text-white mb-2">Processando pagamento</h2>
-                      <p className="text-zinc-400">Aguarde enquanto confirmamos seu pagamento...</p>
-                    </>
-                  )}
+                  <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
+                    <Loader2 className="animate-spin text-[#39FF14]" size={32} />
+                  </div>
+                  <h2 className="text-xl font-bold text-white mb-2">Processando pagamento</h2>
+                  <p className="text-zinc-400">Aguarde enquanto confirmamos seu pagamento...</p>
                 </div>
               </Card>
             )}
