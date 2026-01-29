@@ -71,7 +71,7 @@ const COUNTRIES = [
   { code: '+55', name: 'Brasil', flag: '🇧🇷', length: 11 },
   { code: '+359', name: 'Bulgária', flag: '🇧🇬', length: 9 },
   { code: '+237', name: 'Camarões', flag: '🇨🇲', length: 9 },
-  { code: '+1', name: 'Canadá', flag: '🇨🇦', length: 10 },
+
   { code: '+56', name: 'Chile', flag: '🇨🇱', length: 9 },
   { code: '+86', name: 'China', flag: '🇨🇳', length: 11 },
   { code: '+357', name: 'Chipre', flag: '🇨🇾', length: 8 },
@@ -588,8 +588,8 @@ export default function Checkout() {
                           className="bg-white/5 border border-white/10 text-white rounded-md px-3 py-2 focus:border-[#39FF14]/50 focus:ring-1 focus:ring-[#39FF14]/50 focus:outline-none transition-colors"
                           style={{ width: '140px' }}
                         >
-                          {COUNTRIES.map((country) => (
-                            <option key={country.code} value={country.code} className="bg-[#0A0A0C] text-white">
+                          {COUNTRIES.map((country, idx) => (
+                            <option key={`${country.code}-${idx}`} value={country.code} className="bg-[#0A0A0C] text-white">
                               {country.flag} {country.code} {country.name}
                             </option>
                           ))}

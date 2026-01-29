@@ -43,7 +43,9 @@ Deno.serve(async (req) => {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.message || 'Erro ao processar pagamento');
+      console.error('Erro da API CinqPay:', result);
+      const errorMessage = result.message || result.error || JSON.stringify(result);
+      throw new Error(errorMessage);
     }
 
     // Criar registro inicial do pagamento
