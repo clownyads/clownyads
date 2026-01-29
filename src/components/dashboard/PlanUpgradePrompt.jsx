@@ -41,7 +41,7 @@ const plans = [
     name: 'MESTRE',
     icon: Infinity,
     price: 'R$697,90',
-    billing: 'Vitalício',
+    billing: 'Anual',
     badge: 'Uma vez só',
     features: [
       'Acesso total',
