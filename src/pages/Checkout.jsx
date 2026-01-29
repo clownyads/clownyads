@@ -292,80 +292,84 @@ export default function Checkout() {
 
   const handlePayment = async (e) => {
     e.preventDefault();
-    
-    if (paymentMethod === 'credit_card') {
-      if (!formData.cardNumber || !formData.cardName || !formData.cardExpiry || !formData.cardCvv) {
-        toast.error('Preencha todos os dados do cartão');
-        return;
-      }
-    }
-
     setLoading(true);
     
     try {
+      // 1. Preparar o payload exatamente como a CinqPay exige
       const payload = {
-        amount: Math.round(currentPlan.price * 100),
+        amount: Math.round(currentPlan.price * 100), // Valor em centavos
         offer_hash: currentPlan.hash,
         payment_method: paymentMethod,
         installments: paymentMethod === 'pix' ? 1 : parseInt(formData.installments || 1),
-        customer: {
-          name: formData.name,
-          email: formData.email,
-          phone_number: formData.countryCode + formData.phone,
+        customer: { 
+          name: formData.name, 
+          email: formData.email, 
+          phone_number: formData.countryCode + formData.phone, 
           document: formData.cpf.replace(/\D/g, '')
         },
-        cart: [{
-          product_hash: currentPlan.hash,
-          title: `Plano ${currentPlan.name}`,
-          price: Math.round(currentPlan.price * 100),
-          quantity: 1,
-          operation_type: 1,
-          tangible: false
+        cart: [{ 
+          product_hash: currentPlan.hash, 
+          title: `Plano ${currentPlan.name}`, 
+          price: Math.round(currentPlan.price * 100), 
+          quantity: 1, 
+          operation_type: 1, 
+          tangible: false 
         }],
         plan: currentPlan.name
       };
 
       if (paymentMethod === 'credit_card') {
         const [month, year] = formData.cardExpiry.split('/');
-        payload.card = {
-          number: formData.cardNumber.replace(/\s/g, ''),
-          holder_name: formData.cardName,
-          exp_month: parseInt(month),
-          exp_year: parseInt('20' + year),
-          cvv: formData.cardCvv
+        payload.card = { 
+          number: formData.cardNumber.replace(/\s/g, ''), 
+          holder_name: formData.cardName, 
+          exp_month: parseInt(month), 
+          exp_year: parseInt('20' + year), 
+          cvv: formData.cardCvv 
         };
       }
 
+      // 2. Chamar a função do backend
       const response = await base44.functions.invoke('createCinqpayTransaction', payload);
+      
+      // IMPORTANTE: A Base44 retorna os dados dentro de response.data
+      const result = response.data;
 
-      if (!response.data.success) {
-        throw new Error(response.data.error || 'Erro ao processar pagamento');
-      }
-
-      const { transaction } = response.data;
-      setTransactionHash(transaction.hash);
-
-      if (paymentMethod === 'pix' && transaction.payment_method_details) {
-        setPixData(transaction.payment_method_details);
-        setStep('processing');
-        startPaymentPolling(transaction.hash);
-      } else if (transaction.status === 'approved' || transaction.status === 'paid') {
-        toast.success('Pagamento aprovado! Criando sua conta...');
-        setTimeout(() => {
-          toast.success('Conta criada! Faça login para acessar.');
-          base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
-        }, 2000);
-      } else if (transaction.status === 'pending') {
-        toast.info('Pagamento em processamento...');
-        setStep('processing');
-        startPaymentPolling(transaction.hash);
+      if (paymentMethod === 'pix') {
+        // 3. Verificar se os dados do PIX vieram na resposta
+        if (result.payment_method_details || result.transaction?.payment_method_details) {
+          const pixDetails = result.payment_method_details || result.transaction?.payment_method_details;
+          const transactionHash = result.hash || result.transaction?.hash;
+          
+          setPixData(pixDetails);
+          setTransactionHash(transactionHash);
+          setStep('processing'); // MUDA A TELA PARA O QR CODE
+          toast.success('PIX gerado com sucesso!');
+          
+          // Iniciar verificação automática de pagamento
+          startPaymentPolling(transactionHash);
+        } else {
+          throw new Error('Dados do PIX não retornados pela API');
+        }
       } else {
-        throw new Error('Status de pagamento desconhecido');
+        // Lógica para Cartão de Crédito
+        const transaction = result.transaction || result;
+        if (transaction.status === 'approved' || transaction.status === 'paid') {
+          toast.success('Pagamento aprovado! Criando sua conta...');
+          setTimeout(() => {
+            toast.success('Conta criada! Faça login para acessar.');
+            base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
+          }, 2000);
+        } else {
+          toast.success('Pagamento em processamento!');
+          setStep('processing');
+          startPaymentPolling(transaction.hash);
+        }
       }
 
     } catch (error) {
-      console.error('Erro ao processar pagamento:', error);
-      toast.error(error.message || 'Erro ao processar pagamento');
+      console.error('Erro no pagamento:', error);
+      toast.error(error.message || 'Erro ao gerar pagamento');
     } finally {
       setLoading(false);
     }
