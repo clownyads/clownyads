@@ -351,7 +351,7 @@ export default function Checkout() {
         toast.success('Pagamento aprovado! Criando sua conta...');
         setTimeout(() => {
           toast.success('Conta criada! Faça login para acessar.');
-          base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+          base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
         }, 2000);
       } else if (transaction.status === 'pending') {
         toast.info('Pagamento em processamento...');
@@ -390,10 +390,10 @@ export default function Checkout() {
         if (response.data.status === 'approved' || response.data.status === 'paid') {
           clearInterval(pollInterval);
           toast.success('Pagamento confirmado! Criando sua conta...');
-          
+
           setTimeout(() => {
             toast.success('Conta criada com sucesso! Faça login para acessar.');
-            base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+            base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
           }, 1500);
         } else if (response.data.status === 'declined' || response.data.status === 'cancelled') {
           clearInterval(pollInterval);
