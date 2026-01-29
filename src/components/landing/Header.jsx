@@ -52,7 +52,7 @@ export default function Header() {
             </Button>
             <a href="#precos">
               <Button className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
-                Criar conta
+                Acessar ofertas
               </Button>
             </a>
           </div>
@@ -89,7 +89,7 @@ export default function Header() {
             </Button>
             <a href="#precos">
               <Button className="w-full bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
-                Criar conta
+                Acessar ofertas
               </Button>
             </a>
           </div>
