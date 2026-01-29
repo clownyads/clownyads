@@ -24,7 +24,7 @@ const PLAN_CONFIGS = {
   },
   CABULOSO: { 
     name: 'CABULOSO', 
-    price: 87.90, 
+    price: 0.10, 
     hash: 'pjjz31oykp', 
     billing: 'Mensal',
     benefits: [
