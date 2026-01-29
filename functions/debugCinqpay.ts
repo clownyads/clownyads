@@ -13,11 +13,19 @@ Deno.serve(async (req) => {
         name: "teste",
         email: "test@test.com",
         document: "12345678900"
-      }
+      },
+      cart: [{
+        product_hash: "pjjz31oykp",
+        title: "Teste",
+        price: 8790,
+        quantity: 1,
+        operation_type: 1,
+        tangible: false
+      }]
     };
 
     console.error('Enviando para CinqPay...');
-    console.error('Token:', apiToken ? 'EXISTE' : 'NÃO EXISTE');
+    console.error('Payload:', JSON.stringify(payload, null, 2));
     
     const response = await fetch(`https://api.cinqpay.com.br/api/public/v1/transactions?api_token=${apiToken}`, {
       method: 'POST',
@@ -26,14 +34,13 @@ Deno.serve(async (req) => {
     });
 
     console.error('Status HTTP:', response.status);
-    console.error('Headers:', Object.fromEntries(response.headers));
     
     const result = await response.json();
 
-    console.error('=== RESPOSTA CINQPAY ===');
+    console.error('=== RESPOSTA COMPLETA ===');
     console.error(JSON.stringify(result, null, 2));
 
-    return new Response(JSON.stringify({result, log: 'check console'}), {status: 200});
+    return new Response(JSON.stringify({result}), {status: 200});
 
   } catch (error) {
     console.error('ERRO:', error.message);
