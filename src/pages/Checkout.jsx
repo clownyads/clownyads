@@ -825,7 +825,7 @@ export default function Checkout() {
                 <div className="flex flex-col gap-3 p-4 rounded-lg mb-6" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%)', border: '1px solid rgba(228, 30, 38, 0.3)' }}>
                   <div className="flex items-center gap-2 justify-center">
                     <Clock size={20} style={{ color: '#E41E26' }} />
-                    <span style={{ color: '#f3f4f6', fontSize: '15px', fontWeight: '600' }}>Oferta expira em</span>
+                    <span style={{ color: '#f3f4f6', fontSize: '15px', fontWeight: '600' }}>Código PIX expira em</span>
                   </div>
                   <div className="text-4xl font-bold font-mono text-center" style={{ color: '#E41E26' }}>
                     {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, '0')}
@@ -838,34 +838,34 @@ export default function Checkout() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: 'rgba(228, 30, 38, 0.08)', borderRadius: '6px', border: '1px solid rgba(228, 30, 38, 0.15)' }}>
                     <AlertCircle size={14} style={{ color: '#fbbf24' }} />
-                    <span style={{ color: '#9ca3af', fontSize: '12px' }}>Se a oferta expirar, será necessário gerar outro código PIX</span>
+                    <span style={{ color: '#9ca3af', fontSize: '12px' }}>Copie o código abaixo e pague pelo seu banco</span>
                   </div>
                 </div>
 
                 <div className="text-center mb-6">
-                  <div className="text-lg font-medium text-white mb-1">Pague com Pix</div>
+                  <div className="text-lg font-medium text-white mb-1">Pague com PIX</div>
+                  <div className="text-xs text-zinc-400">Escaneie o código ou copie e cole no seu banco</div>
                 </div>
 
                 <div className="bg-white/5 p-6 rounded-lg mb-4">
                   <p className="text-xs text-zinc-400 mb-3">Código PIX (Copia e Cola)</p>
-                  <div className="text-white text-sm break-all font-mono bg-black/30 p-4 rounded mb-4 select-all" style={{ wordBreak: 'break-all' }}>
-                    {pixData.pix_code || pixData.qrcode_text}
+                  <div className="text-white text-xs break-all font-mono bg-black/30 p-4 rounded mb-4 select-all" style={{ wordBreak: 'break-all', maxHeight: '150px', overflowY: 'auto' }}>
+                    {pixData.pix_code}
                   </div>
                   <Button
                     onClick={() => {
-                      const code = pixData.pix_code || pixData.qrcode_text;
-                      navigator.clipboard.writeText(code);
-                      toast.success('Código copiado!');
+                      navigator.clipboard.writeText(pixData.pix_code);
+                      toast.success('Código PIX copiado!');
                     }}
                     className="w-full bg-[#E41E26] hover:bg-[#c41620] text-white font-bold h-11"
                   >
-                    Copiar Código
+                    Copiar Código PIX
                   </Button>
                 </div>
 
                 <div className="flex items-center justify-center gap-2 text-[#39FF14]">
                   <Loader2 className="animate-spin" size={20} />
-                  <span className="text-sm">Aguardando pagamento...</span>
+                  <span className="text-sm">Aguardando confirmação do pagamento...</span>
                 </div>
               </Card>
             )}
