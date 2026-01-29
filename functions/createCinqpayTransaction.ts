@@ -35,12 +35,26 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
     }
 
-    // Retornar resposta bruta para debug
-    return new Response(JSON.stringify({ 
+    // Extrair dados do PIX da resposta da CinqPay
+    let pixData = null;
+    if (body.payment_method === 'pix' && result.pix) {
+      pixData = {
+        pix_code: result.pix.pix_qr_code || '',
+        pix_qr_code_url: result.pix.pix_url || ''
+      };
+    }
+
+    // Retornar resposta estruturada com sucesso confirmado
+    const successResponse = {
       success: true,
-      debug: result,
-      raw_response: result
-    }), { status: 200, headers });
+      transaction: {
+        hash: result.hash || result.id || '',
+        status: result.payment_status || 'pending',
+        payment_method_details: pixData
+      }
+    };
+
+    return new Response(JSON.stringify(successResponse), { status: 200, headers });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), { status: 500, headers });
   }
