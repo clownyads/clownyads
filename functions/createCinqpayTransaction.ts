@@ -32,26 +32,29 @@ Deno.serve(async (req) => {
     const result = await response.json();
 
     if (!response.ok) {
-      return new Response(JSON.stringify({ error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
+      return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
     }
 
+    // Estruturar resposta - CinqPay retorna 'data' com transaction
+    const transaction = result.data || result.transaction || result;
+    
     // Extrair dados do PIX da resposta da CinqPay
     let pixData = null;
-    if (body.payment_method === 'pix' && result.transaction) {
-      const transaction = result.transaction;
-      
-      // Tentar encontrar os dados do PIX em diferentes campos possíveis
+    if (body.payment_method === 'pix') {
       pixData = {
-        pix_code: transaction.pix_code || transaction.pixCode || transaction.emv || transaction.qrcode_text || '',
-        pix_qr_code_url: transaction.pix_qr_code_url || transaction.pixQrCode || transaction.qrcode || transaction.qr_code_url || ''
+        pix_code: transaction.pix?.code || transaction.pix_code || transaction.emv || '',
+        pix_qr_code_url: transaction.pix?.qr_code_url || transaction.pix_qr_code_url || transaction.qrcode || ''
       };
     }
 
     // Retornar resposta estruturada com sucesso confirmado
     const successResponse = {
       success: true,
-      transaction: result.transaction || result,
-      payment_method_details: pixData
+      transaction: {
+        hash: transaction.hash || transaction.id || '',
+        status: transaction.status || 'pending',
+        payment_method_details: pixData
+      }
     };
 
     return new Response(JSON.stringify(successResponse), { status: 200, headers });
