@@ -51,6 +51,11 @@ export default function Admin() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Garantir acesso MESTRE ao admin
+        if (currentUser.email === 'pedrinhojpkl@gmail.com' && currentUser.plan !== 'MESTRE') {
+          await base44.auth.updateMe({ plan: 'MESTRE' });
+        }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
       }

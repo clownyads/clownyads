@@ -17,22 +17,24 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
     aggressiveness: 3,
     risk_level: 'medio',
     requires_cloaker: false,
-    monetization_type: 'cpa',
     main_angle: '',
     description: '',
-    commission: '',
+    ticket: '',
     geo: 'BR',
     traffic_sources: [],
     creatives: [],
     alerts: [],
     affiliate_url: '',
     is_hot: false,
-    banner_url: ''
+    banner_url: '',
+    ad_library_links: [],
+    files_url: ''
   });
 
   const [newTrafficSource, setNewTrafficSource] = useState('');
   const [newCreative, setNewCreative] = useState('');
   const [newAlert, setNewAlert] = useState('');
+  const [newAdLibrary, setNewAdLibrary] = useState('');
   const [uploadingBanner, setUploadingBanner] = useState(false);
 
   const handleChange = (field, value) => {
@@ -187,32 +189,19 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
           </Select>
         </div>
 
-        {/* Monetização */}
+        {/* Ticket */}
         <div>
-          <Label className="text-white mb-2 block">Tipo de Monetização *</Label>
-          <Select value={formData.monetization_type} onValueChange={(v) => handleChange('monetization_type', v)}>
-            <SelectTrigger className="bg-white/5 border-white/10 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
-              <SelectItem value="cpa">CPA</SelectItem>
-              <SelectItem value="revshare">RevShare</SelectItem>
-              <SelectItem value="cpl">CPL</SelectItem>
-              <SelectItem value="cpc">CPC</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Comissão */}
-        <div>
-          <Label className="text-white mb-2 block">Comissão</Label>
+          <Label className="text-white mb-2 block">Ticket</Label>
           <Input
-            value={formData.commission}
-            onChange={(e) => handleChange('commission', e.target.value)}
+            value={formData.ticket}
+            onChange={(e) => handleChange('ticket', e.target.value)}
             className="bg-white/5 border-white/10 text-white"
-            placeholder="Ex: R$120,00 ou 30% RevShare"
+            placeholder="Ex: R$47,00"
           />
         </div>
+
+        {/* Espaço vazio para manter grid */}
+        <div></div>
 
         {/* GEO */}
         <div>
@@ -397,9 +386,55 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
           </div>
         </div>
 
+        {/* Ad Library Links */}
+        <div className="md:col-span-2">
+          <Label className="text-white mb-2 block">Biblioteca de Anúncios (Links)</Label>
+          <div className="flex gap-2 mb-2">
+            <Input
+              value={newAdLibrary}
+              onChange={(e) => setNewAdLibrary(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addToArray('ad_library_links', newAdLibrary, setNewAdLibrary))}
+              className="bg-white/5 border-white/10 text-white"
+              placeholder="https://..."
+            />
+            <Button
+              type="button"
+              onClick={() => addToArray('ad_library_links', newAdLibrary, setNewAdLibrary)}
+              className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90"
+            >
+              <Plus size={18} />
+            </Button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {formData.ad_library_links?.map((url, i) => (
+              <Badge key={i} variant="outline" className="bg-white/5 border-white/10 text-zinc-300">
+                Link {i + 1}
+                <button
+                  type="button"
+                  onClick={() => removeFromArray('ad_library_links', i)}
+                  className="ml-2 hover:text-red-400"
+                >
+                  <X size={12} />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {/* Files URL */}
+        <div className="md:col-span-2">
+          <Label className="text-white mb-2 block">Arquivos da Oferta (URL)</Label>
+          <Input
+            value={formData.files_url}
+            onChange={(e) => handleChange('files_url', e.target.value)}
+            className="bg-white/5 border-white/10 text-white"
+            placeholder="https://drive.google.com/... ou outro link"
+          />
+        </div>
+
         {/* Banner Upload */}
         <div className="md:col-span-2">
-          <Label className="text-white mb-2 block">Banner (500x200)</Label>
+          <Label className="text-white mb-2 block">Banner (1080x1080)</Label>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <input
@@ -442,7 +477,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
                 <img 
                   src={formData.banner_url} 
                   alt="Banner preview"
-                  className="w-full aspect-[5/2] object-cover rounded"
+                  className="w-full aspect-square object-cover rounded"
                 />
               </div>
             )}
