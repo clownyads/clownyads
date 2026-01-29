@@ -191,7 +191,8 @@ export default function Checkout() {
     cardName: '',
     cardExpiry: '',
     cardCvv: '',
-    countryCode: '+55'
+    countryCode: '+55',
+    installments: '1'
   });
 
   const selectedCountry = COUNTRIES.find(c => c.code === formData.countryCode) || COUNTRIES[0];
@@ -306,6 +307,7 @@ export default function Checkout() {
         amount: Math.round(currentPlan.price * 100),
         offer_hash: currentPlan.hash,
         payment_method: paymentMethod,
+        installments: paymentMethod === 'pix' ? 1 : parseInt(formData.installments || 1),
         customer: {
           name: formData.name,
           email: formData.email,
@@ -747,6 +749,22 @@ export default function Checkout() {
                             required
                           />
                         </div>
+                      </div>
+
+                      <div>
+                        <Label className="text-white">Parcelas *</Label>
+                        <select
+                          value={formData.installments}
+                          onChange={(e) => handleInputChange('installments', e.target.value)}
+                          className="w-full bg-white/5 border border-white/10 text-white rounded-md px-3 py-2 focus:border-[#39FF14]/50 focus:ring-1 focus:ring-[#39FF14]/50 focus:outline-none transition-colors"
+                          required
+                        >
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((num) => (
+                            <option key={num} value={num} className="bg-[#0A0A0C] text-white">
+                              {num}x de R$ {(currentPlan.price / num).toFixed(2)}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                   )}
