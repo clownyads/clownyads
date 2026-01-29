@@ -21,14 +21,8 @@ export default function ClownckerPlus() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
-        
-        // Verificar se o usuário tem plano MESTRE
-        if (currentUser.plan !== 'MESTRE') {
-          window.location.href = createPageUrl('OfertasDoDia');
-        }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
-        window.location.href = createPageUrl('OfertasDoDia');
       } finally {
         setLoading(false);
       }
@@ -82,6 +76,95 @@ export default function ClownckerPlus() {
     return (
       <div className="min-h-screen bg-[#0B0B0D] flex items-center justify-center">
         <p className="text-white">Carregando...</p>
+      </div>
+    );
+  }
+
+  // Se não é MESTRE, mostrar upgrade
+  if (!user || user.plan !== 'MESTRE') {
+    return (
+      <div className="min-h-screen bg-[#0B0B0D] py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8 text-center">
+            <div className="w-16 h-16 rounded-xl bg-[#FFB800]/10 flex items-center justify-center mx-auto mb-4">
+              <Shield size={32} className="text-[#FFB800]" />
+            </div>
+            <h1 className="text-3xl font-black text-white mb-2">Clowncker PLUS</h1>
+            <p className="text-zinc-400">Acesso Exclusivo para Mestres</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl p-8 border border-white/10">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Esta ferramenta é exclusiva para o plano MESTRE
+              </h2>
+              <p className="text-zinc-400">
+                Faça upgrade para ter acesso ao Clowncker PLUS e outras funcionalidades exclusivas
+              </p>
+            </div>
+
+            <div className="max-w-md mx-auto">
+              <div className="relative rounded-xl overflow-hidden bg-white/[0.02] border border-white/5">
+                <div className="absolute top-0 right-0">
+                  <div className="rounded-none rounded-bl-lg px-3 py-1 font-semibold bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/30">
+                    Uma vez só
+                  </div>
+                </div>
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FFB800]/15">
+                      <Shield size={20} className="text-[#FFB800]" />
+                    </div>
+                    <span className="font-bold text-white text-lg">MESTRE</span>
+                  </div>
+                  <div className="mb-4">
+                    <span className="text-3xl font-black text-white">R$697,90</span>
+                    <span className="text-zinc-500 text-sm ml-2">/ Anual</span>
+                  </div>
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                        <Shield size={12} className="text-[#FFB800]" />
+                      </div>
+                      <span className="text-sm text-zinc-300">Clowncker PLUS</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                        <Shield size={12} className="text-[#FFB800]" />
+                      </div>
+                      <span className="text-sm text-zinc-300">Acesso total</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                        <Shield size={12} className="text-[#FFB800]" />
+                      </div>
+                      <span className="text-sm text-zinc-300">Estratégias secretas</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                        <Shield size={12} className="text-[#FFB800]" />
+                      </div>
+                      <span className="text-sm text-zinc-300">Alertas antecipados</span>
+                    </div>
+                  </div>
+                  <Link to={`${createPageUrl('Checkout')}?plan=MESTRE`}>
+                    <Button className="w-full font-semibold border border-white/10 bg-transparent text-white hover:bg-white/5">
+                      Fazer Upgrade
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link to={createPageUrl('OfertasDoDia')}>
+              <Button variant="ghost" className="text-zinc-400 hover:text-white">
+                Voltar
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

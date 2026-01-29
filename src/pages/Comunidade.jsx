@@ -3,17 +3,28 @@ import { base44 } from '@/api/base44Client';
 import Sidebar from '@/components/dashboard/Sidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import { Button } from '@/components/ui/button';
-import { Users, MessageCircle } from 'lucide-react';
+import { Users, MessageCircle, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function Comunidade() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [user, setUser] = React.useState(null);
 
   React.useEffect(() => {
     const checkAuth = async () => {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
         base44.auth.redirectToLogin(window.location.pathname);
+        return;
+      }
+      
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (error) {
+        console.error('Erro ao carregar usuário:', error);
       }
     };
     checkAuth();
@@ -40,6 +51,109 @@ export default function Comunidade() {
               <p className="text-zinc-500 text-sm">Conecte-se com outros membros</p>
             </div>
           </div>
+
+          {(!user || !['CABULOSO', 'MESTRE'].includes(user.plan)) && (
+            <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl p-8 border border-white/10">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  Acesso Exclusivo para Assinantes
+                </h2>
+                <p className="text-zinc-400">
+                  A comunidade está disponível apenas para planos CABULOSO e MESTRE
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <div className="relative rounded-xl overflow-hidden bg-gradient-to-b from-[#BF00FF]/20 to-transparent border-2 border-[#BF00FF]/30">
+                  <div className="absolute top-0 right-0">
+                    <div className="rounded-none rounded-bl-lg px-3 py-1 font-semibold bg-[#BF00FF]/20 text-[#BF00FF] border border-[#BF00FF]/30">
+                      Mais escolhido
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#BF00FF]/15">
+                        <Users size={20} className="text-[#BF00FF]" />
+                      </div>
+                      <span className="font-bold text-white text-lg">CABULOSO</span>
+                    </div>
+                    <div className="mb-4">
+                      <span className="text-3xl font-black text-white">R$87,90</span>
+                      <span className="text-zinc-500 text-sm ml-2">/ Mensal</span>
+                    </div>
+                    <div className="space-y-2 mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#BF00FF]/20">
+                          <Users size={12} className="text-[#BF00FF]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Comunidade Exclusiva</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#BF00FF]/20">
+                          <Users size={12} className="text-[#BF00FF]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Todas as ofertas</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#BF00FF]/20">
+                          <Users size={12} className="text-[#BF00FF]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Alertas de ban</span>
+                      </div>
+                    </div>
+                    <Link to={`${createPageUrl('Checkout')}?plan=CABULOSO`}>
+                      <Button className="w-full font-semibold bg-[#BF00FF] text-[#0B0B0D] hover:bg-[#BF00FF]/90">
+                        Fazer Upgrade
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="relative rounded-xl overflow-hidden bg-white/[0.02] border border-white/5">
+                  <div className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-[#FFB800]/15">
+                        <Shield size={20} className="text-[#FFB800]" />
+                      </div>
+                      <span className="font-bold text-white text-lg">MESTRE</span>
+                    </div>
+                    <div className="mb-4">
+                      <span className="text-3xl font-black text-white">R$697,90</span>
+                      <span className="text-zinc-500 text-sm ml-2">/ Anual</span>
+                    </div>
+                    <div className="space-y-2 mb-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                          <Shield size={12} className="text-[#FFB800]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Comunidade Exclusiva</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                          <Shield size={12} className="text-[#FFB800]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Clowncker PLUS</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-[#FFB800]/20">
+                          <Shield size={12} className="text-[#FFB800]" />
+                        </div>
+                        <span className="text-sm text-zinc-300">Acesso total</span>
+                      </div>
+                    </div>
+                    <Link to={`${createPageUrl('Checkout')}?plan=MESTRE`}>
+                      <Button className="w-full font-semibold border border-white/10 bg-transparent text-white hover:bg-white/5">
+                        Fazer Upgrade
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {user && ['CABULOSO', 'MESTRE'].includes(user.plan) && (
+            <>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
             {/* Discord */}
@@ -77,12 +191,14 @@ export default function Comunidade() {
             </div>
           </div>
 
-          <div className="max-w-4xl bg-gradient-to-r from-[#39FF14]/10 to-[#BF00FF]/10 border border-[#39FF14]/20 rounded-2xl p-6">
-            <h3 className="text-lg font-bold text-white mb-2">💎 Comunidade Exclusiva</h3>
-            <p className="text-zinc-400 text-sm">
-              Conecte-se com outros top players, compartilhe resultados, tire dúvidas e aprenda com quem está escalando todos os dias.
-            </p>
-          </div>
+            <div className="max-w-4xl bg-gradient-to-r from-[#39FF14]/10 to-[#BF00FF]/10 border border-[#39FF14]/20 rounded-2xl p-6">
+              <h3 className="text-lg font-bold text-white mb-2">💎 Comunidade Exclusiva</h3>
+              <p className="text-zinc-400 text-sm">
+                Conecte-se com outros top players, compartilhe resultados, tire dúvidas e aprenda com quem está escalando todos os dias.
+              </p>
+            </div>
+          </>
+          )}
         </main>
       </div>
     </div>
