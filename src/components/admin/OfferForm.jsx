@@ -28,7 +28,8 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
     is_hot: false,
     banner_url: '',
     ad_library_links: [],
-    files_url: ''
+    files_url: '',
+    ad_count: 0
   });
 
   const [newTrafficSource, setNewTrafficSource] = useState('');
@@ -257,6 +258,18 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
               <SelectItem value="true">Sim</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+
+        {/* Volume de Anúncios */}
+        <div>
+          <Label className="text-white mb-2 block">Volume de Anúncios</Label>
+          <Input
+            type="number"
+            value={formData.ad_count}
+            onChange={(e) => handleChange('ad_count', parseInt(e.target.value) || 0)}
+            className="bg-white/5 border-white/10 text-white"
+            placeholder="Ex: 125"
+          />
         </div>
 
         {/* Descrição */}
