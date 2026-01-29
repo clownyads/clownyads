@@ -23,18 +23,22 @@ Deno.serve(async (req) => {
     // A CinqPay exige installments mesmo no PIX
     const payload = { ...body, installments: body.installments || 1 };
 
+    console.error('PAYLOAD ENVIADO:', JSON.stringify(payload, null, 2));
+    
     const response = await fetch(`https://api.cinqpay.com.br/api/public/v1/transactions?api_token=${apiToken}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload )
+      body: JSON.stringify(payload)
     });
 
+    console.error('HTTP Status:', response.status);
+    
     const result = await response.json();
 
     // LOG COMPLETO DA RESPOSTA DA CINQPAY
-    console.error('========== RESPOSTA CINQPAY COMPLETA ==========');
+    console.error('========== RESPOSTA CINQPAY ==========');
     console.error(JSON.stringify(result, null, 2));
-    console.error('=============================================');
+    console.error('=====================================');
 
     if (!response.ok) {
       return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
