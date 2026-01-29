@@ -58,26 +58,26 @@ export default function OfferCard({ offer }) {
   const niche = nicheConfig[offer.niche] || nicheConfig.nutra;
   const StatusIcon = status.icon;
 
-  // Calculate ad count from aggressiveness
-  const adCount = offer.aggressiveness * 25;
+  // Use ad count from offer data
+  const adCount = offer.ad_count || 0;
   let adLevel, adColor, gaugeAngle;
   
-  if (adCount <= 10) {
+  const maxAds = 200;
+  const percentage = Math.min(adCount / maxAds, 1);
+  gaugeAngle = -90 + (percentage * 180);
+  
+  if (adCount <= 50) {
     adLevel = 'Baixo';
     adColor = '#22c55e';
-    gaugeAngle = -90 + (adCount / 10) * 45;
-  } else if (adCount <= 30) {
-    adLevel = 'Médio Baixo';
+  } else if (adCount <= 100) {
+    adLevel = 'Médio';
     adColor = '#eab308';
-    gaugeAngle = -45 + ((adCount - 10) / 20) * 45;
-  } else if (adCount <= 99) {
-    adLevel = 'Médio Alto';
-    adColor = '#f97316';
-    gaugeAngle = 0 + ((adCount - 30) / 69) * 45;
-  } else {
+  } else if (adCount <= 150) {
     adLevel = 'Alto';
+    adColor = '#f97316';
+  } else {
+    adLevel = 'Extremo';
     adColor = '#ef4444';
-    gaugeAngle = 45 + Math.min((adCount - 100) / 100, 1) * 45;
   }
 
   return (
@@ -119,6 +119,58 @@ export default function OfferCard({ offer }) {
         </div>
 
 
+
+        {/* Ad Volume Gauge */}
+        <div className="mb-4">
+          <div className="relative w-full h-24 flex items-center justify-center">
+            <svg className="w-full h-full" viewBox="0 0 200 110">
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="33%" stopColor="#eab308" />
+                  <stop offset="66%" stopColor="#f97316" />
+                  <stop offset="100%" stopColor="#ef4444" />
+                </linearGradient>
+              </defs>
+              
+              {/* Background arc */}
+              <path
+                d="M 20 90 A 80 80 0 0 1 180 90"
+                fill="none"
+                stroke="#ffffff10"
+                strokeWidth="16"
+                strokeLinecap="round"
+              />
+              
+              {/* Colored gradient arc */}
+              <path
+                d="M 20 90 A 80 80 0 0 1 180 90"
+                fill="none"
+                stroke="url(#gaugeGradient)"
+                strokeWidth="16"
+                strokeLinecap="round"
+                strokeDasharray="251.2"
+                strokeDashoffset={251.2 - (percentage * 251.2)}
+              />
+              
+              {/* Needle - more prominent */}
+              <g transform={`rotate(${gaugeAngle} 100 90)`}>
+                <polygon 
+                  points="100,30 95,88 105,88" 
+                  fill={adColor}
+                  filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                />
+                <circle cx="100" cy="90" r="6" fill={adColor} stroke="#0B0B0D" strokeWidth="2" />
+              </g>
+              
+              {/* Center value */}
+              <text x="100" y="80" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">
+                {adCount}
+              </text>
+            </svg>
+          </div>
+          <p className="text-center text-xs text-zinc-500 -mt-2">{adLevel}</p>
+        </div>
 
         {/* Hot Badge Below Gauge */}
         {offer.is_hot && (
