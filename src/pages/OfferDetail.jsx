@@ -132,7 +132,7 @@ export default function OfferDetail() {
             <div className="space-y-6">
               {/* Header Card */}
               <div className="bg-[#0A0A0C] border border-white/5 rounded-xl p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
                   <div className="flex items-start gap-4">
                     <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#39FF14]/20 to-[#BF00FF]/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-white font-bold text-2xl">
@@ -181,6 +181,18 @@ export default function OfferDetail() {
                     )}
                   </div>
                 </div>
+
+                {/* Banner */}
+                {offer.banner_url && (
+                  <div className="rounded-lg overflow-hidden">
+                    <img 
+                      src={offer.banner_url} 
+                      alt={offer.name}
+                      className="w-full h-auto object-cover"
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -193,21 +205,16 @@ export default function OfferDetail() {
                       {offer.description || 'Sem descrição disponível.'}
                     </p>
                     
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                       <div className="p-4 bg-white/5 rounded-xl">
                         <DollarSign size={18} className="text-[#39FF14] mb-2" />
-                        <p className="text-xs text-zinc-500 mb-1">Comissão</p>
-                        <p className="font-semibold text-white">{offer.commission || 'N/A'}</p>
+                        <p className="text-xs text-zinc-500 mb-1">Ticket</p>
+                        <p className="font-semibold text-white">{offer.ticket || 'N/A'}</p>
                       </div>
                       <div className="p-4 bg-white/5 rounded-xl">
                         <Globe size={18} className="text-[#BF00FF] mb-2" />
                         <p className="text-xs text-zinc-500 mb-1">GEO</p>
                         <p className="font-semibold text-white">{offer.geo || 'BR'}</p>
-                      </div>
-                      <div className="p-4 bg-white/5 rounded-xl">
-                        <Target size={18} className="text-[#FFB800] mb-2" />
-                        <p className="text-xs text-zinc-500 mb-1">Monetização</p>
-                        <p className="font-semibold text-white uppercase">{offer.monetization_type || 'CPA'}</p>
                       </div>
                       <div className="p-4 bg-white/5 rounded-xl">
                         <Shield size={18} className="text-zinc-400 mb-2" />
@@ -247,6 +254,42 @@ export default function OfferDetail() {
                             {source}
                           </Badge>
                         ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Ad Library Links */}
+                  {offer.ad_library_links?.length > 0 && (
+                    <div className="bg-[#0A0A0C] border border-white/5 rounded-xl p-6">
+                      <h2 className="font-bold text-white mb-4">Biblioteca de Anúncios</h2>
+                      <div className="flex flex-wrap gap-2">
+                        {offer.ad_library_links.map((link, i) => (
+                          <a key={i} href={link} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+                              {i + 1}
+                            </Button>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Files */}
+                  {offer.files_url && (
+                    <div className="bg-[#0A0A0C] border border-white/5 rounded-xl p-6">
+                      <div className="text-center">
+                        <div className="w-16 h-16 rounded-xl bg-[#39FF14]/10 flex items-center justify-center mx-auto mb-3">
+                          <svg className="w-8 h-8 text-[#39FF14]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                          </svg>
+                        </div>
+                        <h3 className="font-bold text-white mb-2">Arquivos da Oferta</h3>
+                        <a href={offer.files_url} target="_blank" rel="noopener noreferrer">
+                          <Button className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold">
+                            <ExternalLink size={16} className="mr-2" />
+                            Acessar arquivos
+                          </Button>
+                        </a>
                       </div>
                     </div>
                   )}
