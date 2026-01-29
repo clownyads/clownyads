@@ -345,22 +345,33 @@ export default function Checkout() {
       const { transaction } = response.data;
       setTransactionHash(transaction.hash);
 
+      // Para PIX, vai ter payment_method_details com os dados do código
       if (paymentMethod === 'pix' && transaction.payment_method_details) {
         setPixData(transaction.payment_method_details);
         setStep('processing');
         startPaymentPolling(transaction.hash);
-      } else if (transaction.status === 'approved' || transaction.status === 'paid') {
+      } 
+      // Para cartão de crédito aprovado
+      else if (paymentMethod === 'credit_card' && (transaction.status === 'approved' || transaction.status === 'paid')) {
         toast.success('Pagamento aprovado! Criando sua conta...');
         setTimeout(() => {
           toast.success('Conta criada! Faça login para acessar.');
           base44.auth.redirectToLogin(createPageUrl('OfertasDoDia'));
         }, 2000);
-      } else if (transaction.status === 'pending') {
-        toast.info('Pagamento em processamento...');
-        setStep('processing');
-        startPaymentPolling(transaction.hash);
-      } else {
-        throw new Error('Status de pagamento desconhecido');
+      } 
+      // Qualquer outro status pendente
+      else if (transaction.status === 'pending') {
+        // Se for PIX mas não tem dados completos ainda, mostra aguardando
+        if (paymentMethod === 'pix') {
+          setStep('processing');
+          startPaymentPolling(transaction.hash);
+        } else {
+          toast.info('Pagamento em processamento...');
+          setStep('processing');
+        }
+      } 
+      else {
+        throw new Error(`Status de pagamento desconhecido: ${transaction.status}`);
       }
 
     } catch (error) {
