@@ -66,6 +66,7 @@ export default function ClownadorPRO() {
         
         if (!currentUser.plan || (currentUser.plan !== 'CABULOSO' && currentUser.plan !== 'MESTRE')) {
           window.location.href = createPageUrl('OfertasDoDia');
+          return;
         }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);

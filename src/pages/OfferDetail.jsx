@@ -99,7 +99,7 @@ export default function OfferDetail() {
               >
                 <Menu size={24} />
               </Button>
-              <Link to={createPageUrl('Offers')}>
+              <Link to={createPageUrl('OfertasDoDia')}>
                 <Button variant="ghost" className="text-zinc-400 hover:text-white gap-2">
                   <ArrowLeft size={18} />
                   Voltar
@@ -122,9 +122,9 @@ export default function OfferDetail() {
             <div className="text-center py-20">
               <h2 className="text-xl font-bold text-white mb-2">Oferta não encontrada</h2>
               <p className="text-zinc-500 mb-4">A oferta que você procura não existe</p>
-              <Link to={createPageUrl('Offers')}>
+              <Link to={createPageUrl('OfertasDoDia')}>
                 <Button className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90">
-                  Ver todas ofertas
+                  Ver ofertas do dia
                 </Button>
               </Link>
             </div>
