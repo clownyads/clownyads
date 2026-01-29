@@ -48,7 +48,7 @@ const riskConfig = {
 const nicheConfig = {
   nutra: { label: 'Nutra', color: 'bg-emerald-500/10 text-emerald-400' },
   hot: { label: 'Hot', color: 'bg-pink-500/10 text-pink-400' },
-  info_gray: { label: 'Info Gray', color: 'bg-purple-500/10 text-purple-400' },
+  info_gray: { label: 'Info White', color: 'bg-white/10 text-white' },
   info_black: { label: 'Info Black', color: 'bg-zinc-500/10 text-zinc-400' }
 };
 
