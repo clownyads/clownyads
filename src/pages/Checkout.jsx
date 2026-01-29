@@ -783,14 +783,7 @@ export default function Checkout() {
                       </div>
                       
                       <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
-                      <p className="text-zinc-400 mb-6">Escaneie o QR Code ou copie o código abaixo</p>
-
-                      {/* QR Code */}
-                      {pixData.qrcode && (
-                        <div className="bg-white p-4 rounded-lg mx-auto w-fit mb-4">
-                          <img src={pixData.qrcode} alt="QR Code PIX" className="w-64 h-64" />
-                        </div>
-                      )}
+                      <p className="text-zinc-400 mb-6">Copie o código abaixo e realize o pagamento</p>
 
                       <div className="bg-white/5 p-4 rounded-lg mb-4">
                         <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
@@ -800,7 +793,7 @@ export default function Checkout() {
                           size="sm"
                           onClick={() => {
                             navigator.clipboard.writeText(pixData.qrcode_text || pixData.emv);
-                            toast.success('Código copiado!');
+                            toast.success('Código copiado com sucesso, faça o pagamento e não perca seu acesso!');
                           }}
                           className="mt-2 text-white border-white/20"
                         >
