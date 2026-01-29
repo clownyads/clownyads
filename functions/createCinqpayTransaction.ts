@@ -44,17 +44,20 @@ Deno.serve(async (req) => {
     // Extrair dados do PIX da resposta da CinqPay
     let pixData = null;
     if (body.payment_method === 'pix') {
-      // Tente diferentes caminhos de resposta da CinqPay
-      const pixCode = transaction.pix_code || 
-                      transaction.pix?.code || 
-                      transaction.payment_details?.pix_code ||
+      // Mapeamento correto conforme documentação CinqPay
+      const pixCode = transaction.pix_bruto || 
+                      transaction.pix_code || 
                       transaction.emv ||
+                      transaction.pix?.code ||
                       '';
-      const pixQrCode = transaction.qr_code ||
-                        transaction.pix?.qr_code_url ||
+      const pixQrCode = transaction.pix_image ||
+                        transaction.qr_code ||
                         transaction.pix_qr_code_url ||
-                        transaction.payment_details?.qr_code ||
+                        transaction.pix?.qr_code_url ||
                         '';
+      
+      console.log('PIX Code encontrado:', pixCode ? 'SIM' : 'NÃO');
+      console.log('PIX QR Code encontrado:', pixQrCode ? 'SIM' : 'NÃO');
       
       if (pixCode || pixQrCode) {
         pixData = {
