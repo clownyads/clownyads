@@ -52,12 +52,114 @@ const PLAN_CONFIGS = {
 };
 
 const COUNTRIES = [
+  { code: '+93', name: 'Afeganistão', flag: '🇦🇫', length: 9 },
+  { code: '+27', name: 'África do Sul', flag: '🇿🇦', length: 9 },
+  { code: '+355', name: 'Albânia', flag: '🇦🇱', length: 9 },
+  { code: '+49', name: 'Alemanha', flag: '🇩🇪', length: 11 },
+  { code: '+376', name: 'Andorra', flag: '🇦🇩', length: 6 },
+  { code: '+244', name: 'Angola', flag: '🇦🇴', length: 9 },
+  { code: '+54', name: 'Argentina', flag: '🇦🇷', length: 10 },
+  { code: '+374', name: 'Armênia', flag: '🇦🇲', length: 8 },
+  { code: '+61', name: 'Austrália', flag: '🇦🇺', length: 9 },
+  { code: '+43', name: 'Áustria', flag: '🇦🇹', length: 10 },
+  { code: '+994', name: 'Azerbaijão', flag: '🇦🇿', length: 9 },
+  { code: '+973', name: 'Bahrein', flag: '🇧🇭', length: 8 },
+  { code: '+880', name: 'Bangladesh', flag: '🇧🇩', length: 10 },
+  { code: '+32', name: 'Bélgica', flag: '🇧🇪', length: 9 },
+  { code: '+501', name: 'Belize', flag: '🇧🇿', length: 7 },
+  { code: '+591', name: 'Bolívia', flag: '🇧🇴', length: 8 },
   { code: '+55', name: 'Brasil', flag: '🇧🇷', length: 11 },
-  { code: '+1', name: 'EUA/Canadá', flag: '🇺🇸', length: 10 },
-  { code: '+351', name: 'Portugal', flag: '🇵🇹', length: 9 },
+  { code: '+359', name: 'Bulgária', flag: '🇧🇬', length: 9 },
+  { code: '+237', name: 'Camarões', flag: '🇨🇲', length: 9 },
+  { code: '+1', name: 'Canadá', flag: '🇨🇦', length: 10 },
+  { code: '+56', name: 'Chile', flag: '🇨🇱', length: 9 },
+  { code: '+86', name: 'China', flag: '🇨🇳', length: 11 },
+  { code: '+357', name: 'Chipre', flag: '🇨🇾', length: 8 },
+  { code: '+57', name: 'Colômbia', flag: '🇨🇴', length: 10 },
+  { code: '+82', name: 'Coreia do Sul', flag: '🇰🇷', length: 10 },
+  { code: '+506', name: 'Costa Rica', flag: '🇨🇷', length: 8 },
+  { code: '+385', name: 'Croácia', flag: '🇭🇷', length: 9 },
+  { code: '+53', name: 'Cuba', flag: '🇨🇺', length: 8 },
+  { code: '+45', name: 'Dinamarca', flag: '🇩🇰', length: 8 },
+  { code: '+593', name: 'Equador', flag: '🇪🇨', length: 9 },
+  { code: '+20', name: 'Egito', flag: '🇪🇬', length: 10 },
+  { code: '+503', name: 'El Salvador', flag: '🇸🇻', length: 8 },
+  { code: '+971', name: 'Emirados Árabes', flag: '🇦🇪', length: 9 },
+  { code: '+421', name: 'Eslováquia', flag: '🇸🇰', length: 9 },
+  { code: '+386', name: 'Eslovênia', flag: '🇸🇮', length: 9 },
   { code: '+34', name: 'Espanha', flag: '🇪🇸', length: 9 },
+  { code: '+1', name: 'Estados Unidos', flag: '🇺🇸', length: 10 },
+  { code: '+372', name: 'Estônia', flag: '🇪🇪', length: 8 },
+  { code: '+251', name: 'Etiópia', flag: '🇪🇹', length: 9 },
+  { code: '+63', name: 'Filipinas', flag: '🇵🇭', length: 10 },
+  { code: '+358', name: 'Finlândia', flag: '🇫🇮', length: 10 },
+  { code: '+33', name: 'França', flag: '🇫🇷', length: 9 },
+  { code: '+30', name: 'Grécia', flag: '🇬🇷', length: 10 },
+  { code: '+502', name: 'Guatemala', flag: '🇬🇹', length: 8 },
+  { code: '+509', name: 'Haiti', flag: '🇭🇹', length: 8 },
+  { code: '+504', name: 'Honduras', flag: '🇭🇳', length: 8 },
+  { code: '+852', name: 'Hong Kong', flag: '🇭🇰', length: 8 },
+  { code: '+36', name: 'Hungria', flag: '🇭🇺', length: 9 },
+  { code: '+91', name: 'Índia', flag: '🇮🇳', length: 10 },
+  { code: '+62', name: 'Indonésia', flag: '🇮🇩', length: 11 },
+  { code: '+98', name: 'Irã', flag: '🇮🇷', length: 10 },
+  { code: '+964', name: 'Iraque', flag: '🇮🇶', length: 10 },
+  { code: '+353', name: 'Irlanda', flag: '🇮🇪', length: 9 },
+  { code: '+354', name: 'Islândia', flag: '🇮🇸', length: 7 },
+  { code: '+972', name: 'Israel', flag: '🇮🇱', length: 9 },
+  { code: '+39', name: 'Itália', flag: '🇮🇹', length: 10 },
+  { code: '+81', name: 'Japão', flag: '🇯🇵', length: 10 },
+  { code: '+962', name: 'Jordânia', flag: '🇯🇴', length: 9 },
+  { code: '+254', name: 'Quênia', flag: '🇰🇪', length: 10 },
+  { code: '+965', name: 'Kuwait', flag: '🇰🇼', length: 8 },
+  { code: '+856', name: 'Laos', flag: '🇱🇦', length: 10 },
+  { code: '+371', name: 'Letônia', flag: '🇱🇻', length: 8 },
+  { code: '+961', name: 'Líbano', flag: '🇱🇧', length: 8 },
+  { code: '+370', name: 'Lituânia', flag: '🇱🇹', length: 8 },
+  { code: '+352', name: 'Luxemburgo', flag: '🇱🇺', length: 9 },
+  { code: '+60', name: 'Malásia', flag: '🇲🇾', length: 10 },
+  { code: '+356', name: 'Malta', flag: '🇲🇹', length: 8 },
+  { code: '+212', name: 'Marrocos', flag: '🇲🇦', length: 9 },
+  { code: '+52', name: 'México', flag: '🇲🇽', length: 10 },
+  { code: '+258', name: 'Moçambique', flag: '🇲🇿', length: 9 },
+  { code: '+264', name: 'Namíbia', flag: '🇳🇦', length: 9 },
+  { code: '+977', name: 'Nepal', flag: '🇳🇵', length: 10 },
+  { code: '+505', name: 'Nicarágua', flag: '🇳🇮', length: 8 },
+  { code: '+234', name: 'Nigéria', flag: '🇳🇬', length: 10 },
+  { code: '+47', name: 'Noruega', flag: '🇳🇴', length: 8 },
+  { code: '+64', name: 'Nova Zelândia', flag: '🇳🇿', length: 9 },
+  { code: '+968', name: 'Omã', flag: '🇴🇲', length: 8 },
+  { code: '+31', name: 'Países Baixos', flag: '🇳🇱', length: 9 },
+  { code: '+92', name: 'Paquistão', flag: '🇵🇰', length: 10 },
+  { code: '+507', name: 'Panamá', flag: '🇵🇦', length: 8 },
+  { code: '+595', name: 'Paraguai', flag: '🇵🇾', length: 9 },
+  { code: '+51', name: 'Peru', flag: '🇵🇪', length: 9 },
+  { code: '+48', name: 'Polônia', flag: '🇵🇱', length: 9 },
+  { code: '+351', name: 'Portugal', flag: '🇵🇹', length: 9 },
+  { code: '+974', name: 'Qatar', flag: '🇶🇦', length: 8 },
   { code: '+44', name: 'Reino Unido', flag: '🇬🇧', length: 10 },
-  { code: '+39', name: 'Itália', flag: '🇮🇹', length: 10 }
+  { code: '+420', name: 'República Tcheca', flag: '🇨🇿', length: 9 },
+  { code: '+40', name: 'Romênia', flag: '🇷🇴', length: 10 },
+  { code: '+7', name: 'Rússia', flag: '🇷🇺', length: 10 },
+  { code: '+966', name: 'Arábia Saudita', flag: '🇸🇦', length: 9 },
+  { code: '+221', name: 'Senegal', flag: '🇸🇳', length: 9 },
+  { code: '+381', name: 'Sérvia', flag: '🇷🇸', length: 9 },
+  { code: '+65', name: 'Singapura', flag: '🇸🇬', length: 8 },
+  { code: '+963', name: 'Síria', flag: '🇸🇾', length: 9 },
+  { code: '+46', name: 'Suécia', flag: '🇸🇪', length: 9 },
+  { code: '+41', name: 'Suíça', flag: '🇨🇭', length: 9 },
+  { code: '+66', name: 'Tailândia', flag: '🇹🇭', length: 9 },
+  { code: '+886', name: 'Taiwan', flag: '🇹🇼', length: 9 },
+  { code: '+255', name: 'Tanzânia', flag: '🇹🇿', length: 9 },
+  { code: '+90', name: 'Turquia', flag: '🇹🇷', length: 10 },
+  { code: '+380', name: 'Ucrânia', flag: '🇺🇦', length: 9 },
+  { code: '+256', name: 'Uganda', flag: '🇺🇬', length: 9 },
+  { code: '+598', name: 'Uruguai', flag: '🇺🇾', length: 8 },
+  { code: '+58', name: 'Venezuela', flag: '🇻🇪', length: 10 },
+  { code: '+84', name: 'Vietnã', flag: '🇻🇳', length: 10 },
+  { code: '+967', name: 'Iêmen', flag: '🇾🇪', length: 9 },
+  { code: '+260', name: 'Zâmbia', flag: '🇿🇲', length: 9 },
+  { code: '+263', name: 'Zimbábue', flag: '🇿🇼', length: 9 }
 ];
 
 const getUpgradePlan = (currentPlanKey) => {
@@ -483,11 +585,12 @@ export default function Checkout() {
                         <select
                           value={formData.countryCode}
                           onChange={(e) => handleInputChange('countryCode', e.target.value)}
-                          className="bg-white/5 border border-white/10 text-white rounded-md px-3 py-2 w-32"
+                          className="bg-white/5 border border-white/10 text-white rounded-md px-3 py-2 focus:border-[#39FF14]/50 focus:ring-1 focus:ring-[#39FF14]/50 focus:outline-none transition-colors"
+                          style={{ width: '140px' }}
                         >
                           {COUNTRIES.map((country) => (
-                            <option key={country.code} value={country.code}>
-                              {country.flag} {country.code}
+                            <option key={country.code} value={country.code} className="bg-[#0A0A0C] text-white">
+                              {country.flag} {country.code} {country.name}
                             </option>
                           ))}
                         </select>
@@ -510,11 +613,25 @@ export default function Checkout() {
                       <Input
                         value={formData.cpf}
                         onChange={(e) => handleInputChange('cpf', e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
+                        className={`bg-white/5 border-white/10 text-white ${
+                          formData.cpf.length === 14 && !validateCPF(formData.cpf)
+                            ? 'border-red-500'
+                            : formData.cpf.length === 14 && validateCPF(formData.cpf)
+                            ? 'border-green-500'
+                            : ''
+                        }`}
                         placeholder="000.000.000-00"
                         maxLength={14}
                         required
                       />
+                      {formData.cpf.length === 14 && !validateCPF(formData.cpf) && (
+                        <p className="text-xs text-red-400 mt-1">CPF Inválido</p>
+                      )}
+                      {formData.cpf.length === 14 && validateCPF(formData.cpf) && (
+                        <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                          <Check size={12} /> CPF válido
+                        </p>
+                      )}
                     </div>
                   </div>
 
