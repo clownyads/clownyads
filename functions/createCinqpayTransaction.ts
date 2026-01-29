@@ -38,13 +38,30 @@ Deno.serve(async (req) => {
     // Estruturar resposta - CinqPay retorna 'data' com transaction
     const transaction = result.data || result.transaction || result;
     
+    // Log para debug - remover após validação
+    console.log('Transaction completa:', JSON.stringify(transaction, null, 2));
+    
     // Extrair dados do PIX da resposta da CinqPay
     let pixData = null;
     if (body.payment_method === 'pix') {
-      pixData = {
-        pix_code: transaction.pix?.code || transaction.pix_code || transaction.emv || '',
-        pix_qr_code_url: transaction.pix?.qr_code_url || transaction.pix_qr_code_url || transaction.qrcode || ''
-      };
+      // Tente diferentes caminhos de resposta da CinqPay
+      const pixCode = transaction.pix_code || 
+                      transaction.pix?.code || 
+                      transaction.payment_details?.pix_code ||
+                      transaction.emv ||
+                      '';
+      const pixQrCode = transaction.qr_code ||
+                        transaction.pix?.qr_code_url ||
+                        transaction.pix_qr_code_url ||
+                        transaction.payment_details?.qr_code ||
+                        '';
+      
+      if (pixCode || pixQrCode) {
+        pixData = {
+          pix_code: pixCode,
+          pix_qr_code_url: pixQrCode
+        };
+      }
     }
 
     // Retornar resposta estruturada com sucesso confirmado
