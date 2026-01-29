@@ -102,10 +102,10 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="nutra">Nutra</SelectItem>
               <SelectItem value="hot">Hot</SelectItem>
-              <SelectItem value="info_gray">Info Gray</SelectItem>
+              <SelectItem value="info_gray">Info White</SelectItem>
               <SelectItem value="info_black">Info Black</SelectItem>
             </SelectContent>
           </Select>
@@ -118,7 +118,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10 max-h-[300px]">
+            <SelectContent className="bg-[#18181B] border-white/10 max-h-[300px] text-white">
               <SelectItem value="tendencias">🔥 Tendências</SelectItem>
               <SelectItem value="low_ticket">💸 Low Ticket</SelectItem>
               <SelectItem value="renda_extra">📈 Renda Extra</SelectItem>
@@ -145,7 +145,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="escalando">Escalando</SelectItem>
               <SelectItem value="estavel">Estável</SelectItem>
               <SelectItem value="saturando">Saturando</SelectItem>
@@ -164,7 +164,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="1">Nível 1 - Leve</SelectItem>
               <SelectItem value="2">Nível 2</SelectItem>
               <SelectItem value="3">Nível 3 - Médio</SelectItem>
@@ -181,7 +181,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="baixo">Baixo</SelectItem>
               <SelectItem value="medio">Médio</SelectItem>
               <SelectItem value="alto">Alto</SelectItem>
@@ -236,7 +236,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="false">Não</SelectItem>
               <SelectItem value="true">Sim</SelectItem>
             </SelectContent>
@@ -253,7 +253,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
             <SelectTrigger className="bg-white/5 border-white/10 text-white">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[#18181B] border-white/10">
+            <SelectContent className="bg-[#18181B] border-white/10 text-white">
               <SelectItem value="false">Não</SelectItem>
               <SelectItem value="true">Sim</SelectItem>
             </SelectContent>
