@@ -61,6 +61,20 @@ import Offers from './pages/Offers';
 import Profile from './pages/Profile';
 import OfertasDoDia from './pages/OfertasDoDia';
 import CategoryTendencias from './pages/CategoryTendencias';
+import CategoryLowTicket from './pages/CategoryLowTicket';
+import CategoryRendaExtra from './pages/CategoryRendaExtra';
+import CategorySaudeBemEstar from './pages/CategorySaudeBemEstar';
+import CategoryEmagrecimento from './pages/CategoryEmagrecimento';
+import CategoryFitnessExercicios from './pages/CategoryFitnessExercicios';
+import CategoryRelacionamento from './pages/CategoryRelacionamento';
+import CategorySexualidade from './pages/CategorySexualidade';
+import CategoryFamiliaMaternidade from './pages/CategoryFamiliaMaternidade';
+import CategoryEducacaoIdiomas from './pages/CategoryEducacaoIdiomas';
+import CategoryDesenvolvPessoal from './pages/CategoryDesenvolvPessoal';
+import CategoryEspiritualidade from './pages/CategoryEspiritualidade';
+import CategoryModaBeleza from './pages/CategoryModaBeleza';
+import CategoryEstiloVida from './pages/CategoryEstiloVida';
+import CategoryPets from './pages/CategoryPets';
 
 
 export const PAGES = {
@@ -78,6 +92,20 @@ export const PAGES = {
     "Profile": Profile,
     "OfertasDoDia": OfertasDoDia,
     "CategoryTendencias": CategoryTendencias,
+    "CategoryLowTicket": CategoryLowTicket,
+    "CategoryRendaExtra": CategoryRendaExtra,
+    "CategorySaudeBemEstar": CategorySaudeBemEstar,
+    "CategoryEmagrecimento": CategoryEmagrecimento,
+    "CategoryFitnessExercicios": CategoryFitnessExercicios,
+    "CategoryRelacionamento": CategoryRelacionamento,
+    "CategorySexualidade": CategorySexualidade,
+    "CategoryFamiliaMaternidade": CategoryFamiliaMaternidade,
+    "CategoryEducacaoIdiomas": CategoryEducacaoIdiomas,
+    "CategoryDesenvolvPessoal": CategoryDesenvolvPessoal,
+    "CategoryEspiritualidade": CategoryEspiritualidade,
+    "CategoryModaBeleza": CategoryModaBeleza,
+    "CategoryEstiloVida": CategoryEstiloVida,
+    "CategoryPets": CategoryPets,
 }
 
 export const pagesConfig = {
