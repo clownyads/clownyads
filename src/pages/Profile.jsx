@@ -12,11 +12,16 @@ export default function Profile() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [user, setUser] = React.useState(null);
+
   React.useEffect(() => {
     const checkAuth = async () => {
       const isAuth = await base44.auth.isAuthenticated();
       if (!isAuth) {
         base44.auth.redirectToLogin(window.location.pathname);
+      } else {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
       }
     };
     checkAuth();
@@ -51,11 +56,16 @@ export default function Profile() {
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#39FF14] to-[#BF00FF] flex items-center justify-center mx-auto mb-4">
                   <span className="text-black font-black text-3xl">U</span>
                 </div>
-                <h2 className="text-xl font-bold text-white mb-1">Usuário</h2>
-                <p className="text-zinc-500 text-sm mb-4">usuario@email.com</p>
-                <Badge className="bg-[#BF00FF]/10 text-[#BF00FF] border-[#BF00FF]/20">
+                <h2 className="text-xl font-bold text-white mb-1">{user?.full_name || 'Usuário'}</h2>
+                <p className="text-zinc-500 text-sm mb-4">{user?.email || 'usuario@email.com'}</p>
+                <Badge className={`${
+                  user?.plan === 'MESTRE' ? 'bg-[#FFB800]/10 text-[#FFB800] border-[#FFB800]/20' :
+                  user?.plan === 'CABULOSO' ? 'bg-[#BF00FF]/10 text-[#BF00FF] border-[#BF00FF]/20' :
+                  user?.plan === 'NOVATO' ? 'bg-[#39FF14]/10 text-[#39FF14] border-[#39FF14]/20' :
+                  'bg-zinc-500/10 text-zinc-500 border-zinc-500/20'
+                }`}>
                   <Crown size={12} className="mr-1" />
-                  Plano Cabuloso
+                  {user?.plan ? `Plano ${user.plan}` : 'Sem plano ativo'}
                 </Badge>
               </div>
 
@@ -122,14 +132,37 @@ export default function Profile() {
 
               <div className="bg-[#0A0A0C] border border-white/5 rounded-xl p-6">
                 <h3 className="font-semibold text-white mb-4">Assinatura</h3>
-                <div className="flex items-center justify-between p-4 bg-[#BF00FF]/5 border border-[#BF00FF]/20 rounded-xl">
+                <div className={`flex items-center justify-between p-4 rounded-xl ${
+                  user?.plan === 'MESTRE' ? 'bg-[#FFB800]/5 border border-[#FFB800]/20' :
+                  user?.plan === 'CABULOSO' ? 'bg-[#BF00FF]/5 border border-[#BF00FF]/20' :
+                  user?.plan === 'NOVATO' ? 'bg-[#39FF14]/5 border border-[#39FF14]/20' :
+                  'bg-zinc-500/5 border border-zinc-500/20'
+                }`}>
                   <div>
-                    <p className="font-bold text-white">Plano Cabuloso</p>
-                    <p className="text-sm text-zinc-400">R$87,90/mês • Renova em 15/02/2025</p>
+                    <p className="font-bold text-white">
+                      {user?.plan ? `Plano ${user.plan}` : 'Sem plano ativo'}
+                    </p>
+                    <p className="text-sm text-zinc-400">
+                      {user?.plan === 'MESTRE' && 'R$697,90/ano • Renova em 15/02/2026'}
+                      {user?.plan === 'CABULOSO' && 'R$87,90/mês • Renova em 15/02/2025'}
+                      {user?.plan === 'NOVATO' && 'R$27,90/semana • Renova em 05/02/2025'}
+                      {!user?.plan && 'Faça upgrade para acessar ofertas exclusivas'}
+                    </p>
                   </div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
-                    Gerenciar
-                  </Button>
+                  {user?.plan && user.plan !== 'MESTRE' && (
+                    <a href={createPageUrl('Checkout') + `?plan=${user.plan === 'NOVATO' ? 'CABULOSO' : 'MESTRE'}`}>
+                      <Button className="bg-gradient-to-r from-[#39FF14] to-[#BF00FF] text-black hover:opacity-90 font-semibold">
+                        Fazer Upgrade
+                      </Button>
+                    </a>
+                  )}
+                  {!user?.plan && (
+                    <a href={createPageUrl('Checkout') + '?plan=CABULOSO'}>
+                      <Button className="bg-gradient-to-r from-[#39FF14] to-[#BF00FF] text-black hover:opacity-90 font-semibold">
+                        Assinar Agora
+                      </Button>
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

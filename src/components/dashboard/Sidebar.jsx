@@ -18,12 +18,10 @@ import { cn } from '@/lib/utils';
 import { base44 } from '@/api/base44Client';
 
 const navItems = [
-{ icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
 { icon: Flame, label: 'Ofertas do Dia', page: 'OfertasDoDia' },
-{ icon: AlertTriangle, label: 'Alertas', page: 'Alerts', requiredPlan: ['CABULOSO', 'MESTRE'] },
-{ icon: Heart, label: 'Favoritos', page: 'Favorites' },
+{ icon: User, label: 'Comunidade', page: 'Comunidade' },
 { icon: Shield, label: 'Clowncker PLUS', page: 'ClownckerPlus', requiredPlan: ['MESTRE'] },
-{ icon: ShieldCheck, label: 'Anti-Chargeback', page: 'AntiChargeback', requiredPlan: ['MESTRE'] },
+{ icon: ShieldCheck, label: 'Clownador PRO', page: 'ClownadorPRO', requiredPlan: ['CABULOSO', 'MESTRE'] },
 { icon: Settings, label: 'Admin', page: 'Admin', adminOnly: true },
 { icon: User, label: 'Perfil', page: 'Profile' }];
 
@@ -86,7 +84,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 flex items-center justify-between">
-            <Link to={createPageUrl('Home')} className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-default">
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69730f7b4701117070f90750/9f53f90ae_ClownyAds3.png"
                 alt="ClownyAds"
@@ -95,7 +93,7 @@ export default function Sidebar({ isOpen, onClose }) {
               <span className="font-black text-lg tracking-tight">
                 <span className="text-white font-medium">Clowny</span><span className="text-[#39FF14] font-black">Ads</span>
               </span>
-            </Link>
+            </div>
             <button
               onClick={onClose}
               className="lg:hidden p-2 text-zinc-400 hover:text-white">
@@ -109,7 +107,7 @@ export default function Sidebar({ isOpen, onClose }) {
             <ul className="space-y-1">
               {navItems.map((item) => {
                 // Hide admin-only items for non-admin users
-                if (item.adminOnly && user?.role !== 'admin') {
+                if (item.adminOnly && user?.email !== 'pedrinhojpkl@gmail.com') {
                   return null;
                 }
                 // Hide plan-restricted items

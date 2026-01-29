@@ -52,7 +52,6 @@ import Alerts from './pages/Alerts';
 import AntiChargeback from './pages/AntiChargeback';
 import Checkout from './pages/Checkout';
 import ClownckerPlus from './pages/ClownckerPlus';
-import Dashboard from './pages/Dashboard';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import HotOffers from './pages/HotOffers';
@@ -75,6 +74,8 @@ import CategoryEspiritualidade from './pages/CategoryEspiritualidade';
 import CategoryModaBeleza from './pages/CategoryModaBeleza';
 import CategoryEstiloVida from './pages/CategoryEstiloVida';
 import CategoryPets from './pages/CategoryPets';
+import Comunidade from './pages/Comunidade';
+import ClownadorPRO from './pages/ClownadorPRO';
 
 
 export const PAGES = {
@@ -83,7 +84,6 @@ export const PAGES = {
     "AntiChargeback": AntiChargeback,
     "Checkout": Checkout,
     "ClownckerPlus": ClownckerPlus,
-    "Dashboard": Dashboard,
     "Favorites": Favorites,
     "Home": Home,
     "HotOffers": HotOffers,
@@ -106,6 +106,8 @@ export const PAGES = {
     "CategoryModaBeleza": CategoryModaBeleza,
     "CategoryEstiloVida": CategoryEstiloVida,
     "CategoryPets": CategoryPets,
+    "Comunidade": Comunidade,
+    "ClownadorPRO": ClownadorPRO,
 }
 
 export const pagesConfig = {

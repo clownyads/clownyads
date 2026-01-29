@@ -40,10 +40,6 @@ export default function DashboardHeader({ onMenuClick, searchQuery, setSearchQue
             <Bell size={20} />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6B6B] rounded-full" />
           </Button>
-          
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#39FF14] to-[#BF00FF] flex items-center justify-center">
-            <span className="text-black font-bold text-sm">U</span>
-          </div>
         </div>
       </div>
 
