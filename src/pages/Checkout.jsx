@@ -838,7 +838,7 @@ export default function Checkout() {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: 'rgba(228, 30, 38, 0.08)', borderRadius: '6px', border: '1px solid rgba(228, 30, 38, 0.15)' }}>
                     <AlertCircle size={14} style={{ color: '#fbbf24' }} />
-                    <span style={{ color: '#9ca3af', fontSize: '12px' }}>Se a oferta expirar, o desconto não estará mais disponível</span>
+                    <span style={{ color: '#9ca3af', fontSize: '12px' }}>Se a oferta expirar, será necessário gerar outro código PIX</span>
                   </div>
                 </div>
 
@@ -862,10 +862,6 @@ export default function Checkout() {
                     Copiar Código
                   </Button>
                 </div>
-
-                <p className="text-xs text-zinc-400 text-center mb-3">
-                  HP INSTITUICAO DE RECEBIVEIS LTDA
-                </p>
 
                 <div className="flex items-center justify-center gap-2 text-[#39FF14]">
                   <Loader2 className="animate-spin" size={20} />
