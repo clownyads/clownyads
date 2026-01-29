@@ -809,20 +809,11 @@ export default function Checkout() {
                 </div>
                 
                 <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
-                <p className="text-zinc-400 mb-6">Escaneie o QR Code ou copie o código abaixo</p>
+                <p className="text-zinc-400 mb-6">Copie o código abaixo e realize o pagamento</p>
 
-                {/* QR Code Real da CinqPay */}
-                <div className="bg-white p-4 rounded-lg mx-auto w-64 h-64 flex items-center justify-center mb-4">
-                  <img 
-                    src={pixData.pix_qr_code_url || pixData.qrcode} 
-                    alt="QR Code PIX" 
-                    className="w-full h-full"
-                  />
-                </div>
-
-                <div className="bg-white/5 p-4 rounded-lg mb-4">
-                  <p className="text-xs text-zinc-400 mb-2">Código PIX (Copia e Cola)</p>
-                  <p className="text-white text-xs break-all font-mono">
+                <div className="bg-white/5 p-6 rounded-lg mb-4">
+                  <p className="text-xs text-zinc-400 mb-3">Código PIX (Copia e Cola)</p>
+                  <p className="text-white text-sm break-all font-mono bg-black/30 p-4 rounded mb-4">
                     {pixData.pix_code || pixData.qrcode_text}
                   </p>
                   <Button
@@ -833,7 +824,7 @@ export default function Checkout() {
                       navigator.clipboard.writeText(code);
                       toast.success('Código copiado!');
                     }}
-                    className="mt-2 text-white border-white/20"
+                    className="w-full text-white border-white/20"
                   >
                     Copiar código
                   </Button>
