@@ -32,9 +32,9 @@ Deno.serve(async (req) => {
     const result = await response.json();
 
     // LOG COMPLETO DA RESPOSTA DA CINQPAY
-    console.log('========== RESPOSTA CINQPAY COMPLETA ==========');
-    console.log(JSON.stringify(result, null, 2));
-    console.log('=============================================');
+    console.error('========== RESPOSTA CINQPAY COMPLETA ==========');
+    console.error(JSON.stringify(result, null, 2));
+    console.error('=============================================');
 
     if (!response.ok) {
       return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
