@@ -19,7 +19,6 @@ import { base44 } from '@/api/base44Client';
 
 const navItems = [
 { icon: LayoutDashboard, label: 'Dashboard', page: 'Dashboard' },
-{ icon: Package, label: 'Ofertas', page: 'Offers' },
 { icon: Flame, label: 'Ofertas do Dia', page: 'OfertasDoDia' },
 { icon: AlertTriangle, label: 'Alertas', page: 'Alerts', requiredPlan: ['CABULOSO', 'MESTRE'] },
 { icon: Heart, label: 'Favoritos', page: 'Favorites' },
@@ -50,6 +49,7 @@ const categoryItems = [
 export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const [user, setUser] = React.useState(null);
+  const [ofertasOpen, setOfertasOpen] = React.useState(false);
 
   React.useEffect(() => {
     const loadUser = async () => {
@@ -134,29 +134,38 @@ export default function Sidebar({ isOpen, onClose }) {
                   </li>);
 
               })}
-            </ul>
 
-            {/* Categorias */}
-            <div className="mt-6 pt-4 border-t border-white/5">
-              <p className="px-4 text-xs font-semibold text-zinc-500 uppercase mb-3">Categorias</p>
-              <ul className="space-y-1">
-                {categoryItems.map((item) => (
-                  <li key={item.page}>
-                    <Link
-                      to={createPageUrl(item.page)}
-                      onClick={onClose}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
-                        isActive(item.page) ?
-                        "bg-[#39FF14]/10 text-[#39FF14]" :
-                        "text-zinc-400 hover:text-white hover:bg-white/5"
-                      )}>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+              {/* Ofertas com submenu */}
+              <li 
+                onMouseEnter={() => setOfertasOpen(true)}
+                onMouseLeave={() => setOfertasOpen(false)}
+              >
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-default">
+                  <Package size={20} />
+                  Ofertas
+                </div>
+
+                {ofertasOpen && (
+                  <ul className="mt-1 ml-4 space-y-1 border-l-2 border-white/5 pl-3">
+                    {categoryItems.map((item) => (
+                      <li key={item.page}>
+                        <Link
+                          to={createPageUrl(item.page)}
+                          onClick={onClose}
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200",
+                            isActive(item.page) ?
+                            "bg-[#39FF14]/10 text-[#39FF14]" :
+                            "text-zinc-400 hover:text-white hover:bg-white/5"
+                          )}>
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            </ul>
           </nav>
 
           {/* Footer */}
