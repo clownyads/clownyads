@@ -40,8 +40,8 @@ export default function Checkout() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
       } catch (error) {
-        console.error('Erro ao carregar usuário:', error);
-        base44.auth.redirectToLogin(window.location.href);
+        console.log('Usuário não autenticado, permitindo checkout como guest');
+        setUser(null);
       } finally {
         setLoading(false);
       }
