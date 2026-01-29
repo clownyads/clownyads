@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
-import { CreditCard, QrCode, Check, Loader2, ArrowLeft, Sparkles } from 'lucide-react';
+import { CreditCard, QrCode, Check, Loader2, ArrowLeft, Sparkles, Clock, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 const PLAN_CONFIGS = {
@@ -176,6 +176,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [pixData, setPixData] = useState(null);
   const [transactionHash, setTransactionHash] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState(600); // 10 minutos
   
   const planKey = searchParams.get('plan') || 'CABULOSO';
   const currentPlan = PLAN_CONFIGS[planKey] || PLAN_CONFIGS.CABULOSO;
@@ -348,6 +349,7 @@ export default function Checkout() {
       // Para PIX, vai ter payment_method_details com os dados do código
       if (paymentMethod === 'pix' && transaction.payment_method_details) {
         setPixData(transaction.payment_method_details);
+        setTimeRemaining(600); // Reset timer para 10 minutos
         setStep('processing');
         startPaymentPolling(transaction.hash);
       } 
@@ -386,11 +388,24 @@ export default function Checkout() {
     let attempts = 0;
     const maxAttempts = 120; // 10 minutos (5s * 120)
 
+    // Timer de contagem regressiva
+    const timerInterval = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(timerInterval);
+          clearInterval(pollInterval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     const pollInterval = setInterval(async () => {
       attempts++;
       
       if (attempts > maxAttempts) {
         clearInterval(pollInterval);
+        clearInterval(timerInterval);
         toast.error('Tempo de espera excedido. Entre em contato com o suporte.');
         return;
       }
@@ -402,6 +417,7 @@ export default function Checkout() {
 
         if (response.data.status === 'approved' || response.data.status === 'paid') {
           clearInterval(pollInterval);
+          clearInterval(timerInterval);
           toast.success('Pagamento confirmado! Criando sua conta...');
 
           setTimeout(() => {
@@ -410,6 +426,7 @@ export default function Checkout() {
           }, 1500);
         } else if (response.data.status === 'declined' || response.data.status === 'cancelled') {
           clearInterval(pollInterval);
+          clearInterval(timerInterval);
           toast.error('Pagamento não aprovado. Tente novamente.');
           setStep('payment');
         }
@@ -803,39 +820,57 @@ export default function Checkout() {
             )}
 
             {step === 'processing' && pixData && (
-              <Card className="bg-white/5 border-white/10 p-6 text-center">
-                <div className="w-16 h-16 rounded-full bg-[#39FF14]/20 flex items-center justify-center mx-auto mb-4">
-                  <QrCode size={32} className="text-[#39FF14]" />
+              <Card className="bg-white/5 border-white/10 p-6">
+                {/* Timer - Oferta expira em */}
+                <div className="flex flex-col gap-3 p-4 rounded-lg mb-6" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%)', border: '1px solid rgba(228, 30, 38, 0.3)' }}>
+                  <div className="flex items-center gap-2 justify-center">
+                    <Clock size={20} style={{ color: '#E41E26' }} />
+                    <span style={{ color: '#f3f4f6', fontSize: '15px', fontWeight: '600' }}>Oferta expira em</span>
+                  </div>
+                  <div className="text-4xl font-bold font-mono text-center" style={{ color: '#E41E26' }}>
+                    {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, '0')}
+                  </div>
+                  <div className="w-full rounded-full h-2 overflow-hidden" style={{ background: 'rgba(228, 30, 38, 0.2)' }}>
+                    <div className="h-full rounded-full transition-all duration-1000 ease-linear" style={{ 
+                      width: `${(timeRemaining / 600) * 100}%`, 
+                      background: 'linear-gradient(90deg, rgb(228, 30, 38) 0%, rgb(140, 21, 21) 100%)'
+                    }} />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 14px', background: 'rgba(228, 30, 38, 0.08)', borderRadius: '6px', border: '1px solid rgba(228, 30, 38, 0.15)' }}>
+                    <AlertCircle size={14} style={{ color: '#fbbf24' }} />
+                    <span style={{ color: '#9ca3af', fontSize: '12px' }}>Se a oferta expirar, o desconto não estará mais disponível</span>
+                  </div>
                 </div>
-                
-                <h2 className="text-xl font-bold text-white mb-2">Pague com PIX</h2>
-                <p className="text-zinc-400 mb-6">Copie o código abaixo e realize o pagamento</p>
+
+                <div className="text-center mb-6">
+                  <div className="text-lg font-medium text-white mb-1">Pague com Pix</div>
+                </div>
 
                 <div className="bg-white/5 p-6 rounded-lg mb-4">
                   <p className="text-xs text-zinc-400 mb-3">Código PIX (Copia e Cola)</p>
-                  <p className="text-white text-sm break-all font-mono bg-black/30 p-4 rounded mb-4">
+                  <div className="text-white text-sm break-all font-mono bg-black/30 p-4 rounded mb-4 select-all" style={{ wordBreak: 'break-all' }}>
                     {pixData.pix_code || pixData.qrcode_text}
-                  </p>
+                  </div>
                   <Button
                     onClick={() => {
                       const code = pixData.pix_code || pixData.qrcode_text;
                       navigator.clipboard.writeText(code);
                       toast.success('Código copiado!');
                     }}
-                    className="w-full bg-[#39FF14] hover:bg-[#39FF14]/90 text-black font-bold"
+                    className="w-full bg-[#E41E26] hover:bg-[#c41620] text-white font-bold h-11"
                   >
-                    Copiar código
+                    Copiar Código
                   </Button>
                 </div>
 
-                <div className="flex items-center justify-center gap-2 text-[#39FF14] mb-4">
+                <p className="text-xs text-zinc-400 text-center mb-3">
+                  HP INSTITUICAO DE RECEBIVEIS LTDA
+                </p>
+
+                <div className="flex items-center justify-center gap-2 text-[#39FF14]">
                   <Loader2 className="animate-spin" size={20} />
                   <span className="text-sm">Aguardando pagamento...</span>
                 </div>
-
-                <p className="text-xs text-zinc-500">
-                  O sistema irá detectar automaticamente quando o pagamento for confirmado
-                </p>
               </Card>
             )}
 
