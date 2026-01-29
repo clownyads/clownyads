@@ -11,6 +11,7 @@ export default function Comunidade() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const checkAuth = async () => {
@@ -25,6 +26,8 @@ export default function Comunidade() {
         setUser(currentUser);
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
+      } finally {
+        setLoading(false);
       }
     };
     checkAuth();
@@ -52,7 +55,11 @@ export default function Comunidade() {
             </div>
           </div>
 
-          {(!user || !['CABULOSO', 'MESTRE'].includes(user.plan)) && (
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <p className="text-zinc-400">Carregando...</p>
+            </div>
+          ) : (!user || !['CABULOSO', 'MESTRE'].includes(user.plan)) && (
             <div className="bg-gradient-to-br from-white/5 to-white/[0.02] rounded-2xl p-8 border border-white/10">
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-white mb-2">
@@ -152,7 +159,7 @@ export default function Comunidade() {
             </div>
           )}
 
-          {user && ['CABULOSO', 'MESTRE'].includes(user.plan) && (
+          {!loading && user && ['CABULOSO', 'MESTRE'].includes(user.plan) && (
             <>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">

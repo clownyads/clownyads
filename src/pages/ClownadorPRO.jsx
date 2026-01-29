@@ -63,14 +63,8 @@ export default function ClownadorPRO() {
 
         const currentUser = await base44.auth.me();
         setUser(currentUser);
-        
-        if (!currentUser.plan || (currentUser.plan !== 'CABULOSO' && currentUser.plan !== 'MESTRE')) {
-          window.location.href = createPageUrl('OfertasDoDia');
-          return;
-        }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
-        window.location.href = createPageUrl('OfertasDoDia');
       } finally {
         setLoading(false);
       }
@@ -84,6 +78,12 @@ export default function ClownadorPRO() {
         <p className="text-white">Carregando...</p>
       </div>
     );
+  }
+
+  // Se não tem plano CABULOSO ou MESTRE, redireciona
+  if (!user || (!['CABULOSO', 'MESTRE'].includes(user.plan))) {
+    window.location.href = createPageUrl('OfertasDoDia');
+    return null;
   }
 
   return (
