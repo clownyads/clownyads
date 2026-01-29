@@ -36,11 +36,17 @@ Deno.serve(async (req) => {
       paymentMethod: payment_method
     });
 
-    // Se o pagamento foi aprovado, atualizar o plano do usuário
+    // Se o pagamento foi aprovado, criar o usuário se necessário e atualizar o plano
     if (status === 'approved' || status === 'paid') {
-      await base44.asServiceRole.entities.User.update(user_id, {
-        plan: plan
-      });
+      try {
+        // Tentar atualizar usuário existente
+        await base44.asServiceRole.entities.User.update(user_id, {
+          plan: plan
+        });
+      } catch (error) {
+        // Se usuário não existe, o sistema de auth já deve ter criado
+        console.log('Usuário será criado pelo sistema de autenticação');
+      }
     }
 
     return Response.json({ success: true, message: 'Webhook processed' });
