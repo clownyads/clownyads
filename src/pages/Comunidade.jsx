@@ -51,7 +51,7 @@ export default function Comunidade() {
               </div>
               <h2 className="text-xl font-black text-white mb-2">Discord</h2>
               <p className="text-zinc-400 text-sm mb-6">
-                Junte-se ao nosso servidor Discord para conversar com outros afiliados e receber suporte em tempo real
+                Junte-se ao nosso servidor Discord para conversar com outros top players e receber suporte em tempo real
               </p>
               <a href="https://discord.gg/clownyads" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold w-full">
@@ -67,7 +67,7 @@ export default function Comunidade() {
               </div>
               <h2 className="text-xl font-black text-white mb-2">WhatsApp</h2>
               <p className="text-zinc-400 text-sm mb-6">
-                Entre no nosso grupo VIP do WhatsApp para receber alertas exclusivos e networking com afiliados de elite
+                Entre no nosso grupo VIP do WhatsApp para receber alertas exclusivos e networking com top players
               </p>
               <a href="https://chat.whatsapp.com/clownyads" target="_blank" rel="noopener noreferrer">
                 <Button className="bg-[#25D366] hover:bg-[#20BA5A] text-white font-semibold w-full">

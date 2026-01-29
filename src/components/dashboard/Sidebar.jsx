@@ -168,7 +168,10 @@ export default function Sidebar({ isOpen, onClose }) {
 
           {/* Footer */}
           <div className="p-3 border-t border-white/5">
-            <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 w-full">
+            <button 
+              onClick={() => base44.auth.logout(createPageUrl('Home'))}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-zinc-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 w-full"
+            >
               <LogOut size={20} />
               Sair
             </button>
