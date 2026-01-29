@@ -33,11 +33,11 @@ export default function OfertasDoDia() {
     checkAuth();
   }, []);
 
-  // Se não tem plano ativo, não busca ofertas
+  // Buscar ofertas sempre que o usuário estiver carregado
   const { data: offers = [], isLoading } = useQuery({
     queryKey: ['offers'],
     queryFn: () => base44.entities.Offer.list('-created_date'),
-    enabled: !loading && !!user && !!user.plan && user.plan !== 'FREE'
+    enabled: !loading && !!user
   });
 
   // Filtrar ofertas dos últimos 2 dias (48 horas)
