@@ -270,7 +270,7 @@ export default function Checkout() {
       return false;
     }
     
-    if (formData.phone.length !== selectedCountry.length) {
+    if (formData.phone.length < selectedCountry.length) {
       toast.error(`O telefone deve ter ${selectedCountry.length} dígitos para ${selectedCountry.name}`);
       return false;
     }
