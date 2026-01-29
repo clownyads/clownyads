@@ -1,32 +1,42 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
+  // Configurar CORS para permitir chamadas do frontend
+  const headers = new Headers({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Content-Type": "application/json"
+  });
+
+  if (req.method === "OPTIONS") return new Response(null, { headers });
+
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    
-    // Forçar installments como 1 se for PIX e não vier no body
-    if (body.payment_method === 'pix' && !body.installments) {
-      body.installments = 1;
+    const apiToken = Deno.env.get("CINQPAY_API_TOKEN");
+
+    if (!apiToken) {
+      return new Response(JSON.stringify({ error: "Token da CinqPay não configurado" }), { status: 500, headers });
     }
 
-    const response = await fetch('https://api.cinqpay.com.br/api/public/v1/transactions?api_token=' + Deno.env.get('CINQPAY_API_TOKEN' ), {
+    // A CinqPay exige installments mesmo no PIX
+    const payload = { ...body, installments: body.installments || 1 };
+
+    const response = await fetch(`https://api.cinqpay.com.br/api/public/v1/transactions?api_token=${apiToken}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(body)
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload )
     });
 
     const result = await response.json();
-    
+
     if (!response.ok) {
-      return Response.json({ error: result.message || 'Erro na CinqPay' }, { status: response.status });
+      return new Response(JSON.stringify({ error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
     }
 
-    return Response.json(result);
+    return new Response(JSON.stringify(result), { status: 200, headers });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500, headers });
   }
 });
