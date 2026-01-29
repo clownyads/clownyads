@@ -24,11 +24,11 @@ export default function ClownckerPlus() {
         
         // Verificar se o usuário tem plano MESTRE
         if (currentUser.plan !== 'MESTRE') {
-          window.location.href = createPageUrl('Dashboard');
+          window.location.href = createPageUrl('OfertasDoDia');
         }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
-        window.location.href = createPageUrl('Dashboard');
+        window.location.href = createPageUrl('OfertasDoDia');
       } finally {
         setLoading(false);
       }
@@ -181,9 +181,9 @@ export default function ClownckerPlus() {
         </div>
 
         <div className="mt-6 text-center">
-          <Link to={createPageUrl('Dashboard')}>
+          <Link to={createPageUrl('OfertasDoDia')}>
             <Button variant="ghost" className="text-zinc-400 hover:text-white">
-              Voltar ao Dashboard
+              Voltar
             </Button>
           </Link>
         </div>
