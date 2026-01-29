@@ -42,7 +42,7 @@ const riskConfig = {
 const nicheConfig = {
   nutra: { label: 'Nutra', color: 'text-emerald-400 bg-emerald-500/10' },
   hot: { label: 'Hot', color: 'text-pink-400 bg-pink-500/10' },
-  info_gray: { label: 'Info Gray', color: 'text-purple-400 bg-purple-500/10' },
+  info_gray: { label: 'Info White', color: 'text-white bg-white/10' },
   info_black: { label: 'Info Black', color: 'text-zinc-400 bg-zinc-500/10' }
 };
 
@@ -297,75 +297,86 @@ export default function OfferDetail() {
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                  {/* Ad Volume Score */}
+                  {/* Ad Volume Gauge */}
                   <div className="bg-[#0A0A0C] border border-white/5 rounded-xl p-6">
                     <h3 className="font-bold text-white mb-4">Volume de Anúncios</h3>
-                    <div className="relative w-full h-24 flex items-center justify-center mb-4">
-                      {/* Gauge background */}
+                    <div className="relative w-full h-24 flex items-center justify-center">
                       <svg className="w-full h-full" viewBox="0 0 200 110">
+                        <defs>
+                          <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#22c55e" />
+                            <stop offset="33%" stopColor="#eab308" />
+                            <stop offset="66%" stopColor="#f97316" />
+                            <stop offset="100%" stopColor="#ef4444" />
+                          </linearGradient>
+                        </defs>
+                        
                         {/* Background arc */}
                         <path
-                          d="M 20 100 A 80 80 0 0 1 180 100"
+                          d="M 20 90 A 80 80 0 0 1 180 90"
                           fill="none"
                           stroke="#ffffff10"
-                          strokeWidth="12"
+                          strokeWidth="16"
+                          strokeLinecap="round"
                         />
-                        {/* Colored sections */}
+                        
+                        {/* Colored gradient arc */}
                         <path
-                          d="M 20 100 A 80 80 0 0 1 60 40"
+                          d="M 20 90 A 80 80 0 0 1 180 90"
                           fill="none"
-                          stroke="#22c55e"
-                          strokeWidth="12"
+                          stroke="url(#gaugeGradient)"
+                          strokeWidth="16"
+                          strokeLinecap="round"
+                          strokeDasharray="251.2"
+                          strokeDashoffset={251.2 - ((() => {
+                            const adCount = offer.ad_count || 0;
+                            const maxAds = 200;
+                            return Math.min(adCount / maxAds, 1);
+                          })() * 251.2)}
                         />
-                        <path
-                          d="M 60 40 A 80 80 0 0 1 100 20"
-                          fill="none"
-                          stroke="#eab308"
-                          strokeWidth="12"
-                        />
-                        <path
-                          d="M 100 20 A 80 80 0 0 1 140 40"
-                          fill="none"
-                          stroke="#f97316"
-                          strokeWidth="12"
-                        />
-                        <path
-                          d="M 140 40 A 80 80 0 0 1 180 100"
-                          fill="none"
-                          stroke="#ef4444"
-                          strokeWidth="12"
-                        />
-                        {/* Needle */}
+                        
+                        {/* Needle - more prominent */}
                         <g transform={`rotate(${(() => {
-                          const adCount = offer.aggressiveness * 25; // Simulate ad count from aggressiveness
-                          let angle;
-                          if (adCount <= 10) angle = -90 + (adCount / 10) * 45;
-                          else if (adCount <= 30) angle = -45 + ((adCount - 10) / 20) * 45;
-                          else if (adCount <= 99) angle = 0 + ((adCount - 30) / 69) * 45;
-                          else angle = 45 + Math.min((adCount - 100) / 100, 1) * 45;
-                          return angle;
-                        })()} 100 100)`}>
-                          <line x1="100" y1="100" x2="100" y2="30" stroke="white" strokeWidth="3" />
-                          <circle cx="100" cy="100" r="5" fill="white" />
+                          const adCount = offer.ad_count || 0;
+                          const maxAds = 200;
+                          const percentage = Math.min(adCount / maxAds, 1);
+                          return -90 + (percentage * 180);
+                        })()} 100 90)`}>
+                          <polygon 
+                            points="100,30 95,88 105,88" 
+                            fill={(() => {
+                              const adCount = offer.ad_count || 0;
+                              if (adCount <= 50) return '#22c55e';
+                              if (adCount <= 100) return '#eab308';
+                              if (adCount <= 150) return '#f97316';
+                              return '#ef4444';
+                            })()}
+                            filter="drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                          />
+                          <circle cx="100" cy="90" r="6" fill={(() => {
+                            const adCount = offer.ad_count || 0;
+                            if (adCount <= 50) return '#22c55e';
+                            if (adCount <= 100) return '#eab308';
+                            if (adCount <= 150) return '#f97316';
+                            return '#ef4444';
+                          })()} stroke="#0B0B0D" strokeWidth="2" />
                         </g>
+                        
+                        {/* Center value */}
+                        <text x="100" y="80" textAnchor="middle" fill="white" fontSize="20" fontWeight="bold">
+                          {offer.ad_count || 0}
+                        </text>
                       </svg>
                     </div>
-                    <div className="flex justify-between text-xs text-zinc-500 mb-3">
-                      <span>Baixo</span>
-                      <span>Médio</span>
-                      <span>Alto</span>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm text-zinc-400">
-                        {(() => {
-                          const adCount = offer.aggressiveness * 25;
-                          if (adCount <= 10) return 'Baixo (0-10 anúncios)';
-                          if (adCount <= 30) return 'Médio Baixo (11-30 anúncios)';
-                          if (adCount <= 99) return 'Médio Alto (31-99 anúncios)';
-                          return 'Alto (100+ anúncios)';
-                        })()}
-                      </p>
-                    </div>
+                    <p className="text-center text-xs text-zinc-500 -mt-2">
+                      {(() => {
+                        const adCount = offer.ad_count || 0;
+                        if (adCount <= 50) return 'Baixo';
+                        if (adCount <= 100) return 'Médio';
+                        if (adCount <= 150) return 'Alto';
+                        return 'Extremo';
+                      })()}
+                    </p>
                     {offer.is_hot && (
                       <div className="mt-4 pt-4 border-t border-white/5">
                         <Badge className="bg-[#FF6B6B]/20 text-[#FF6B6B] border-[#FF6B6B]/30 w-full justify-center">
@@ -374,18 +385,6 @@ export default function OfferDetail() {
                         </Badge>
                       </div>
                     )}
-                  </div>
-
-                  {/* Banner */}
-                  <div className="bg-[#0A0A0C] border border-white/5 rounded-xl overflow-hidden">
-                    <div className="aspect-[5/2] bg-gradient-to-br from-[#39FF14]/10 via-[#BF00FF]/10 to-[#39FF14]/10 flex items-center justify-center">
-                      <div className="text-center p-6">
-                        <h3 className="text-xl font-black text-white mb-2">
-                          Espaço para Banner
-                        </h3>
-                        <p className="text-sm text-zinc-500">500x200</p>
-                      </div>
-                    </div>
                   </div>
 
                   {/* Alerts */}
