@@ -817,14 +817,12 @@ export default function Checkout() {
                     {pixData.pix_code || pixData.qrcode_text}
                   </p>
                   <Button
-                    variant="outline"
-                    size="sm"
                     onClick={() => {
                       const code = pixData.pix_code || pixData.qrcode_text;
                       navigator.clipboard.writeText(code);
                       toast.success('Código copiado!');
                     }}
-                    className="w-full text-white border-white/20"
+                    className="w-full bg-[#39FF14] hover:bg-[#39FF14]/90 text-black font-bold"
                   >
                     Copiar código
                   </Button>
