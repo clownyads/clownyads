@@ -6,13 +6,64 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
-import { CreditCard, QrCode, Check, Loader2, ArrowLeft } from 'lucide-react';
+import { CreditCard, QrCode, Check, Loader2, ArrowLeft, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 const PLAN_CONFIGS = {
-  NOVATO: { name: 'NOVATO', price: 27.90, hash: 'pjjz31oykp', billing: 'Semanal' },
-  CABULOSO: { name: 'CABULOSO', price: 87.90, hash: 'pjjz31oykp', billing: 'Mensal' },
-  MESTRE: { name: 'MESTRE', price: 697.90, hash: 'pjjz31oykp', billing: 'Anual' }
+  NOVATO: { 
+    name: 'NOVATO', 
+    price: 27.90, 
+    hash: 'pjjz31oykp', 
+    billing: 'Semanal',
+    benefits: [
+      'Acesso a ofertas atualizadas diariamente',
+      'Filtros básicos de nichos e status',
+      'Visualização de dados de performance',
+      'Suporte via email'
+    ]
+  },
+  CABULOSO: { 
+    name: 'CABULOSO', 
+    price: 87.90, 
+    hash: 'pjjz31oykp', 
+    billing: 'Mensal',
+    benefits: [
+      'Todos os benefícios do NOVATO',
+      'Alertas em tempo real de ofertas quentes',
+      'Análise avançada de competição',
+      'Acesso prioritário a novas ofertas',
+      'Suporte via WhatsApp'
+    ]
+  },
+  MESTRE: { 
+    name: 'MESTRE', 
+    price: 697.90, 
+    hash: 'pjjz31oykp', 
+    billing: 'Anual',
+    benefits: [
+      'Todos os benefícios do CABULOSO',
+      'Clowncker PLUS (cloaker premium)',
+      'Sistema Anti-Chargeback',
+      'Criativos exclusivos e scripts',
+      'Consultoria individual mensal',
+      'Grupo VIP de membros MESTRE'
+    ]
+  }
+};
+
+const COUNTRIES = [
+  { code: '+55', name: 'Brasil', flag: '🇧🇷', length: 11 },
+  { code: '+1', name: 'EUA/Canadá', flag: '🇺🇸', length: 10 },
+  { code: '+351', name: 'Portugal', flag: '🇵🇹', length: 9 },
+  { code: '+34', name: 'Espanha', flag: '🇪🇸', length: 9 },
+  { code: '+44', name: 'Reino Unido', flag: '🇬🇧', length: 10 },
+  { code: '+39', name: 'Itália', flag: '🇮🇹', length: 10 }
+];
+
+const getUpgradePlan = (currentPlanKey) => {
+  if (currentPlanKey === 'NOVATO') return 'CABULOSO';
+  if (currentPlanKey === 'CABULOSO') return 'MESTRE';
+  return null;
 };
 
 export default function Checkout() {
@@ -37,11 +88,67 @@ export default function Checkout() {
     cardNumber: '',
     cardName: '',
     cardExpiry: '',
-    cardCvv: ''
+    cardCvv: '',
+    countryCode: '+55'
   });
 
+  const selectedCountry = COUNTRIES.find(c => c.code === formData.countryCode) || COUNTRIES[0];
+
   const handleInputChange = (field, value) => {
+    // Validação para campo nome: apenas letras
+    if (field === 'name') {
+      const onlyLetters = /^[a-zA-ZÀ-ÿ\s]*$/;
+      if (!onlyLetters.test(value)) return;
+    }
+    
+    // Validação para telefone: apenas números
+    if (field === 'phone') {
+      const onlyNumbers = value.replace(/\D/g, '');
+      if (onlyNumbers.length <= selectedCountry.length) {
+        setFormData(prev => ({ ...prev, [field]: onlyNumbers }));
+      }
+      return;
+    }
+
+    // Validação para CPF: apenas números e formatação
+    if (field === 'cpf') {
+      let onlyNumbers = value.replace(/\D/g, '');
+      if (onlyNumbers.length <= 11) {
+        // Formata o CPF: 111.222.333-44
+        if (onlyNumbers.length > 9) {
+          onlyNumbers = onlyNumbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else if (onlyNumbers.length > 6) {
+          onlyNumbers = onlyNumbers.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+        } else if (onlyNumbers.length > 3) {
+          onlyNumbers = onlyNumbers.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+        }
+        setFormData(prev => ({ ...prev, [field]: onlyNumbers }));
+      }
+      return;
+    }
+
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const validateCPF = (cpf) => {
+    const numeros = cpf.replace(/\D/g, '').split('').map(Number);
+    
+    if (numeros.length !== 11) return false;
+    
+    // Verifica se todos os dígitos são iguais
+    if (numeros.every(num => num === numeros[0])) return false;
+    
+    // Validação do primeiro dígito
+    const soma1 = numeros.slice(0, 9).reduce((acc, num, idx) => acc + num * (10 - idx), 0);
+    const digito1 = ((soma1 * 10) % 11) % 10;
+    if (numeros[9] !== digito1) return false;
+    
+    // Validação do segundo dígito
+    const soma2 = numeros.slice(0, 10).reduce((acc, num, idx) => acc + num * (11 - idx), 0);
+    const digito2 = ((soma2 * 10) % 11) % 10;
+    if (numeros[10] !== digito2) return false;
+    
+    return true;
   };
 
   const validateRegister = () => {
@@ -49,14 +156,27 @@ export default function Checkout() {
       toast.error('Preencha todos os campos obrigatórios');
       return false;
     }
+    
     if (formData.password !== formData.confirmPassword) {
       toast.error('As senhas não coincidem');
       return false;
     }
+    
     if (formData.password.length < 6) {
       toast.error('A senha deve ter pelo menos 6 caracteres');
       return false;
     }
+    
+    if (formData.phone.length !== selectedCountry.length) {
+      toast.error(`O telefone deve ter ${selectedCountry.length} dígitos para ${selectedCountry.name}`);
+      return false;
+    }
+    
+    if (!validateCPF(formData.cpf)) {
+      toast.error('CPF inválido');
+      return false;
+    }
+    
     return true;
   };
 
@@ -87,7 +207,7 @@ export default function Checkout() {
         customer: {
           name: formData.name,
           email: formData.email,
-          phone_number: formData.phone,
+          phone_number: formData.countryCode + formData.phone,
           document: formData.cpf.replace(/\D/g, '')
         },
         cart: [{
@@ -200,29 +320,87 @@ export default function Checkout() {
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Resumo do Plano */}
-          <Card className="bg-white/5 border-white/10 p-6 lg:col-span-1 h-fit">
-            <h2 className="text-lg font-bold text-white mb-4">Resumo</h2>
-            
-            <div className="bg-gradient-to-br from-[#39FF14]/10 to-[#BF00FF]/10 p-4 rounded-lg mb-4">
-              <div className="text-sm text-zinc-400 mb-1">Plano</div>
-              <div className="text-xl font-bold text-white mb-2">{currentPlan.name}</div>
-              <div className="text-2xl font-black text-[#39FF14]">
-                R$ {currentPlan.price.toFixed(2)}
-                <span className="text-xs text-zinc-400 font-normal ml-1">/ {currentPlan.billing}</span>
+          <div className="lg:col-span-1 space-y-4">
+            <Card className="bg-white/5 border-white/10 p-6">
+              <h2 className="text-lg font-bold text-white mb-4">Resumo</h2>
+              
+              <div className="bg-gradient-to-br from-[#39FF14]/10 to-[#BF00FF]/10 p-4 rounded-lg mb-4">
+                <div className="text-sm text-zinc-400 mb-1">Plano</div>
+                <div className="text-xl font-bold text-white mb-2">{currentPlan.name}</div>
+                <div className="text-2xl font-black text-[#39FF14]">
+                  R$ {currentPlan.price.toFixed(2)}
+                  <span className="text-xs text-zinc-400 font-normal ml-1">/ {currentPlan.billing}</span>
+                </div>
               </div>
-            </div>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-zinc-400">
-                <span>Subtotal</span>
-                <span>R$ {currentPlan.price.toFixed(2)}</span>
+              {/* Benefícios do Plano */}
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold text-white mb-3">O que está incluso:</h3>
+                <ul className="space-y-2">
+                  {currentPlan.benefits.map((benefit, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
+                      <Check size={16} className="text-[#39FF14] flex-shrink-0 mt-0.5" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="border-t border-white/10 pt-2 flex justify-between text-white font-bold">
-                <span>Total</span>
-                <span>R$ {currentPlan.price.toFixed(2)}</span>
+
+              <div className="space-y-2 text-sm border-t border-white/10 pt-4">
+                <div className="flex justify-between text-zinc-400">
+                  <span>Subtotal</span>
+                  <span>R$ {currentPlan.price.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-white font-bold">
+                  <span>Total</span>
+                  <span>R$ {currentPlan.price.toFixed(2)}</span>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+
+            {/* Upgrade Offer */}
+            {getUpgradePlan(planKey) && (
+              <Card className="bg-gradient-to-br from-[#BF00FF]/10 to-[#39FF14]/10 border-[#BF00FF]/30 p-4">
+                <div className="text-xs font-bold text-[#BF00FF] mb-2">🚀 UPGRADE DISPONÍVEL</div>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  Plano {PLAN_CONFIGS[getUpgradePlan(planKey)].name}
+                </h3>
+                <p className="text-xs text-zinc-400 mb-3">
+                  Economize mais e tenha acesso a recursos exclusivos
+                </p>
+                
+                <ul className="space-y-1.5 mb-4">
+                  {PLAN_CONFIGS[getUpgradePlan(planKey)].benefits.slice(0, 3).map((benefit, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-zinc-300">
+                      <Check size={14} className="text-[#39FF14] flex-shrink-0 mt-0.5" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                  {PLAN_CONFIGS[getUpgradePlan(planKey)].benefits.length > 3 && (
+                    <li className="text-xs text-zinc-400 italic">
+                      +{PLAN_CONFIGS[getUpgradePlan(planKey)].benefits.length - 3} benefícios adicionais
+                    </li>
+                  )}
+                </ul>
+
+                <div className="bg-white/5 rounded-lg p-3 mb-3">
+                  <div className="text-2xl font-black text-[#39FF14]">
+                    R$ {PLAN_CONFIGS[getUpgradePlan(planKey)].price.toFixed(2)}
+                    <span className="text-xs text-zinc-400 font-normal ml-1">
+                      / {PLAN_CONFIGS[getUpgradePlan(planKey)].billing}
+                    </span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => navigate(createPageUrl('Checkout') + `?plan=${getUpgradePlan(planKey)}`)}
+                  className="w-full bg-gradient-to-r from-[#BF00FF] to-[#39FF14] text-white font-bold"
+                >
+                  Fazer upgrade agora
+                </Button>
+              </Card>
+            )}
+          </div>
 
           {/* Formulário */}
           <div className="lg:col-span-2">
@@ -277,24 +455,55 @@ export default function Checkout() {
                         type="password"
                         value={formData.confirmPassword}
                         onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
+                        className={`bg-white/5 border-white/10 text-white ${
+                          formData.confirmPassword && formData.password !== formData.confirmPassword
+                            ? 'border-red-500'
+                            : formData.confirmPassword && formData.password === formData.confirmPassword
+                            ? 'border-green-500'
+                            : ''
+                        }`}
                         placeholder="Confirme sua senha"
                         required
                       />
+                      {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                        <p className="text-xs text-red-400 mt-1">As senhas não coincidem</p>
+                      )}
+                      {formData.confirmPassword && formData.password === formData.confirmPassword && (
+                        <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                          <Check size={12} /> Senhas correspondem
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label className="text-white">Celular *</Label>
-                      <Input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
-                        placeholder="(11) 99999-9999"
-                        required
-                      />
+                      <div className="flex gap-2">
+                        <select
+                          value={formData.countryCode}
+                          onChange={(e) => handleInputChange('countryCode', e.target.value)}
+                          className="bg-white/5 border border-white/10 text-white rounded-md px-3 py-2 w-32"
+                        >
+                          {COUNTRIES.map((country) => (
+                            <option key={country.code} value={country.code}>
+                              {country.flag} {country.code}
+                            </option>
+                          ))}
+                        </select>
+                        <Input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          className="bg-white/5 border-white/10 text-white flex-1"
+                          placeholder={`${selectedCountry.length} dígitos`}
+                          maxLength={selectedCountry.length}
+                          required
+                        />
+                      </div>
+                      <p className="text-xs text-zinc-500 mt-1">
+                        {selectedCountry.name}: {selectedCountry.length} dígitos
+                      </p>
                     </div>
                     <div>
                       <Label className="text-white">CPF *</Label>
@@ -303,6 +512,7 @@ export default function Checkout() {
                         onChange={(e) => handleInputChange('cpf', e.target.value)}
                         className="bg-white/5 border-white/10 text-white"
                         placeholder="000.000.000-00"
+                        maxLength={14}
                         required
                       />
                     </div>
