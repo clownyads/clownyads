@@ -12,6 +12,7 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
   const [formData, setFormData] = useState(offer || {
     name: '',
     niche: 'nutra',
+    category: 'tendencias',
     status: 'escalando',
     aggressiveness: 3,
     risk_level: 'medio',
@@ -103,6 +104,33 @@ export default function OfferForm({ offer, onSubmit, onCancel, isLoading }) {
               <SelectItem value="hot">Hot</SelectItem>
               <SelectItem value="info_gray">Info Gray</SelectItem>
               <SelectItem value="info_black">Info Black</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Categoria */}
+        <div>
+          <Label className="text-white mb-2 block">Categoria *</Label>
+          <Select value={formData.category} onValueChange={(v) => handleChange('category', v)}>
+            <SelectTrigger className="bg-white/5 border-white/10 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-[#18181B] border-white/10 max-h-[300px]">
+              <SelectItem value="tendencias">🔥 Tendências</SelectItem>
+              <SelectItem value="low_ticket">💸 Low Ticket</SelectItem>
+              <SelectItem value="renda_extra">📈 Renda Extra</SelectItem>
+              <SelectItem value="saude_bem_estar">❤️ Saúde & Bem-estar</SelectItem>
+              <SelectItem value="emagrecimento">🏃 Emagrecimento</SelectItem>
+              <SelectItem value="fitness_exercicios">🏋️ Fitness & Exercícios</SelectItem>
+              <SelectItem value="relacionamento">💕 Relacionamento</SelectItem>
+              <SelectItem value="sexualidade">🌶️ Sexualidade</SelectItem>
+              <SelectItem value="familia_maternidade">👨‍👩‍👧 Família & Maternidade</SelectItem>
+              <SelectItem value="educacao_idiomas">📚 Educação & Idiomas</SelectItem>
+              <SelectItem value="desenvolv_pessoal">🧠 Desenvolv. Pessoal</SelectItem>
+              <SelectItem value="espiritualidade">🙏 Espiritualidade</SelectItem>
+              <SelectItem value="moda_beleza">💄 Moda & Beleza</SelectItem>
+              <SelectItem value="estilo_vida">💎 Estilo de Vida</SelectItem>
+              <SelectItem value="pets">🐾 Pets</SelectItem>
             </SelectContent>
           </Select>
         </div>

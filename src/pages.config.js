@@ -59,6 +59,8 @@ import HotOffers from './pages/HotOffers';
 import OfferDetail from './pages/OfferDetail';
 import Offers from './pages/Offers';
 import Profile from './pages/Profile';
+import OfertasDoDia from './pages/OfertasDoDia';
+import CategoryTendencias from './pages/CategoryTendencias';
 
 
 export const PAGES = {
@@ -74,6 +76,8 @@ export const PAGES = {
     "OfferDetail": OfferDetail,
     "Offers": Offers,
     "Profile": Profile,
+    "OfertasDoDia": OfertasDoDia,
+    "CategoryTendencias": CategoryTendencias,
 }
 
 export const pagesConfig = {
