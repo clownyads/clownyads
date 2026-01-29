@@ -31,6 +31,11 @@ Deno.serve(async (req) => {
 
     const result = await response.json();
 
+    // LOG COMPLETO DA RESPOSTA DA CINQPAY
+    console.log('========== RESPOSTA CINQPAY COMPLETA ==========');
+    console.log(JSON.stringify(result, null, 2));
+    console.log('=============================================');
+
     if (!response.ok) {
       return new Response(JSON.stringify({ success: false, error: result.message || "Erro na CinqPay", details: result }), { status: 400, headers });
     }
@@ -39,7 +44,7 @@ Deno.serve(async (req) => {
     const transaction = result.data || result.transaction || result;
     
     // Log para debug - remover após validação
-    console.log('Transaction completa:', JSON.stringify(transaction, null, 2));
+    console.log('Transaction extraída:', JSON.stringify(transaction, null, 2));
     
     // Extrair dados do PIX da resposta da CinqPay
     let pixData = null;
