@@ -7,6 +7,17 @@ import { ArrowRight, Zap, Shield, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Hero() {
+  React.useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://scripts.converteai.net/d8555716-f0a5-49a3-b44d-8c262d98909f/players/697b085ff4ad5bc74fb0d3e2/v4/player.js';
+    script.async = true;
+    document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0B0D] pt-16">
       {/* Background Effects */}
@@ -73,15 +84,7 @@ Extraídas do mercado com tecnologia ant-cloacker, filtradas e prontas pra você
           className="max-w-3xl mx-auto mb-8 px-4">
 
           <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-video">
-            <iframe
-              className="w-full h-full"
-              src="https://www.youtube.com/embed/BsX5zcxHhas?controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&fs=0"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen />
-
+            <vturb-smartplayer id="vid-697b085ff4ad5bc74fb0d3e2" style={{ display: 'block', margin: '0 auto', width: '100%' }}></vturb-smartplayer>
           </div>
         </motion.div>
 
