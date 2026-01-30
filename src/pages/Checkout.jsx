@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 const PLAN_CONFIGS = {
   NOVATO: { 
     name: 'NOVATO', 
-    price: 27.90, 
+    price: 19.90, 
     hash: 'pjjz31oykp', 
     billing: 'Semanal',
     benefits: [
@@ -24,7 +24,7 @@ const PLAN_CONFIGS = {
   },
   CABULOSO: { 
     name: 'CABULOSO', 
-    price: 0.10, 
+    price: 67.90, 
     hash: 'pjjz31oykp', 
     billing: 'Mensal',
     benefits: [
@@ -37,9 +37,9 @@ const PLAN_CONFIGS = {
   },
   MESTRE: { 
     name: 'MESTRE', 
-    price: 697.90, 
+    price: 497.90, 
     hash: 'pjjz31oykp', 
-    billing: 'Anual',
+    billing: 'Plano Anual',
     benefits: [
       'Todos os benefícios do CABULOSO',
       'Clowncker PLUS (cloaker premium)',
