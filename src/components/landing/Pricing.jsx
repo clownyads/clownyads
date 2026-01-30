@@ -10,7 +10,7 @@ const plans = [
   {
     name: 'NOVATO',
     icon: Zap,
-    price: 'R$27,90',
+    price: 'R$19,90',
     billing: 'Semanal',
     description: 'Testar o mercado real',
     features: [
@@ -29,7 +29,7 @@ const plans = [
   {
     name: 'CABULOSO',
     icon: Crown,
-    price: 'R$87,90',
+    price: 'R$67,90',
     billing: 'Mensal',
     description: 'Pra quem leva a sério',
     badge: 'Mais escolhido',
@@ -48,10 +48,10 @@ const plans = [
   {
     name: 'MESTRE',
     icon: Infinity,
-    price: 'R$697,90',
+    price: 'R$497,90',
     billing: 'Anual',
     description: 'Acesso definitivo',
-    badge: 'Uma vez só',
+    badge: 'Plano Anual',
     features: [
       'Acesso total',
       'Estratégia Secreta para ganhar no leilão',
