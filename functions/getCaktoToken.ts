@@ -25,10 +25,9 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
-          grant_type: 'client_credentials',
-          client_id: clientId,
-          client_secret: clientSecret,
-        }),
+            client_id: clientId,
+            client_secret: clientSecret,
+          }),
     });
 
     const text = await response.text();
