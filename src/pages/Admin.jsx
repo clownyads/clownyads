@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import Sidebar from '@/components/dashboard/Sidebar';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import OfferForm from '@/components/admin/OfferForm';
+import CaktoTestPanel from '@/components/admin/CaktoTestPanel';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -181,6 +182,9 @@ export default function Admin() {
               Nova Oferta
             </Button>
           </div>
+
+          {/* Test Panel */}
+          <CaktoTestPanel />
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
