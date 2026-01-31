@@ -52,14 +52,14 @@ Deno.serve(async (req) => {
                 <div style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                     <h3 style="color: #39FF14; margin-top: 0;">🚀 Como acessar a plataforma:</h3>
                     <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                        <li>Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a></li>
+                        <li>Acesse: <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">https://clownyads.pro/login</a></li>
                         <li>Faça login com seu e-mail</li>
                         <li>Use a senha que você criou no checkout</li>
                     </ol>
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
-                    <a href="https://clownyads.base44.com" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                    <a href="https://clownyads.pro/login" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                         Acessar Plataforma Agora 🚀
                     </a>
                 </div>
