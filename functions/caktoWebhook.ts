@@ -63,21 +63,25 @@ Deno.serve(async (req) => {
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.log('Usuário não encontrado, criando registro manualmente:', email);
-            
-            // Fallback: Criar entidade User manualmente pois inviteUser requer sessão
-            const newUser = await base44.asServiceRole.entities.User.create({
-                email: email,
-                full_name: webhookData.data?.customer?.name || 'Cliente',
-                role: 'user',
-                plan: 'FREE'
-            });
-            
-            console.log('Usuário criado manualmente:', newUser.id);
-            isNewUser = true;
-            
-            // Usar o usuário criado
-            users = [newUser];
+            console.log('LOG: Usuário não encontrado, tentando criar registro manualmente para:', email);
+            try {
+                const newUser = await base44.asServiceRole.entities.User.create({
+                    email: email,
+                    full_name: webhookData.data?.customer?.name || 'Cliente',
+                    role: 'user',
+                    plan: 'FREE'
+                });
+                console.log('LOG: Usuário criado manualmente com ID:', newUser.id);
+                isNewUser = true;
+                users = [newUser]; 
+            } catch (createErr) {
+                console.error('ERROR: Falha ao criar usuário manualmente para:', email, createErr);
+                // Se falhar a criação do usuário, não podemos prosseguir
+                return Response.json(
+                    { success: false, error: 'Falha ao criar registro de usuário.' },
+                    { status: 500, headers: corsHeaders }
+                );
+            }
         }
         
         user = users[0];
@@ -108,23 +112,31 @@ Deno.serve(async (req) => {
                     planExpiresAt = addMonths(now, 1).toISOString();
                 }
                 
-                await base44.asServiceRole.entities.User.update(user.id, {
-                    plan: userPlan,
-                    plan_updated_at: now.toISOString(),
-                    plan_expires_at: planExpiresAt
-                });
+                try {
+                    await base44.asServiceRole.entities.User.update(user.id, {
+                        plan: userPlan,
+                        plan_updated_at: now.toISOString(),
+                        plan_expires_at: planExpiresAt
+                    });
+                    console.log(`LOG: Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
+                } catch (updateUserErr) {
+                    console.error('ERROR: Falha ao atualizar plano do usuário:', user.id, updateUserErr);
+                }
     
-                console.log(`Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
-    
-                await base44.asServiceRole.entities.Payment.create({
-                    amount: amount,
-                    currency: 'BRL',
-                    status: 'approved',
-                    transactionId: transactionId,
-                    userId: user.id,
-                    plan: userPlan,
-                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
-                });
+                try {
+                    await base44.asServiceRole.entities.Payment.create({
+                        amount: amount,
+                        currency: 'BRL',
+                        status: 'approved',
+                        transactionId: transactionId,
+                        userId: user.id,
+                        plan: userPlan,
+                        paymentMethod: webhookData.data?.paymentMethod || 'unknown'
+                    });
+                    console.log(`LOG: Pagamento registrado para usuário ${email}`);
+                } catch (createPaymentErr) {
+                    console.error('ERROR: Falha ao registrar pagamento para:', user.id, createPaymentErr);
+                }
     
                 console.log(`Pagamento registrado para usuário ${email}`);
 
@@ -257,22 +269,32 @@ Deno.serve(async (req) => {
             case 'subscription_renewal_refused':
             case 'chargeback':
             case 'refund':
-                await base44.asServiceRole.entities.User.update(user.id, {
-                    plan: 'FREE',
-                    plan_updated_at: now.toISOString(),
-                    plan_expires_at: now.toISOString()
-                });
-                console.log(`Plano do usuário ${email} alterado para FREE devido ao evento ${eventType}`);
+                const revokedPlan = 'FREE';
+                try {
+                    await base44.asServiceRole.entities.User.update(user.id, {
+                        plan: revokedPlan,
+                        plan_updated_at: now.toISOString(),
+                        plan_expires_at: now.toISOString()
+                    });
+                    console.log(`LOG: Plano do usuário ${email} alterado para ${revokedPlan} devido ao evento ${eventType}`);
+                } catch (updateUserErr) {
+                    console.error('ERROR: Falha ao revogar plano do usuário:', user.id, updateUserErr);
+                }
 
-                await base44.asServiceRole.entities.Payment.create({
-                    amount: amount,
-                    currency: 'BRL',
-                    status: eventType.replace(/_/g, '.'),
-                    transactionId: transactionId,
-                    userId: user.id,
-                    plan: userPlan,
-                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
-                });
+                try {
+                    await base44.asServiceRole.entities.Payment.create({
+                        amount: amount,
+                        currency: 'BRL',
+                        status: eventType.replace(/_/g, '.'),
+                        transactionId: transactionId,
+                        userId: user.id,
+                        plan: revokedPlan, 
+                        paymentMethod: webhookData.data?.paymentMethod || 'unknown'
+                    });
+                    console.log(`LOG: Pagamento de revogação registrado para usuário ${email}`);
+                } catch (createPaymentErr) {
+                    console.error('ERROR: Falha ao registrar pagamento de revogação para:', user.id, createPaymentErr);
+                }
 
                 return Response.json(
                     { success: true, message: 'Plano revogado com sucesso', user_plan: 'FREE' },
