@@ -22,10 +22,11 @@ Deno.serve(async (req) => {
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.log('Usuário não encontrado, criando convite:', email);
-            await base44.asServiceRole.users.inviteUser(email, "user");
-            console.log('Convite enviado para:', email);
-            isNewUser = true;
+            console.log('Usuário não encontrado, favor verificar manualmente se o usuário existe');
+            return Response.json({ 
+                error: 'Usuário não encontrado. O webhook da Cakto deve ter falhado. Entre em contato com o suporte.',
+                email: email 
+            }, { status: 404 });
             
             await new Promise(resolve => setTimeout(resolve, 2000));
             
