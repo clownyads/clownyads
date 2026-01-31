@@ -27,11 +27,20 @@ Deno.serve(async (req) => {
             console.log('Convite enviado para:', email);
             isNewUser = true;
             
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
             
             users = await base44.asServiceRole.entities.User.filter({ email });
             if (!users || users.length === 0) {
-                return Response.json({ error: 'Erro ao criar usuário' }, { status: 500 });
+                console.log('Tentando buscar novamente...');
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                users = await base44.asServiceRole.entities.User.filter({ email });
+                
+                if (!users || users.length === 0) {
+                    return Response.json({ 
+                        error: 'Usuário convidado mas ainda não apareceu no sistema. Verifique o email de convite.',
+                        invited: true 
+                    }, { status: 202 });
+                }
             }
         }
         
