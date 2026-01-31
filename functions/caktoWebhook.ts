@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
             console.log('Usuário não encontrado, criando convite:', email);
             
             // Convidar o usuário para criar a conta
-            await base44.asServiceRole.users.inviteUser(email, "user");
+            await base44.auth.inviteUser(email, "user");
             console.log('Convite enviado para:', email);
             
             isNewUser = true;
