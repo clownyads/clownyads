@@ -63,26 +63,21 @@ Deno.serve(async (req) => {
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.log('Usuário não encontrado, criando convite:', email);
+            console.log('Usuário não encontrado, criando registro manualmente:', email);
             
-            // Convidar o usuário para criar a conta
-            await base44.asServiceRole.users.inviteUser(email, "user");
-            console.log('Convite enviado para:', email);
+            // Fallback: Criar entidade User manualmente pois inviteUser requer sessão
+            const newUser = await base44.asServiceRole.entities.User.create({
+                email: email,
+                full_name: webhookData.data?.customer?.name || 'Cliente',
+                role: 'user',
+                plan: 'FREE'
+            });
             
+            console.log('Usuário criado manualmente:', newUser.id);
             isNewUser = true;
             
-            // Aguardar um pouco para o usuário ser criado
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            // Buscar o usuário recém-criado
-            users = await base44.asServiceRole.entities.User.filter({ email });
-            if (!users || users.length === 0) {
-                console.error('Erro ao criar usuário:', email);
-                return Response.json(
-                    { success: false, error: 'Erro ao criar usuário' },
-                    { status: 500, headers: corsHeaders }
-                );
-            }
+            // Usar o usuário criado
+            users = [newUser];
         }
         
         user = users[0];
@@ -164,17 +159,13 @@ Deno.serve(async (req) => {
                                 ${isNewUser ? `
                                 <div style="background-color: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
                                     <p style="color: #39FF14; font-size: 14px; margin: 0; font-weight: bold;">
-                                        ⚠️ IMPORTANTE: Você receberá um e-mail separado da plataforma ClownyAds com um link para criar sua senha de acesso.
-                                    </p>
-                                    <p style="color: #fff; font-size: 13px; margin: 8px 0 0 0;">
-                                        Verifique sua caixa de entrada (e spam) para o e-mail com o assunto "Convite para acessar ClownyAds".
+                                        ⚠️ IMPORTANTE: Se este é seu primeiro acesso, utilize a opção "Esqueci minha senha" no login para definir sua senha.
                                     </p>
                                 </div>
                                 ` : ''}
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                                    <li>${isNewUser ? 'Verifique seu e-mail e clique no link de convite para criar sua senha' : 'Acesse: <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.app</a>'}</li>
-                                    <li>${isNewUser ? 'Crie sua senha de acesso' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
-                                    <li>${isNewUser ? 'Acesse: <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.app</a>' : 'Use sua senha'}</li>
+                                    <li>Acesse: <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.app</a></li>
+                                    <li>${isNewUser ? 'Clique em "Esqueci minha senha" e use seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
                                 </ol>
                             </div>
 
