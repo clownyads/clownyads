@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
       'Authorization': `${token_type || 'Bearer'} ${access_token}`,
     });
 
-    let body: BodyInit | undefined = undefined;
+    let body = undefined;
 
     if (payload !== undefined && method.toUpperCase() !== 'GET') {
       headers.set('Content-Type', 'application/json');
@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
       });
     }
   } catch (error) {
-    return Response.json({ error: error && (error as Error).message ? (error as Error).message : String(error) }, { status: 500 });
+    const message = (error && typeof error === 'object' && 'message' in error) ? error.message : String(error);
+    return Response.json({ error: message }, { status: 500 });
   }
 });
