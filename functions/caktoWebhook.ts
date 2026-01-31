@@ -163,9 +163,20 @@ Deno.serve(async (req) => {
                                     </p>
                                 </div>
                                 ` : ''}
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <a href="https://clownyads.base44.app" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Acessar Plataforma</a>
+                                </div>
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                                    <li>Acesse: <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.app</a></li>
-                                    <li>${isNewUser ? 'Clique em "Esqueci minha senha" e use seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
+                                    <li>Acesse a plataforma clicando no botão acima ou em <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">clownyads.base44.app</a></li>
+                                    ${isNewUser ? `
+                                    <li style="margin-top: 10px;">
+                                        <strong>Primeiro Acesso:</strong> Na tela de login, clique em <strong style="color: #39FF14;">"Esqueci minha senha"</strong>
+                                    </li>
+                                    <li>Digite seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
+                                    <li>Você receberá um link para definir sua senha de acesso.</li>
+                                    ` : `
+                                    <li style="margin-top: 10px;">Faça login com seu e-mail: <strong style="color: #39FF14;">${email}</strong> e sua senha atual.</li>
+                                    `}
                                 </ol>
                             </div>
 
