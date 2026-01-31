@@ -19,13 +19,12 @@ Deno.serve(async (req) => {
       );
     }
 
-    const basic = btoa(`${clientId}:${clientSecret}`);
-    // List of configurations to try
+    // Configurations to try (Prioritizing the one that worked: JSON Body + Trailing Slash)
     const configs = [
-      // 1. JSON body with client_credentials (no trailing slash)
+      // 1. JSON Body + Trailing Slash (Confirmed working)
       {
-        name: "JSON Body, No Trailing Slash",
-        url: 'https://api.cakto.com.br/public_api/token',
+        name: "JSON Body + Trailing Slash",
+        url: 'https://api.cakto.com.br/public_api/token/',
         init: {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -36,38 +35,10 @@ Deno.serve(async (req) => {
           })
         }
       },
-      // 2. Form URL Encoded, No Trailing Slash, grant_type=client_credentials
+      // 2. Basic Auth + Trailing Slash (Backup)
       {
-        name: "Form Encoded, No Trailing Slash",
-        url: 'https://api.cakto.com.br/public_api/token',
-        init: {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            client_id: clientId,
-            client_secret: clientSecret,
-            grant_type: 'client_credentials'
-          })
-        }
-      },
-      // 3. Form URL Encoded, WITH Trailing Slash (Original), grant_type=client_credentials
-      {
-        name: "Form Encoded, With Trailing Slash",
+        name: "Basic Auth + Trailing Slash",
         url: 'https://api.cakto.com.br/public_api/token/',
-        init: {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            client_id: clientId,
-            client_secret: clientSecret,
-            grant_type: 'client_credentials'
-          })
-        }
-      },
-       // 4. Basic Auth
-      {
-        name: "Basic Auth",
-        url: 'https://api.cakto.com.br/public_api/token',
         init: {
           method: 'POST',
           headers: {
@@ -75,6 +46,21 @@ Deno.serve(async (req) => {
             'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
           },
           body: new URLSearchParams({ grant_type: 'client_credentials' })
+        }
+      },
+      // 3. Form Encoded + Trailing Slash + Scope (Backup)
+      {
+        name: "Form Encoded + Trailing Slash + Scope",
+        url: 'https://api.cakto.com.br/public_api/token/',
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials',
+            scope: '*'
+          })
         }
       }
     ];
