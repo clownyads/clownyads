@@ -20,61 +20,88 @@ Deno.serve(async (req) => {
     }
 
     const basic = btoa(`${clientId}:${clientSecret}`);
-    const tokenUrl = 'https://api.cakto.com.br/public_api/token/';
-
-    const attempt = async (init) => {
-      const res = await fetch(tokenUrl, init);
-      const txt = await res.text();
-      let json;
-      try { json = JSON.parse(txt); } catch { json = { raw: txt }; }
-      return { res, json };
-    };
-
-    // Attempt 1: form-encoded with client_id/secret (as per docs)
-    let { res, json } = await attempt({
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ client_id: clientId, client_secret: clientSecret })
-    });
-
-    if (res.ok) {
-      return Response.json(json, { status: 200 });
-    }
-
-    // Attempt 2: Basic auth + grant_type=client_credentials
-    if (json?.error === 'unsupported_grant_type' || res.status === 400) {
-      const basic = btoa(`${clientId}:${clientSecret}`);
-      ({ res, json } = await attempt({
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': `Basic ${basic}`,
-        },
-        body: new URLSearchParams({ grant_type: 'client_credentials' })
-      }));
-      if (res.ok) {
-        return Response.json(json, { status: 200 });
+    // List of configurations to try
+    const configs = [
+      // 1. JSON body with client_credentials (no trailing slash)
+      {
+        name: "JSON Body, No Trailing Slash",
+        url: 'https://api.cakto.com.br/public_api/token',
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials'
+          })
+        }
+      },
+      // 2. Form URL Encoded, No Trailing Slash, grant_type=client_credentials
+      {
+        name: "Form Encoded, No Trailing Slash",
+        url: 'https://api.cakto.com.br/public_api/token',
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials'
+          })
+        }
+      },
+      // 3. Form URL Encoded, WITH Trailing Slash (Original), grant_type=client_credentials
+      {
+        name: "Form Encoded, With Trailing Slash",
+        url: 'https://api.cakto.com.br/public_api/token/',
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            client_id: clientId,
+            client_secret: clientSecret,
+            grant_type: 'client_credentials'
+          })
+        }
+      },
+       // 4. Basic Auth
+      {
+        name: "Basic Auth",
+        url: 'https://api.cakto.com.br/public_api/token',
+        init: {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+          },
+          body: new URLSearchParams({ grant_type: 'client_credentials' })
+        }
       }
-    }
+    ];
 
-    // Attempt 3: grant_type in body + client creds in body
-    if (json?.error === 'unsupported_grant_type' || res.status === 400) {
-      ({ res, json } = await attempt({
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          grant_type: 'client_credentials',
-          client_id: clientId,
-          client_secret: clientSecret,
-        })
-      }));
-      if (res.ok) {
-        return Response.json(json, { status: 200 });
+    const attempts = [];
+
+    for (const config of configs) {
+      console.log(`Trying auth config: ${config.name}`);
+      try {
+        const res = await fetch(config.url, config.init);
+        const txt = await res.text();
+        let json;
+        try { json = JSON.parse(txt); } catch { json = { raw: txt }; }
+        
+        attempts.push({ name: config.name, status: res.status, response: json });
+
+        if (res.ok && json.access_token) {
+          console.log(`Success with config: ${config.name}`);
+          return Response.json(json, { status: 200 });
+        }
+      } catch (err) {
+        attempts.push({ name: config.name, error: err.message });
       }
     }
 
     return Response.json(
-      { error: 'Cakto token request failed', status: res.status, data: json },
+      { error: 'All Cakto token strategies failed', attempts },
       { status: 502 }
     );
   } catch (error) {
