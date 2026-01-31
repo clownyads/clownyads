@@ -27,13 +27,13 @@ export default function CTASection() {
             Use o que já está funcionando no mercado real.
           </p>
           
-          <a href="#precos">
+          <a href="https://pay.cakto.com.br/8ft2cqr" target="_blank" rel="noopener noreferrer">
             <Button 
               size="lg" 
               className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-bold text-lg px-10 h-14 group"
             >
               Entrar no ClownyAds agora
-              <parameter name="ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </a>
           

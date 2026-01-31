@@ -122,7 +122,11 @@ export default function PlanUpgradePrompt() {
                 ))}
               </div>
 
-              <Link to={`${createPageUrl('Checkout')}?plan=${plan.planType}`}>
+              <a href={
+                plan.planType === 'NOVATO' ? 'https://pay.cakto.com.br/375opkw_747493' :
+                plan.planType === 'CABULOSO' ? 'https://pay.cakto.com.br/8ft2cqr' :
+                'https://pay.cakto.com.br/7srttoi'
+              } target="_blank" rel="noopener noreferrer">
                 <Button 
                   className="w-full font-semibold"
                   style={{ 
@@ -133,7 +137,7 @@ export default function PlanUpgradePrompt() {
                 >
                   Começar agora
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         ))}

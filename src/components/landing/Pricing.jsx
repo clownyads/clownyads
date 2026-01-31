@@ -179,7 +179,11 @@ export default function Pricing() {
                   ))}
                 </div>
 
-                <Link to={`${createPageUrl('Checkout')}?plan=${plan.planType}`}>
+                <a href={
+                  plan.planType === 'NOVATO' ? 'https://pay.cakto.com.br/375opkw_747493' :
+                  plan.planType === 'CABULOSO' ? 'https://pay.cakto.com.br/8ft2cqr' :
+                  'https://pay.cakto.com.br/7srttoi'
+                } target="_blank" rel="noopener noreferrer">
                   <Button 
                     className="w-full font-semibold h-12"
                     style={{ 
@@ -190,7 +194,7 @@ export default function Pricing() {
                   >
                     Começar agora
                   </Button>
-                </Link>
+                </a>
               </div>
             </motion.div>
           ))}
