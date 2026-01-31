@@ -62,6 +62,28 @@ Deno.serve(async (req) => {
             scope: '*'
           })
         }
+      },
+      // 4. Form Encoded + Trailing Slash + NO grant_type (Implicit)
+      {
+        name: "Form Encoded + Trailing Slash + NO grant_type",
+        url: 'https://api.cakto.com.br/public_api/token/',
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            client_id: clientId,
+            client_secret: clientSecret
+          })
+        }
+      },
+      // 5. Query Params + Trailing Slash (Desperation)
+      {
+        name: "Query Params + Trailing Slash",
+        url: `https://api.cakto.com.br/public_api/token/?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
+        init: {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        }
       }
     ];
 
