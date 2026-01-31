@@ -19,15 +19,16 @@ Deno.serve(async (req) => {
       );
     }
 
+    const basic = btoa(`${clientId}:${clientSecret}`);
     const response = await fetch('https://api.cakto.com.br/public_api/token/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${basic}`,
       },
       body: new URLSearchParams({
-            client_id: clientId,
-            client_secret: clientSecret,
-          }),
+        grant_type: 'client_credentials',
+      }),
     });
 
     const text = await response.text();
