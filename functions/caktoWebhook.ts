@@ -22,23 +22,24 @@ Deno.serve(async (req) => {
 
         // Validar a chave secreta do webhook
         const webhookSecret = Deno.env.get('CAKTO_WEBHOOK_SECRET');
-        const signature = req.headers.get('X-Webhook-Signature') || webhookData.webhook_secret;
+        const receivedSecret = webhookData.secret;
 
-        if (signature !== webhookSecret) {
-            console.error('Webhook signature inválida');
+        if (receivedSecret !== webhookSecret) {
+            console.error('Webhook secret inválido. Recebido:', receivedSecret);
             return Response.json(
-                { success: false, error: 'Webhook signature inválida' },
+                { success: false, error: 'Webhook secret inválido' },
                 { status: 401, headers: corsHeaders }
             );
         }
 
-        console.log('Webhook Cakto recebido:', webhookData);
+        console.log('Webhook Cakto recebido:', JSON.stringify(webhookData, null, 2));
 
-        const eventType = webhookData.event || webhookData.type;
-        const email = webhookData.customer?.email || webhookData.email;
-        const productName = webhookData.product?.name || webhookData.plan;
-        const amount = webhookData.amount || webhookData.value || 0;
-        const transactionId = webhookData.transaction_id || webhookData.id;
+        const eventType = webhookData.event;
+        const email = webhookData.data?.customer?.email;
+        const offerName = webhookData.data?.offer?.name;
+        const productName = webhookData.data?.product?.name;
+        const amount = webhookData.data?.amount || 0;
+        const transactionId = webhookData.data?.id;
         
         if (!email) {
             console.error('Email não encontrado no webhook');
@@ -83,19 +84,24 @@ Deno.serve(async (req) => {
 
         switch (eventType) {
             case 'purchase_approved':
-            case 'payment.approved':
-            case 'payment.confirmed':
             case 'subscription_created':
             case 'subscription_renewed':
-                if (productName?.includes('NOVATO') || productName?.includes('Novato')) {
+                // Verificar nome da oferta ou produto
+                const fullName = `${offerName} ${productName}`.toLowerCase();
+                
+                if (fullName.includes('novato')) {
                     userPlan = 'NOVATO';
                     planExpiresAt = addDays(now, 7).toISOString();
-                } else if (productName?.includes('CABULOSO') || productName?.includes('Cabuloso')) {
+                } else if (fullName.includes('cabuloso')) {
                     userPlan = 'CABULOSO';
                     planExpiresAt = addMonths(now, 1).toISOString();
-                } else if (productName?.includes('MESTRE') || productName?.includes('Mestre')) {
+                } else if (fullName.includes('mestre')) {
                     userPlan = 'MESTRE';
                     planExpiresAt = addYears(now, 1).toISOString();
+                } else {
+                    console.warn('Plano não identificado. Oferta:', offerName, 'Produto:', productName);
+                    userPlan = 'CABULOSO'; // Fallback para o plano mais popular
+                    planExpiresAt = addMonths(now, 1).toISOString();
                 }
                 
                 await base44.asServiceRole.entities.User.update(user.id, {
