@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { addDays, addMonths, addYears } from 'npm:date-fns';
 
 Deno.serve(async (req) => {
     // CORS headers
@@ -33,85 +34,112 @@ Deno.serve(async (req) => {
 
         console.log('Webhook Cakto recebido:', webhookData);
 
-        // Identificar o tipo de evento
         const eventType = webhookData.event || webhookData.type;
-        const status = webhookData.status;
         const email = webhookData.customer?.email || webhookData.email;
-        const plan = webhookData.product?.name || webhookData.plan || 'CABULOSO';
+        const productName = webhookData.product?.name || webhookData.plan;
         const amount = webhookData.amount || webhookData.value || 0;
         const transactionId = webhookData.transaction_id || webhookData.id;
-
-        // Processar apenas pagamentos aprovados/confirmados
-        if (eventType === 'payment.approved' || eventType === 'payment.confirmed' || status === 'approved' || status === 'paid') {
-            
-            if (!email) {
-                console.error('Email não encontrado no webhook');
-                return Response.json(
-                    { success: false, error: 'Email não encontrado' },
-                    { status: 400, headers: corsHeaders }
-                );
-            }
-
-            // Buscar o usuário pelo email usando service role
-            const users = await base44.asServiceRole.entities.User.filter({ email });
-
-            if (!users || users.length === 0) {
-                console.error('Usuário não encontrado:', email);
-                return Response.json(
-                    { success: false, error: 'Usuário não encontrado' },
-                    { status: 404, headers: corsHeaders }
-                );
-            }
-
-            const user = users[0];
-
-            // Determinar o plano baseado no nome do produto
-            let userPlan = 'FREE';
-            if (plan.includes('NOVATO') || plan.includes('Novato')) {
-                userPlan = 'NOVATO';
-            } else if (plan.includes('CABULOSO') || plan.includes('Cabuloso')) {
-                userPlan = 'CABULOSO';
-            } else if (plan.includes('MESTRE') || plan.includes('Mestre')) {
-                userPlan = 'MESTRE';
-            }
-
-            // Atualizar o plano do usuário
-            await base44.asServiceRole.entities.User.update(user.id, {
-                plan: userPlan,
-                plan_updated_at: new Date().toISOString()
-            });
-
-            console.log(`Plano do usuário ${email} atualizado para ${userPlan}`);
-
-            // Registrar o pagamento na entidade Payment
-            await base44.asServiceRole.entities.Payment.create({
-                amount: amount / 100, // Converter centavos para reais
-                currency: 'BRL',
-                status: 'approved',
-                transactionId: transactionId,
-                userId: user.id,
-                plan: userPlan,
-                paymentMethod: webhookData.payment_method || 'unknown',
-                metadata: JSON.stringify(webhookData)
-            });
-
-            console.log(`Pagamento registrado para usuário ${email}`);
-
+        
+        if (!email) {
+            console.error('Email não encontrado no webhook');
             return Response.json(
-                { 
-                    success: true, 
-                    message: 'Pagamento processado com sucesso',
-                    user_plan: userPlan
-                },
-                { status: 200, headers: corsHeaders }
+                { success: false, error: 'Email não encontrado' },
+                { status: 400, headers: corsHeaders }
             );
         }
 
-        // Para outros eventos, apenas retornar sucesso
-        return Response.json(
-            { success: true, message: 'Evento recebido mas não processado' },
-            { status: 200, headers: corsHeaders }
-        );
+        const users = await base44.asServiceRole.entities.User.filter({ email });
+        if (!users || users.length === 0) {
+            console.error('Usuário não encontrado:', email);
+            return Response.json(
+                { success: false, error: 'Usuário não encontrado' },
+                { status: 404, headers: corsHeaders }
+            );
+        }
+        let user = users[0];
+
+        let userPlan = user.plan;
+        let planExpiresAt = user.plan_expires_at;
+        const now = new Date();
+
+        switch (eventType) {
+            case 'purchase_approved':
+            case 'payment.approved':
+            case 'payment.confirmed':
+            case 'subscription_created':
+            case 'subscription_renewed':
+                if (productName?.includes('NOVATO') || productName?.includes('Novato')) {
+                    userPlan = 'NOVATO';
+                    planExpiresAt = addDays(now, 7).toISOString();
+                } else if (productName?.includes('CABULOSO') || productName?.includes('Cabuloso')) {
+                    userPlan = 'CABULOSO';
+                    planExpiresAt = addMonths(now, 1).toISOString();
+                } else if (productName?.includes('MESTRE') || productName?.includes('Mestre')) {
+                    userPlan = 'MESTRE';
+                    planExpiresAt = addYears(now, 1).toISOString();
+                }
+                
+                await base44.asServiceRole.entities.User.update(user.id, {
+                    plan: userPlan,
+                    plan_updated_at: now.toISOString(),
+                    plan_expires_at: planExpiresAt
+                });
+    
+                console.log(`Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
+    
+                await base44.asServiceRole.entities.Payment.create({
+                    amount: amount / 100,
+                    currency: 'BRL',
+                    status: 'approved',
+                    transactionId: transactionId,
+                    userId: user.id,
+                    plan: userPlan,
+                    paymentMethod: webhookData.payment_method || 'unknown',
+                    metadata: JSON.stringify(webhookData)
+                });
+    
+                console.log(`Pagamento registrado para usuário ${email}`);
+
+                return Response.json(
+                    { success: true, message: 'Pagamento processado com sucesso', user_plan: userPlan },
+                    { status: 200, headers: corsHeaders }
+                );
+
+            case 'purchase_refused':
+            case 'subscription_canceled':
+            case 'subscription_renewal_refused':
+            case 'chargeback':
+            case 'refund':
+                await base44.asServiceRole.entities.User.update(user.id, {
+                    plan: 'FREE',
+                    plan_updated_at: now.toISOString(),
+                    plan_expires_at: now.toISOString()
+                });
+                console.log(`Plano do usuário ${email} alterado para FREE devido ao evento ${eventType}`);
+
+                await base44.asServiceRole.entities.Payment.create({
+                    amount: amount / 100,
+                    currency: 'BRL',
+                    status: eventType.replace(/_/g, '.'),
+                    transactionId: transactionId,
+                    userId: user.id,
+                    plan: userPlan,
+                    paymentMethod: webhookData.payment_method || 'unknown',
+                    metadata: JSON.stringify(webhookData)
+                });
+
+                return Response.json(
+                    { success: true, message: 'Plano revogado com sucesso', user_plan: 'FREE' },
+                    { status: 200, headers: corsHeaders }
+                );
+
+            default:
+                console.log(`Evento ${eventType} recebido, mas não há lógica para ele.`);
+                return Response.json(
+                    { success: true, message: 'Evento recebido mas não processado' },
+                    { status: 200, headers: corsHeaders }
+                );
+        }
 
     } catch (error) {
         console.error('Erro no webhook Cakto:', error);

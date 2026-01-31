@@ -23,6 +23,18 @@ export default function OfertasDoDia() {
       
       try {
         const currentUser = await base44.auth.me();
+        
+        // Verificar se o plano expirou
+        if (currentUser.plan_expires_at) {
+          const expiresAt = new Date(currentUser.plan_expires_at);
+          const now = new Date();
+          
+          if (expiresAt < now && currentUser.plan !== 'FREE') {
+            // Plano expirado - definir como FREE localmente para exibir o prompt
+            currentUser.plan = 'FREE';
+          }
+        }
+        
         setUser(currentUser);
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);
