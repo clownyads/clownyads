@@ -9,8 +9,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const clientId = Deno.env.get('CLIENT_ID');
-    const clientSecret = Deno.env.get('CLIENT_SECRET');
+    const clientId = (Deno.env.get('CLIENT_ID') || '').trim();
+    const clientSecret = (Deno.env.get('CLIENT_SECRET') || '').trim();
 
     if (!clientId || !clientSecret) {
       return Response.json(
@@ -19,9 +19,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Configurations to try (Prioritizing the one that worked: JSON Body + Trailing Slash)
+    // List of configurations to try - Focusing on Trailing Slash
     const configs = [
-      // 1. JSON Body + Trailing Slash (Confirmed working)
+      // 1. JSON Body + Trailing Slash
       {
         name: "JSON Body + Trailing Slash",
         url: 'https://api.cakto.com.br/public_api/token/',
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
           })
         }
       },
-      // 2. Basic Auth + Trailing Slash (Backup)
+      // 2. Basic Auth + Trailing Slash
       {
         name: "Basic Auth + Trailing Slash",
         url: 'https://api.cakto.com.br/public_api/token/',
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
           body: new URLSearchParams({ grant_type: 'client_credentials' })
         }
       },
-      // 3. Form Encoded + Trailing Slash + Scope (Backup)
+      // 3. Form Encoded + Trailing Slash + Scope
       {
         name: "Form Encoded + Trailing Slash + Scope",
         url: 'https://api.cakto.com.br/public_api/token/',
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
           })
         }
       },
-      // 4. Form Encoded + Trailing Slash + NO grant_type (Implicit)
+       // 4. Form Encoded + Trailing Slash + NO grant_type (Implicit)
       {
         name: "Form Encoded + Trailing Slash + NO grant_type",
         url: 'https://api.cakto.com.br/public_api/token/',
@@ -74,15 +74,6 @@ Deno.serve(async (req) => {
             client_id: clientId,
             client_secret: clientSecret
           })
-        }
-      },
-      // 5. Query Params + Trailing Slash (Desperation)
-      {
-        name: "Query Params + Trailing Slash",
-        url: `https://api.cakto.com.br/public_api/token/?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
-        init: {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         }
       }
     ];
