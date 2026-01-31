@@ -113,14 +113,13 @@ Deno.serve(async (req) => {
                 console.log(`Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
     
                 await base44.asServiceRole.entities.Payment.create({
-                    amount: amount / 100,
+                    amount: amount,
                     currency: 'BRL',
                     status: 'approved',
                     transactionId: transactionId,
                     userId: user.id,
                     plan: userPlan,
-                    paymentMethod: webhookData.payment_method || 'unknown',
-                    metadata: JSON.stringify(webhookData)
+                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
                 });
     
                 console.log(`Pagamento registrado para usuário ${email}`);
@@ -255,14 +254,13 @@ Deno.serve(async (req) => {
                 console.log(`Plano do usuário ${email} alterado para FREE devido ao evento ${eventType}`);
 
                 await base44.asServiceRole.entities.Payment.create({
-                    amount: amount / 100,
+                    amount: amount,
                     currency: 'BRL',
                     status: eventType.replace(/_/g, '.'),
                     transactionId: transactionId,
                     userId: user.id,
                     plan: userPlan,
-                    paymentMethod: webhookData.payment_method || 'unknown',
-                    metadata: JSON.stringify(webhookData)
+                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
                 });
 
                 return Response.json(
