@@ -144,21 +144,21 @@ export default function Profile() {
                       {user?.plan ? `Plano ${user.plan}` : 'Sem plano ativo'}
                     </p>
                     <p className="text-sm text-zinc-400">
-                      {user?.plan === 'MESTRE' && 'R$697,90/ano • Renova em 15/02/2026'}
-                      {user?.plan === 'CABULOSO' && 'R$87,90/mês • Renova em 15/02/2025'}
-                      {user?.plan === 'NOVATO' && 'R$27,90/semana • Renova em 05/02/2025'}
+                      {user?.plan === 'MESTRE' && 'R$497,90/ano • Renova em 15/02/2026'}
+                      {user?.plan === 'CABULOSO' && 'R$67,90/mês • Renova em 15/02/2025'}
+                      {user?.plan === 'NOVATO' && 'R$19,90/semana • Renova em 05/02/2025'}
                       {!user?.plan && 'Faça upgrade para acessar ofertas exclusivas'}
                     </p>
                   </div>
                   {user?.plan && user.plan !== 'MESTRE' && (
-                    <a href={createPageUrl('Checkout') + `?plan=${user.plan === 'NOVATO' ? 'CABULOSO' : 'MESTRE'}`}>
+                    <a href={createPageUrl('Home') + '#precos'}>
                       <Button className="bg-gradient-to-r from-[#39FF14] to-[#BF00FF] text-black hover:opacity-90 font-semibold">
                         Fazer Upgrade
                       </Button>
                     </a>
                   )}
                   {!user?.plan && (
-                    <a href={createPageUrl('Checkout') + '?plan=CABULOSO'}>
+                    <a href={createPageUrl('Home') + '#precos'}>
                       <Button className="bg-gradient-to-r from-[#39FF14] to-[#BF00FF] text-black hover:opacity-90 font-semibold">
                         Assinar Agora
                       </Button>
