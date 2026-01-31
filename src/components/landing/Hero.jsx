@@ -101,11 +101,11 @@ Extraídas do mercado com tecnologia ant-cloacker, filtradas e prontas pra você
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </a>
-          <Link to={createPageUrl('SignUp')}>
+          <a href="#precos">
             <Button size="lg" variant="outline" className="border-[#BF00FF]/50 text-white hover:bg-[#BF00FF]/10 bg-[#BF00FF]/5 font-semibold text-lg px-8 h-14">
-              Criar conta grátis
+              Criar conta
             </Button>
-          </Link>
+          </a>
         </motion.div>
 
         {/* Trust */}
