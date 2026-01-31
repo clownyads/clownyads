@@ -51,10 +51,10 @@ Deno.serve(async (req) => {
         const transactionId = webhookData.data?.id;
         
         if (!email) {
-            console.error('Email não encontrado no webhook');
+            console.log('Email não encontrado no webhook. Assumindo teste de validação.');
             return Response.json(
-                { success: false, error: 'Email não encontrado' },
-                { status: 400, headers: corsHeaders }
+                { success: true, message: 'Webhook recebido e validado (sem dados de email)' },
+                { status: 200, headers: corsHeaders }
             );
         }
 
