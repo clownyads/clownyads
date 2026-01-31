@@ -48,15 +48,34 @@ Deno.serve(async (req) => {
             );
         }
 
-        const users = await base44.asServiceRole.entities.User.filter({ email });
+        let users = await base44.asServiceRole.entities.User.filter({ email });
+        let user;
+        let isNewUser = false;
+
         if (!users || users.length === 0) {
-            console.error('Usuário não encontrado:', email);
-            return Response.json(
-                { success: false, error: 'Usuário não encontrado' },
-                { status: 404, headers: corsHeaders }
-            );
+            console.log('Usuário não encontrado, criando convite:', email);
+            
+            // Convidar o usuário para criar a conta
+            await base44.asServiceRole.users.inviteUser(email, "user");
+            console.log('Convite enviado para:', email);
+            
+            isNewUser = true;
+            
+            // Aguardar um pouco para o usuário ser criado
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Buscar o usuário recém-criado
+            users = await base44.asServiceRole.entities.User.filter({ email });
+            if (!users || users.length === 0) {
+                console.error('Erro ao criar usuário:', email);
+                return Response.json(
+                    { success: false, error: 'Erro ao criar usuário' },
+                    { status: 500, headers: corsHeaders }
+                );
+            }
         }
-        let user = users[0];
+        
+        user = users[0];
 
         let userPlan = user.plan;
         let planExpiresAt = user.plan_expires_at;
@@ -128,10 +147,20 @@ Deno.serve(async (req) => {
 
                             <div style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                                 <h3 style="color: #39FF14; margin-top: 0;">🚀 Como acessar a plataforma:</h3>
+                                ${isNewUser ? `
+                                <div style="background-color: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                                    <p style="color: #39FF14; font-size: 14px; margin: 0; font-weight: bold;">
+                                        ⚠️ IMPORTANTE: Você receberá um e-mail separado da plataforma ClownyAds com um link para criar sua senha de acesso.
+                                    </p>
+                                    <p style="color: #fff; font-size: 13px; margin: 8px 0 0 0;">
+                                        Verifique sua caixa de entrada (e spam) para o e-mail com o assunto "Convite para acessar ClownyAds".
+                                    </p>
+                                </div>
+                                ` : ''}
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                                    <li>Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a></li>
-                                    <li>Faça login com seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
-                                    <li>Use a senha que você criou no checkout</li>
+                                    <li>${isNewUser ? 'Verifique seu e-mail e clique no link de convite para criar sua senha' : 'Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a>'}</li>
+                                    <li>${isNewUser ? 'Crie sua senha de acesso' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
+                                    <li>${isNewUser ? 'Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a>' : 'Use sua senha'}</li>
                                 </ol>
                             </div>
 
