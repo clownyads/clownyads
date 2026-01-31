@@ -16,13 +16,22 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         
+        // Pegar token da URL (se houver)
+        const url = new URL(req.url);
+        const querySecret = url.searchParams.get('token') || url.searchParams.get('secret');
+
         // Pegar o corpo da requisição
         const body = await req.text();
-        const webhookData = JSON.parse(body);
+        let webhookData = {};
+        try {
+            webhookData = JSON.parse(body);
+        } catch (e) {
+            console.log('Corpo da requisição não é JSON válido ou está vazio');
+        }
 
-        // Validar a chave secreta do webhook
+        // Validar a chave secreta do webhook (prioridade para o body, fallback para URL)
         const webhookSecret = Deno.env.get('CAKTO_WEBHOOK_SECRET');
-        const receivedSecret = webhookData.secret;
+        const receivedSecret = webhookData.secret || querySecret;
 
         if (receivedSecret !== webhookSecret) {
             console.error('Webhook secret inválido. Recebido:', receivedSecret);
