@@ -100,6 +100,81 @@ Deno.serve(async (req) => {
     
                 console.log(`Pagamento registrado para usuário ${email}`);
 
+                // Enviar e-mail de acesso
+                try {
+                    const planNames = {
+                        'NOVATO': 'Novato (Semanal)',
+                        'CABULOSO': 'Cabuloso (Mensal)',
+                        'MESTRE': 'Mestre (Anual)'
+                    };
+
+                    await base44.asServiceRole.integrations.Core.SendEmail({
+                        to: email,
+                        subject: '🎉 Bem-vindo ao ClownyAds! Seu acesso está liberado',
+                        from_name: 'ClownyAds',
+                        body: `
+                            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0B0B0D; color: #fff; padding: 40px 20px;">
+                                <div style="text-align: center; margin-bottom: 30px;">
+                                    <h1 style="color: #39FF14; margin: 0;">🎪 ClownyAds</h1>
+                                </div>
+                                
+                                <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(191, 0, 255, 0.1) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+                                    <h2 style="color: #39FF14; margin-top: 0;">Pagamento Confirmado! ✅</h2>
+                                    <p style="color: #fff; font-size: 16px; line-height: 1.6;">
+                                        Olá <strong>${user.full_name || 'Cliente'}</strong>,
+                                    </p>
+                                    <p style="color: #fff; font-size: 16px; line-height: 1.6;">
+                                        Seu pagamento foi confirmado com sucesso e seu acesso ao plano <strong style="color: #39FF14;">${planNames[userPlan] || userPlan}</strong> está ativo!
+                                    </p>
+                                </div>
+
+                                <div style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #39FF14; margin-top: 0;">🚀 Como acessar a plataforma:</h3>
+                                    <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
+                                        <li>Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a></li>
+                                        <li>Faça login com seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
+                                        <li>Use a senha que você criou no checkout</li>
+                                    </ol>
+                                </div>
+
+                                <div style="background-color: rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                                    <h3 style="color: #39FF14; margin-top: 0;">📊 Detalhes da sua assinatura:</h3>
+                                    <table style="width: 100%; color: #fff; font-size: 14px;">
+                                        <tr>
+                                            <td style="padding: 8px 0;">Plano:</td>
+                                            <td style="padding: 8px 0; text-align: right;"><strong style="color: #39FF14;">${planNames[userPlan] || userPlan}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0;">Validade:</td>
+                                            <td style="padding: 8px 0; text-align: right;"><strong>${new Date(planExpiresAt).toLocaleDateString('pt-BR')}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0;">E-mail:</td>
+                                            <td style="padding: 8px 0; text-align: right;"><strong>${email}</strong></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="https://clownyads.base44.com" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                                        Acessar Plataforma Agora 🚀
+                                    </a>
+                                </div>
+
+                                <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center; color: #888; font-size: 13px;">
+                                    <p>Precisa de ajuda? Responda este e-mail ou entre em contato conosco.</p>
+                                    <p style="margin-top: 10px;">© ${new Date().getFullYear()} ClownyAds. Todos os direitos reservados.</p>
+                                </div>
+                            </div>
+                        `
+                    });
+
+                    console.log(`E-mail de acesso enviado para ${email}`);
+                } catch (emailError) {
+                    console.error('Erro ao enviar e-mail de acesso:', emailError);
+                    // Não falha a transação se o e-mail falhar
+                }
+
                 return Response.json(
                     { success: true, message: 'Pagamento processado com sucesso', user_plan: userPlan },
                     { status: 200, headers: corsHeaders }
