@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
             data: {
                 id: `test_trans_${Date.now()}`,
                 amount: 99.90,
-                status: event.includes('approved') ? 'approved' : 'refused',
+                status: event.includes('approved') || event.includes('created') || event.includes('renewed') ? 'approved' : 'refused',
                 customer: {
                     email: email,
                     name: "Test User",
