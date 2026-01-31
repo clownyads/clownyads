@@ -9,7 +9,7 @@ const plans = [
   {
     name: 'NOVATO',
     icon: Zap,
-    price: 'R$27,90',
+    price: 'R$19,90',
     billing: 'Semanal',
     features: [
       'Biblioteca das ofertas',
@@ -22,7 +22,7 @@ const plans = [
   {
     name: 'CABULOSO',
     icon: Crown,
-    price: 'R$87,90',
+    price: 'R$67,90',
     billing: 'Mensal',
     badge: 'Mais escolhido',
     features: [
@@ -40,7 +40,7 @@ const plans = [
   {
     name: 'MESTRE',
     icon: Infinity,
-    price: 'R$697,90',
+    price: 'R$497,90',
     billing: 'Anual',
     badge: 'Uma vez só',
     features: [
