@@ -108,9 +108,9 @@ Deno.serve(async (req) => {
                         </div>
                         ` : ''}
                         <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                            <li>${isNewUser ? 'Verifique seu e-mail e clique no link de convite para criar sua senha' : 'Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a>'}</li>
+                            <li>${isNewUser ? 'Verifique seu e-mail e clique no link de convite para criar sua senha' : 'Acesse: <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a>'}</li>
                             <li>${isNewUser ? 'Crie sua senha de acesso' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
-                            <li>${isNewUser ? 'Acesse: <a href="https://clownyads.base44.com" style="color: #39FF14; text-decoration: none;">https://clownyads.base44.com</a>' : 'Use sua senha'}</li>
+                            <li>${isNewUser ? 'Acesse: <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">https://clownyads.pro/login</a>' : 'Use sua senha'}</li>
                         </ol>
                     </div>
 
@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
                     </div>
 
                     <div style="text-align: center; margin-top: 30px;">
-                        <a href="https://clownyads.base44.com" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                        <a href="https://clownyads.pro/login" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                             Acessar Plataforma Agora 🚀
                         </a>
                     </div>
