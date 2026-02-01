@@ -63,11 +63,25 @@ Deno.serve(async (req) => {
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.warn('Usuário não encontrado no Base44:', email);
-            return Response.json(
-                { success: false, error: 'Usuário não encontrado no Base44. O usuário deve se cadastrar primeiro.' },
-                { status: 404, headers: corsHeaders }
-            );
+            console.log('LOG: Usuário não encontrado, tentando criar registro manualmente para:', email);
+            try {
+                const newUser = await base44.asServiceRole.entities.User.create({
+                    email: email,
+                    full_name: webhookData.data?.customer?.name || 'Cliente',
+                    role: 'user',
+                    plan: 'FREE'
+                });
+                console.log('LOG: Usuário criado manualmente com ID:', newUser.id);
+                isNewUser = true;
+                users = [newUser]; 
+            } catch (createErr) {
+                console.error('ERROR: Falha ao criar usuário manualmente para:', email, createErr);
+                // Se falhar a criação do usuário, não podemos prosseguir
+                return Response.json(
+                    { success: false, error: 'Falha ao criar registro de usuário.' },
+                    { status: 500, headers: corsHeaders }
+                );
+            }
         }
         
         user = users[0];
@@ -98,23 +112,31 @@ Deno.serve(async (req) => {
                     planExpiresAt = addMonths(now, 1).toISOString();
                 }
                 
-                await base44.asServiceRole.entities.User.update(user.id, {
-                    plan: userPlan,
-                    plan_updated_at: now.toISOString(),
-                    plan_expires_at: planExpiresAt
-                });
+                try {
+                    await base44.asServiceRole.entities.User.update(user.id, {
+                        plan: userPlan,
+                        plan_updated_at: now.toISOString(),
+                        plan_expires_at: planExpiresAt
+                    });
+                    console.log(`LOG: Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
+                } catch (updateUserErr) {
+                    console.error('ERROR: Falha ao atualizar plano do usuário:', user.id, updateUserErr);
+                }
     
-                console.log(`Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
-    
-                await base44.asServiceRole.entities.Payment.create({
-                    amount: amount,
-                    currency: 'BRL',
-                    status: 'approved',
-                    transactionId: transactionId,
-                    userId: user.id,
-                    plan: userPlan,
-                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
-                });
+                try {
+                    await base44.asServiceRole.entities.Payment.create({
+                        amount: amount,
+                        currency: 'BRL',
+                        status: 'approved',
+                        transactionId: transactionId,
+                        userId: user.id,
+                        plan: userPlan,
+                        paymentMethod: webhookData.data?.paymentMethod || 'unknown'
+                    });
+                    console.log(`LOG: Pagamento registrado para usuário ${email}`);
+                } catch (createPaymentErr) {
+                    console.error('ERROR: Falha ao registrar pagamento para:', user.id, createPaymentErr);
+                }
     
                 console.log(`Pagamento registrado para usuário ${email}`);
 
@@ -131,7 +153,7 @@ Deno.serve(async (req) => {
                     const htmlBody = `
                         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0B0B0D; color: #fff; padding: 40px 20px;">
                             <div style="text-align: center; margin-bottom: 30px;">
-                                <h1 style="color: #39FF14; margin: 0;">🃏 ClownyAds</h1>
+                                <h1 style="color: #39FF14; margin: 0;">🎪 ClownyAds</h1>
                             </div>
 
                             <div style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.1) 0%, rgba(191, 0, 255, 0.1) 100%); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
@@ -153,9 +175,20 @@ Deno.serve(async (req) => {
                                     </p>
                                 </div>
                                 ` : ''}
+                                <div style="text-align: center; margin: 20px 0;">
+                                    <a href="https://clownyads.base44.app" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Acessar Plataforma</a>
+                                </div>
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                                    <li>Acesse: <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">https://clownyads.pro/login</a></li>
-                                    <li>${isNewUser ? 'Clique em "Esqueci minha senha" e use seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>' : 'Faça login com seu e-mail: <strong style="color: #39FF14;">' + email + '</strong>'}</li>
+                                    <li>Acesse a plataforma clicando no botão acima ou em <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">clownyads.base44.app</a></li>
+                                    ${isNewUser ? `
+                                    <li style="margin-top: 10px;">
+                                        <strong>Primeiro Acesso:</strong> Na tela de login, clique em <strong style="color: #39FF14;">"Esqueci minha senha"</strong>
+                                    </li>
+                                    <li>Digite seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
+                                    <li>Você receberá um link para definir sua senha de acesso.</li>
+                                    ` : `
+                                    <li style="margin-top: 10px;">Faça login com seu e-mail: <strong style="color: #39FF14;">${email}</strong> e sua senha atual.</li>
+                                    `}
                                 </ol>
                             </div>
 
@@ -178,7 +211,7 @@ Deno.serve(async (req) => {
                             </div>
 
                             <div style="text-align: center; margin-top: 30px;">
-                                <a href="https://clownyads.pro/login" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                                <a href="https://clownyads.base44.app" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                                     Acessar Plataforma Agora 🚀
                                 </a>
                             </div>
@@ -236,22 +269,32 @@ Deno.serve(async (req) => {
             case 'subscription_renewal_refused':
             case 'chargeback':
             case 'refund':
-                await base44.asServiceRole.entities.User.update(user.id, {
-                    plan: 'FREE',
-                    plan_updated_at: now.toISOString(),
-                    plan_expires_at: now.toISOString()
-                });
-                console.log(`Plano do usuário ${email} alterado para FREE devido ao evento ${eventType}`);
+                const revokedPlan = 'FREE';
+                try {
+                    await base44.asServiceRole.entities.User.update(user.id, {
+                        plan: revokedPlan,
+                        plan_updated_at: now.toISOString(),
+                        plan_expires_at: now.toISOString()
+                    });
+                    console.log(`LOG: Plano do usuário ${email} alterado para ${revokedPlan} devido ao evento ${eventType}`);
+                } catch (updateUserErr) {
+                    console.error('ERROR: Falha ao revogar plano do usuário:', user.id, updateUserErr);
+                }
 
-                await base44.asServiceRole.entities.Payment.create({
-                    amount: amount,
-                    currency: 'BRL',
-                    status: eventType.replace(/_/g, '.'),
-                    transactionId: transactionId,
-                    userId: user.id,
-                    plan: userPlan,
-                    paymentMethod: webhookData.data?.paymentMethod || 'unknown'
-                });
+                try {
+                    await base44.asServiceRole.entities.Payment.create({
+                        amount: amount,
+                        currency: 'BRL',
+                        status: eventType.replace(/_/g, '.'),
+                        transactionId: transactionId,
+                        userId: user.id,
+                        plan: revokedPlan, 
+                        paymentMethod: webhookData.data?.paymentMethod || 'unknown'
+                    });
+                    console.log(`LOG: Pagamento de revogação registrado para usuário ${email}`);
+                } catch (createPaymentErr) {
+                    console.error('ERROR: Falha ao registrar pagamento de revogação para:', user.id, createPaymentErr);
+                }
 
                 return Response.json(
                     { success: true, message: 'Plano revogado com sucesso', user_plan: 'FREE' },
