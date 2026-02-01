@@ -141,6 +141,8 @@ Deno.serve(async (req) => {
                 console.log(`Pagamento registrado para usuário ${email}`);
 
                 // Enviar e-mail de acesso usando Gmail OAuth
+                // Apenas para eventos de assinatura para evitar duplicidade com purchase_approved
+                if (['subscription_created', 'subscription_renewed'].includes(eventType)) {
                 try {
                     const planNames = {
                         'NOVATO': 'Novato (Semanal)',
@@ -258,6 +260,7 @@ Deno.serve(async (req) => {
                     console.error('Erro ao enviar e-mail de acesso:', emailError);
                     // Não falha a transação se o e-mail falhar
                 }
+                } // Fim do if (eventType === ...)
 
                 return Response.json(
                     { success: true, message: 'Pagamento processado com sucesso', user_plan: userPlan },
