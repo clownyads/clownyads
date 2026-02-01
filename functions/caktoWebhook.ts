@@ -63,21 +63,11 @@ Deno.serve(async (req) => {
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.log('Usuário não encontrado, criando registro manualmente:', email);
-            
-            // Fallback: Criar entidade User manualmente pois inviteUser requer sessão
-            const newUser = await base44.asServiceRole.entities.User.create({
-                email: email,
-                full_name: webhookData.data?.customer?.name || 'Cliente',
-                role: 'user',
-                plan: 'FREE'
-            });
-            
-            console.log('Usuário criado manualmente:', newUser.id);
-            isNewUser = true;
-            
-            // Usar o usuário criado
-            users = [newUser];
+            console.warn('Usuário não encontrado no Base44:', email);
+            return Response.json(
+                { success: false, error: 'Usuário não encontrado no Base44. O usuário deve se cadastrar primeiro.' },
+                { status: 404, headers: corsHeaders }
+            );
         }
         
         user = users[0];
