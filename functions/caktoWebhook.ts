@@ -173,20 +173,21 @@ Deno.serve(async (req) => {
                                 ${isNewUser ? `
                                 <div style="background-color: rgba(57, 255, 20, 0.1); border: 1px solid rgba(57, 255, 20, 0.3); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
                                     <p style="color: #39FF14; font-size: 14px; margin: 0; font-weight: bold;">
-                                        ⚠️ IMPORTANTE: Como é seu primeiro acesso, clique no botão abaixo para criar sua senha.
+                                        ⚠️ IMPORTANTE: Como é seu primeiro acesso, siga os passos abaixo para definir sua senha.
                                     </p>
                                 </div>
                                 ` : ''}
                                 <div style="text-align: center; margin: 20px 0;">
-                                    <a href="${isNewUser ? 'https://clownyads.pro/forgot-password' : 'https://clownyads.pro/login'}" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
-                                        ${isNewUser ? 'Definir Minha Senha' : 'Acessar Plataforma'}
+                                    <a href="https://clownyads.pro/login" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                                        Acessar Plataforma
                                     </a>
                                 </div>
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
                                     ${isNewUser ? `
-                                    <li>Clique no botão acima "Definir Minha Senha".</li>
-                                    <li style="margin-top: 10px;">Digite seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
-                                    <li>Você receberá um link seguro para criar sua senha de acesso.</li>
+                                    <li>Clique no botão acima "Acessar Plataforma".</li>
+                                    <li style="margin-top: 10px;">Na tela de login, clique em <strong style="color: #39FF14;">"Esqueci minha senha"</strong> ou <strong>"Forgot Password"</strong>.</li>
+                                    <li>Digite seu e-mail: <strong style="color: #39FF14;">${email}</strong></li>
+                                    <li>Siga as instruções enviadas para seu e-mail para criar sua senha.</li>
                                     ` : `
                                     <li>Acesse a plataforma clicando no botão acima ou em <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">clownyads.pro/login</a></li>
                                     <li style="margin-top: 10px;">Faça login com seu e-mail: <strong style="color: #39FF14;">${email}</strong> e sua senha atual.</li>

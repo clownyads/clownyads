@@ -23,7 +23,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { Mail } from 'lucide-react';
 
 const statusConfig = {
   escalando: { color: 'bg-green-500/10 text-green-400' },
