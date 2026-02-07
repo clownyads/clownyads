@@ -41,6 +41,8 @@ export default function Admin() {
   const [showForm, setShowForm] = useState(false);
   const [editingOffer, setEditingOffer] = useState(null);
   const [user, setUser] = useState(null);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -111,6 +113,25 @@ export default function Admin() {
     }
   });
 
+  const inviteMutation = useMutation({
+    mutationFn: (email) => base44.users.inviteUser(email, 'user'),
+    onSuccess: () => {
+      setInviteOpen(false);
+      setInviteEmail('');
+      toast.success('Convite enviado com sucesso!');
+    },
+    onError: (error) => {
+      console.error('Erro ao convidar usuário:', error);
+      toast.error('Erro ao enviar convite. Verifique se o e-mail é válido.');
+    }
+  });
+
+  const handleInvite = (e) => {
+    e.preventDefault();
+    if (!inviteEmail) return;
+    inviteMutation.mutate(inviteEmail);
+  };
+
   const handleSubmit = (data) => {
     if (editingOffer) {
       updateMutation.mutate({ id: editingOffer.id, data });
@@ -176,13 +197,23 @@ export default function Admin() {
                 <p className="text-zinc-500 text-sm">Gerencie as ofertas da plataforma</p>
               </div>
             </div>
-            <Button 
-              onClick={handleNew}
-              className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold"
-            >
-              <Plus size={18} className="mr-2" />
-              Nova Oferta
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => setInviteOpen(true)}
+                variant="outline"
+                className="border-white/10 text-white hover:bg-white/5"
+              >
+                <Mail size={18} className="mr-2" />
+                Convidar Usuário
+              </Button>
+              <Button 
+                onClick={handleNew}
+                className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold"
+              >
+                <Plus size={18} className="mr-2" />
+                Nova Oferta
+              </Button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -317,6 +348,49 @@ export default function Admin() {
             }}
             isLoading={createMutation.isLoading || updateMutation.isLoading}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Dialog */}
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="bg-[#0A0A0C] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Convidar Usuário</DialogTitle>
+            <DialogDescription className="text-zinc-500">
+              Envie um convite para um novo usuário acessar a plataforma.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleInvite} className="space-y-4 pt-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-white">E-mail</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="usuario@exemplo.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                className="bg-[#1A1A1D] border-white/10 text-white focus:border-[#39FF14] focus:ring-[#39FF14]"
+                required
+              />
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setInviteOpen(false)}
+                className="text-zinc-400 hover:text-white hover:bg-white/5"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                disabled={inviteMutation.isLoading}
+                className="bg-[#39FF14] text-black hover:bg-[#39FF14]/90 font-semibold"
+              >
+                {inviteMutation.isLoading ? 'Enviando...' : 'Enviar Convite'}
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
