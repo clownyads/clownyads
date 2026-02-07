@@ -178,10 +178,10 @@ Deno.serve(async (req) => {
                                 </div>
                                 ` : ''}
                                 <div style="text-align: center; margin: 20px 0;">
-                                    <a href="https://clownyads.base44.app" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Acessar Plataforma</a>
+                                    <a href="https://clownyads.pro/login" style="background-color: #39FF14; color: #000; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Acessar Plataforma</a>
                                 </div>
                                 <ol style="color: #fff; font-size: 15px; line-height: 1.8; padding-left: 20px;">
-                                    <li>Acesse a plataforma clicando no botão acima ou em <a href="https://clownyads.base44.app" style="color: #39FF14; text-decoration: none;">clownyads.base44.app</a></li>
+                                    <li>Acesse a plataforma clicando no botão acima ou em <a href="https://clownyads.pro/login" style="color: #39FF14; text-decoration: none;">clownyads.pro/login</a></li>
                                     ${isNewUser ? `
                                     <li style="margin-top: 10px;">
                                         <strong>Primeiro Acesso:</strong> Na tela de login, clique em <strong style="color: #39FF14;">"Esqueci minha senha"</strong>
@@ -213,7 +213,7 @@ Deno.serve(async (req) => {
                             </div>
 
                             <div style="text-align: center; margin-top: 30px;">
-                                <a href="https://clownyads.base44.app" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
+                                <a href="https://clownyads.pro/login" style="display: inline-block; background: linear-gradient(90deg, #39FF14 0%, #BF00FF 100%); color: #000; text-decoration: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; font-size: 16px;">
                                     Acessar Plataforma Agora 🚀
                                 </a>
                             </div>
