@@ -221,7 +221,7 @@ Deno.serve(async (req) => {
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0;">Validade:</td>
-                                        <td style="padding: 8px 0; text-align: right;"><strong>${new Date(planExpiresAt).toLocaleDateString('pt-BR')}</strong></td>
+                                        <td style="padding: 8px 0; text-align: right;"><strong>${new Date(targetExpiresAt).toLocaleDateString('pt-BR')}</strong></td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0;">E-mail:</td>
