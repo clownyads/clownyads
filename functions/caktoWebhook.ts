@@ -58,69 +58,86 @@ Deno.serve(async (req) => {
             );
         }
 
+        // Determinar o plano e validade com base nos dados do webhook ANTES de criar/buscar o usuário
+        const now = new Date();
+        let targetPlan = 'FREE';
+        let targetExpiresAt = null;
+        const fullName = `${offerName || ''} ${productName || ''}`.toLowerCase();
+
+        // Lógica de determinação do plano para eventos de compra/assinatura
+        if (['purchase_approved', 'subscription_created', 'subscription_renewed'].includes(eventType)) {
+            if (fullName.includes('novato')) {
+                targetPlan = 'NOVATO';
+                targetExpiresAt = addDays(now, 7).toISOString();
+            } else if (fullName.includes('cabuloso')) {
+                targetPlan = 'CABULOSO';
+                targetExpiresAt = addMonths(now, 1).toISOString();
+            } else if (fullName.includes('mestre')) {
+                targetPlan = 'MESTRE';
+                targetExpiresAt = addYears(now, 1).toISOString();
+            } else {
+                // Fallback apenas se for um evento de compra, senão mantém o que tem ou FREE
+                console.warn('Plano não identificado. Oferta:', offerName, 'Produto:', productName);
+                targetPlan = 'CABULOSO'; // Fallback
+                targetExpiresAt = addMonths(now, 1).toISOString();
+            }
+        }
+
         let users = await base44.asServiceRole.entities.User.filter({ email });
         let user;
         let isNewUser = false;
 
         if (!users || users.length === 0) {
-            console.log('LOG: Usuário não encontrado, tentando criar registro manualmente para:', email);
+            console.log('LOG: Usuário não encontrado, criando registro manualmente para:', email);
             try {
+                // Se é novo usuário, já cria com o plano correto se for compra, ou FREE se não for
+                const initialPlan = (targetExpiresAt) ? targetPlan : 'FREE';
+                
                 const newUser = await base44.asServiceRole.entities.User.create({
                     email: email,
                     full_name: webhookData.data?.customer?.name || 'Cliente',
                     role: 'user',
-                    plan: 'FREE'
+                    plan: initialPlan,
+                    plan_updated_at: targetExpiresAt ? now.toISOString() : undefined,
+                    plan_expires_at: targetExpiresAt || undefined
                 });
-                console.log('LOG: Usuário criado manualmente com ID:', newUser.id);
+                console.log('LOG: Usuário criado manualmente com ID:', newUser.id, 'e plano:', initialPlan);
                 isNewUser = true;
-                users = [newUser]; 
+                user = newUser;
             } catch (createErr) {
                 console.error('ERROR: Falha ao criar usuário manualmente para:', email, createErr);
-                // Se falhar a criação do usuário, não podemos prosseguir
                 return Response.json(
                     { success: false, error: 'Falha ao criar registro de usuário.' },
                     { status: 500, headers: corsHeaders }
                 );
             }
+        } else {
+            user = users[0];
         }
-        
-        user = users[0];
 
-        let userPlan = user.plan;
-        let planExpiresAt = user.plan_expires_at;
-        const now = new Date();
+        let userPlan = user.plan; // O plano atual do usuário (ou o que acabamos de criar)
 
         switch (eventType) {
             case 'purchase_approved':
             case 'subscription_created':
             case 'subscription_renewed':
-                // Verificar nome da oferta ou produto
-                const fullName = `${offerName} ${productName}`.toLowerCase();
-                
-                if (fullName.includes('novato')) {
-                    userPlan = 'NOVATO';
-                    planExpiresAt = addDays(now, 7).toISOString();
-                } else if (fullName.includes('cabuloso')) {
-                    userPlan = 'CABULOSO';
-                    planExpiresAt = addMonths(now, 1).toISOString();
-                } else if (fullName.includes('mestre')) {
-                    userPlan = 'MESTRE';
-                    planExpiresAt = addYears(now, 1).toISOString();
+                // Se o usuário JÁ existia, precisamos atualizar o plano
+                // Se acabou de ser criado (isNewUser), ele já tem o plano correto, então pulamos o update
+                if (!isNewUser) {
+                    try {
+                        await base44.asServiceRole.entities.User.update(user.id, {
+                            plan: targetPlan,
+                            plan_updated_at: now.toISOString(),
+                            plan_expires_at: targetExpiresAt
+                        });
+                        console.log(`LOG: Plano do usuário existente ${email} atualizado para ${targetPlan}.`);
+                        userPlan = targetPlan; // Atualiza variável local para uso posterior
+                    } catch (updateUserErr) {
+                        console.error('ERROR: Falha ao atualizar plano do usuário:', user.id, updateUserErr);
+                    }
                 } else {
-                    console.warn('Plano não identificado. Oferta:', offerName, 'Produto:', productName);
-                    userPlan = 'CABULOSO'; // Fallback para o plano mais popular
-                    planExpiresAt = addMonths(now, 1).toISOString();
-                }
-                
-                try {
-                    await base44.asServiceRole.entities.User.update(user.id, {
-                        plan: userPlan,
-                        plan_updated_at: now.toISOString(),
-                        plan_expires_at: planExpiresAt
-                    });
-                    console.log(`LOG: Plano do usuário ${email} atualizado para ${userPlan}. Expira em ${planExpiresAt}`);
-                } catch (updateUserErr) {
-                    console.error('ERROR: Falha ao atualizar plano do usuário:', user.id, updateUserErr);
+                    // Para novos usuários, o plano já foi definido no create, apenas atualizamos a variável local se necessário
+                    userPlan = targetPlan;
                 }
     
                 try {
