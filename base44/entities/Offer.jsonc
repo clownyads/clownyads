@@ -1,0 +1,165 @@
+{
+  "name": "Offer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da oferta"
+    },
+    "niche": {
+      "type": "string",
+      "enum": [
+        "nutra",
+        "hot",
+        "info_gray",
+        "info_black"
+      ],
+      "description": "Nicho da oferta"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tendencias",
+        "low_ticket",
+        "renda_extra",
+        "saude_bem_estar",
+        "emagrecimento",
+        "fitness_exercicios",
+        "relacionamento",
+        "sexualidade",
+        "familia_maternidade",
+        "educacao_idiomas",
+        "desenvolv_pessoal",
+        "espiritualidade",
+        "moda_beleza",
+        "estilo_vida",
+        "pets"
+      ],
+      "description": "Categoria da oferta"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "escalando",
+        "estavel",
+        "saturando",
+        "morta"
+      ],
+      "description": "Status atual de escala"
+    },
+    "aggressiveness": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "N\u00edvel de agressividade 1-5"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "baixo",
+        "medio",
+        "alto",
+        "extremo"
+      ],
+      "description": "N\u00edvel de risco de ban"
+    },
+    "requires_cloaker": {
+      "type": "boolean",
+      "description": "Precisa de cloaker"
+    },
+    "ticket": {
+      "type": "string",
+      "description": "Valor do ticket da oferta"
+    },
+    "main_angle": {
+      "type": "string",
+      "description": "\u00c2ngulo principal da oferta"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o da oferta"
+    },
+    "geo": {
+      "type": "string",
+      "description": "Pa\u00eds/regi\u00e3o alvo"
+    },
+    "traffic_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Fontes de tr\u00e1fego recomendadas"
+    },
+    "creatives": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs dos criativos"
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Alertas ativos"
+    },
+    "affiliate_url": {
+      "type": "string",
+      "description": "URL de afiliado"
+    },
+    "is_hot": {
+      "type": "boolean",
+      "description": "Est\u00e1 em alta"
+    },
+    "views": {
+      "type": "number",
+      "description": "Visualiza\u00e7\u00f5es"
+    },
+    "banner_url": {
+      "type": "string",
+      "description": "URL do banner 1080x1080"
+    },
+    "ad_library_links": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Links para bibliotecas de an\u00fancios"
+    },
+    "files_url": {
+      "type": "string",
+      "description": "URL dos arquivos da oferta"
+    },
+    "ad_count": {
+      "type": "number",
+      "description": "N\u00famero de an\u00fancios ativos",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "niche",
+    "status",
+    "aggressiveness",
+    "risk_level",
+    "category"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    },
+    "write": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}
